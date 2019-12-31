@@ -1,18 +1,16 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Permissions
+ * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Permissions\Acl\TestAsset;
+namespace LaminasTest\Permissions\Acl\TestAsset;
 
-use Zend\Permissions\Acl;
+use Laminas\Permissions\Acl;
 
-class ExtendedAclZF2234 extends Acl\Acl
+class ExtendedAclLaminas2234 extends Acl\Acl
 {
     public function exroleDFSVisitAllPrivileges(Acl\Role\RoleInterface $role, Acl\Resource\ResourceInterface $resource = null,
                                               &$dfs = null)
