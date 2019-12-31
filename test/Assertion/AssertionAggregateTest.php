@@ -1,22 +1,21 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
  */
-namespace ZendTest\Permissions\Acl\Assertion;
+namespace LaminasTest\Permissions\Acl\Assertion;
 
 use InvalidArgumentException as PHPInvalidArgumentException;
+use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Assertion\AssertionAggregate;
+use Laminas\Permissions\Acl\Assertion\Exception\InvalidAssertionException;
+use Laminas\Permissions\Acl\Exception\InvalidArgumentException;
+use Laminas\Permissions\Acl\Exception\RuntimeException;
+use Laminas\Permissions\Acl\Resource\GenericResource;
+use Laminas\Permissions\Acl\Role\GenericRole;
 use PHPUnit\Framework\TestCase;
-use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Assertion\AssertionAggregate;
-use Zend\Permissions\Acl\Assertion\Exception\InvalidAssertionException;
-use Zend\Permissions\Acl\Exception\InvalidArgumentException;
-use Zend\Permissions\Acl\Exception\RuntimeException;
-use Zend\Permissions\Acl\Resource\GenericResource;
-use Zend\Permissions\Acl\Role\GenericRole;
 
 class AssertionAggregateTest extends TestCase
 {
@@ -29,7 +28,7 @@ class AssertionAggregateTest extends TestCase
 
     public function testAddAssertion()
     {
-        $assertion = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
+        $assertion = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
         $this->assertionAggregate->addAssertion($assertion);
 
         $this->assertAttributeEquals([
@@ -50,8 +49,8 @@ class AssertionAggregateTest extends TestCase
 
     public function testAddAssertions()
     {
-        $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
-        $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
+        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
+        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
 
         $aggregate = $this->assertionAggregate->addAssertions($assertions);
 
@@ -113,7 +112,7 @@ class AssertionAggregateTest extends TestCase
 
     public function testManagerAccessors()
     {
-        $manager = $this->getMockBuilder('Zend\Permissions\Acl\Assertion\AssertionManager')
+        $manager = $this->getMockBuilder('Laminas\Permissions\Acl\Assertion\AssertionManager')
                         ->disableOriginalConstructor()
                         ->getMock();
 
@@ -139,12 +138,12 @@ class AssertionAggregateTest extends TestCase
             ->getMock()
             ;
 
-        $assertion = $this->getMockForAbstractClass('Zend\Permissions\Acl\Assertion\AssertionInterface');
+        $assertion = $this->getMockForAbstractClass('Laminas\Permissions\Acl\Assertion\AssertionInterface');
         $assertion->expects($this->once())
             ->method('assert')
             ->will($this->returnValue(true));
 
-        $manager = $this->getMockBuilder('Zend\Permissions\Acl\Assertion\AssertionManager')
+        $manager = $this->getMockBuilder('Laminas\Permissions\Acl\Assertion\AssertionManager')
                         ->disableOriginalConstructor()
                         ->getMock();
 
@@ -175,7 +174,7 @@ class AssertionAggregateTest extends TestCase
             ->getMock()
             ;
 
-        $manager = $this->getMockBuilder('Zend\Permissions\Acl\Assertion\AssertionManager')
+        $manager = $this->getMockBuilder('Laminas\Permissions\Acl\Assertion\AssertionManager')
                         ->disableOriginalConstructor()
                         ->getMock();
 
@@ -207,9 +206,9 @@ class AssertionAggregateTest extends TestCase
             ->getMock()
             ;
 
-        $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
-        $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
-        $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
+        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
+        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
+        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
 
         $assertions[0]->expects($this->once())
             ->method('assert')
@@ -247,9 +246,9 @@ class AssertionAggregateTest extends TestCase
             ->getMock()
             ;
 
-        $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
-        $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
-        $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
+        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
+        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
+        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
 
         $assertions[0]->expects($this->once())
             ->method('assert')
@@ -290,9 +289,9 @@ class AssertionAggregateTest extends TestCase
             ->getMock()
             ;
 
-        $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
-        $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
-        $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
+        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
+        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
+        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
 
         $assertions[0]->expects($this->once())
             ->method('assert')
@@ -332,9 +331,9 @@ class AssertionAggregateTest extends TestCase
             ->getMock()
             ;
 
-        $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
-        $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
-        $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
+        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
+        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
+        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
 
         $assertions[0]->expects($this->once())
             ->method('assert')

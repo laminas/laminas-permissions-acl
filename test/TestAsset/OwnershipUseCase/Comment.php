@@ -1,13 +1,14 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-permissions-acl for the canonical source repository
- * @copyright Copyright (c) 2018 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-permissions-acl/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Permissions\Acl\TestAsset\OwnershipUseCase;
+namespace LaminasTest\Permissions\Acl\TestAsset\OwnershipUseCase;
 
-use Zend\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class Comment implements ResourceInterface
 {
