@@ -1,19 +1,18 @@
 <?php
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
-namespace ZendTest\Permissions\Acl\Assertion;
 
+/**
+ * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
+ */
+namespace LaminasTest\Permissions\Acl\Assertion;
+
+use Laminas\Permissions\Acl\Assertion\AssertionInterface;
+use Laminas\Permissions\Acl\Assertion\AssertionManager;
+use Laminas\Permissions\Acl\Exception\InvalidArgumentException;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\Test\CommonPluginManagerTrait;
 use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Permissions\Acl\Assertion\AssertionInterface;
-use Zend\Permissions\Acl\Assertion\AssertionManager;
-use Zend\Permissions\Acl\Exception\InvalidArgumentException;
-use Zend\ServiceManager\ServiceManager;
-use Zend\ServiceManager\Test\CommonPluginManagerTrait;
 
 class AssertionManagerCompatibilityTest extends TestCase
 {
