@@ -1,13 +1,13 @@
 docs_dir: docs/book
 site_dir: docs/html
 nav:
-    - Home: index.md
-    - 'Theory and Usage': usage.md
-    - 'Refining Access Controls': refining.md
-    - Reference:
-      - 'Ownership Assertions': ownership.md
-      - 'Expression Assertions': expression.md
-      - 'Advanced Usage': advanced.md
+    - { Home: index.md }
+    - { 'Theory and Usage': usage.md }
+    - { 'Refining Access Controls': refining.md }
+    - { Reference: [{ 'Ownership Assertions': ownership.md }, { 'Expression Assertions': expression.md }, { 'Advanced Usage': advanced.md }] }
 site_name: laminas-permissions-acl
 site_description: 'Create, manage, and query access control lists.'
 repo_url: 'https://github.com/laminas/laminas-permissions-acl'
+extra:
+    project: Components
+    project_url: 'https://docs.laminas.dev'
