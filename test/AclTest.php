@@ -1,31 +1,29 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Permissions
+ * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Permissions\Acl;
+namespace LaminasTest\Permissions\Acl;
 
-use Zend\Permissions\Acl;
-use Zend\Permissions\Acl\Role;
-use Zend\Permissions\Acl\Resource;
+use Laminas\Permissions\Acl;
+use Laminas\Permissions\Acl\Resource;
+use Laminas\Permissions\Acl\Role;
 
 /**
- * @category   Zend
- * @package    Zend_Permissions
+ * @category   Laminas
+ * @package    Laminas_Permissions
  * @subpackage UnitTests
- * @group      Zend_Acl
+ * @group      Laminas_Acl
  */
 class AclTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * ACL object for each test method
      *
-     * @var Zend_Acl
+     * @var Laminas_Acl
      */
     protected $_acl;
 
@@ -62,7 +60,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
     {
         $role = $this->_acl->addRole('area')
                            ->getRole('area');
-        $this->assertInstanceOf('Zend\Permissions\Acl\Role\RoleInterface', $role);
+        $this->assertInstanceOf('Laminas\Permissions\Acl\Role\RoleInterface', $role);
         $this->assertEquals('area', $role->getRoleId());
     }
 
@@ -86,7 +84,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
      */
     public function testRoleRegistryRemoveOneNonExistent()
     {
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\InvalidArgumentException', 'not found');
+        $this->setExpectedException('Laminas\Permissions\Acl\Exception\InvalidArgumentException', 'not found');
         $this->_acl->removeRole('nonexistent');
     }
 
@@ -110,7 +108,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
      */
     public function testRoleRegistryAddInheritsNonExistent()
     {
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\InvalidArgumentException');
+        $this->setExpectedException('Laminas\Permissions\Acl\Exception\InvalidArgumentException');
         $this->_acl->addRole(new Role\GenericRole('guest'), 'nonexistent');
     }
 
@@ -121,8 +119,8 @@ class AclTest extends \PHPUnit_Framework_TestCase
      */
     public function testRoleRegistryAddNotRole()
     {
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\InvalidArgumentException',
-                                    'addRole() expects $role to be of type Zend\Permissions\Acl\Role');
+        $this->setExpectedException('Laminas\Permissions\Acl\Exception\InvalidArgumentException',
+                                    'addRole() expects $role to be of type Laminas\Permissions\Acl\Role');
         $this->_acl->addRole(new \stdClass, 'guest');
     }
 
@@ -137,13 +135,13 @@ class AclTest extends \PHPUnit_Framework_TestCase
         $this->_acl->addRole($roleGuest);
         try {
             $this->_acl->inheritsRole('nonexistent', $roleGuest);
-            $this->fail('Expected Zend\Permissions\Acl\Role\Exception not thrown upon specifying a non-existent child Role');
+            $this->fail('Expected Laminas\Permissions\Acl\Role\Exception not thrown upon specifying a non-existent child Role');
         } catch (Acl\Exception\InvalidArgumentException $e) {
             $this->assertContains('not found', $e->getMessage());
         }
         try {
             $this->_acl->inheritsRole($roleGuest, 'nonexistent');
-            $this->fail('Expected Zend\Permissions\Acl\Role\Exception not thrown upon specifying a non-existent child Role');
+            $this->fail('Expected Laminas\Permissions\Acl\Role\Exception not thrown upon specifying a non-existent child Role');
         } catch (Acl\Exception\InvalidArgumentException $e) {
             $this->assertContains('not found', $e->getMessage());
         }
@@ -220,7 +218,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
     {
         $roleGuest = new Role\GenericRole('guest');
         $roleRegistry = new Role\Registry();
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\InvalidArgumentException', 'already exists');
+        $this->setExpectedException('Laminas\Permissions\Acl\Exception\InvalidArgumentException', 'already exists');
         $roleRegistry->add($roleGuest)
                      ->add($roleGuest);
     }
@@ -235,7 +233,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
         $roleGuest1 = new Role\GenericRole('guest');
         $roleGuest2 = new Role\GenericRole('guest');
         $roleRegistry = new Role\Registry();
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\InvalidArgumentException', 'already exists');
+        $this->setExpectedException('Laminas\Permissions\Acl\Exception\InvalidArgumentException', 'already exists');
         $roleRegistry->add($roleGuest1)
                      ->add($roleGuest2);
     }
@@ -262,14 +260,14 @@ class AclTest extends \PHPUnit_Framework_TestCase
     {
         $resource = $this->_acl->addResource('area')
                           ->getResource('area');
-        $this->assertInstanceOf('Zend\Permissions\Acl\Resource\ResourceInterface', $resource);
+        $this->assertInstanceOf('Laminas\Permissions\Acl\Resource\ResourceInterface', $resource);
         $this->assertEquals('area', $resource->getResourceId());
     }
 
     /**
      * Ensures that basic addition and retrieval of a single Resource works
      *
-     * @group ZF-1167
+     * @group Laminas-1167
      */
     public function testResourceAddAndGetOneWithAddResourceMethod()
     {
@@ -301,7 +299,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
      */
     public function testResourceRemoveOneNonExistent()
     {
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\ExceptionInterface', 'not found');
+        $this->setExpectedException('Laminas\Permissions\Acl\Exception\ExceptionInterface', 'not found');
         $this->_acl->removeResource('nonexistent');
     }
 
@@ -325,7 +323,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
      */
     public function testResourceAddInheritsNonExistent()
     {
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\InvalidArgumentException', 'does not exist');
+        $this->setExpectedException('Laminas\Permissions\Acl\Exception\InvalidArgumentException', 'does not exist');
         $this->_acl->addResource(new Resource\GenericResource('area'), 'nonexistent');
     }
 
@@ -336,8 +334,8 @@ class AclTest extends \PHPUnit_Framework_TestCase
      */
     public function testResourceRegistryAddNotResource()
     {
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\InvalidArgumentException',
-                                    'addResource() expects $resource to be of type Zend\Permissions\Acl\Resource');
+        $this->setExpectedException('Laminas\Permissions\Acl\Exception\InvalidArgumentException',
+                                    'addResource() expects $resource to be of type Laminas\Permissions\Acl\Resource');
         $this->_acl->addResource(new \stdClass);
     }
 
@@ -352,13 +350,13 @@ class AclTest extends \PHPUnit_Framework_TestCase
         $this->_acl->addResource($resourceArea);
         try {
             $this->_acl->inheritsResource('nonexistent', $resourceArea);
-            $this->fail('Expected Zend\Permissions\Acl\Exception\ExceptionInterface not thrown upon specifying a non-existent child Resource');
+            $this->fail('Expected Laminas\Permissions\Acl\Exception\ExceptionInterface not thrown upon specifying a non-existent child Resource');
         } catch (Acl\Exception\ExceptionInterface $e) {
             $this->assertContains('not found', $e->getMessage());
         }
         try {
             $this->_acl->inheritsResource($resourceArea, 'nonexistent');
-            $this->fail('Expected Zend\Permissions\Acl\Exception\ExceptionInterface not thrown upon specifying a non-existent parent Resource');
+            $this->fail('Expected Laminas\Permissions\Acl\Exception\ExceptionInterface not thrown upon specifying a non-existent parent Resource');
         } catch (Acl\Exception\ExceptionInterface $e) {
             $this->assertContains('not found', $e->getMessage());
         }
@@ -394,7 +392,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
      */
     public function testResourceDuplicate()
     {
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\ExceptionInterface', 'already exists');
+        $this->setExpectedException('Laminas\Permissions\Acl\Exception\ExceptionInterface', 'already exists');
         $resourceArea = new Resource\GenericResource('area');
         $this->_acl->addResource($resourceArea)
                    ->addResource($resourceArea);
@@ -407,7 +405,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
      */
     public function testResourceDuplicateId()
     {
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\ExceptionInterface', 'already exists');
+        $this->setExpectedException('Laminas\Permissions\Acl\Exception\ExceptionInterface', 'already exists');
         $resourceArea1 = new Resource\GenericResource('area');
         $resourceArea2 = new Resource\GenericResource('area');
         $this->_acl->addResource($resourceArea1)
@@ -423,20 +421,20 @@ class AclTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $this->_acl->isAllowed('nonexistent');
-            $this->fail('Expected Zend\Permissions\Acl\Role\Exception\ExceptionInterface not thrown upon non-existent Role');
+            $this->fail('Expected Laminas\Permissions\Acl\Role\Exception\ExceptionInterface not thrown upon non-existent Role');
         } catch (Acl\Exception\InvalidArgumentException $e) {
             $this->assertContains('not found', $e->getMessage());
         }
         try {
             $this->_acl->isAllowed(null, 'nonexistent');
-            $this->fail('Expected Zend\Permissions\Acl\Exception\ExceptionInterface not thrown upon non-existent Resource');
+            $this->fail('Expected Laminas\Permissions\Acl\Exception\ExceptionInterface not thrown upon non-existent Resource');
         } catch (Acl\Exception\InvalidArgumentException $e) {
             $this->assertContains('not found', $e->getMessage());
         }
     }
 
     /**
-     * Ensures that by default, Zend_Acl denies access to everything by all
+     * Ensures that by default, Laminas_Acl denies access to everything by all
      *
      * @return void
      */
@@ -471,7 +469,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Ensures that by default, Zend_Acl denies access to a privilege on anything by all
+     * Ensures that by default, Laminas_Acl denies access to a privilege on anything by all
      *
      * @return void
      */
@@ -549,7 +547,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Ensures that by default, Zend_Acl denies access to everything for a particular Role
+     * Ensures that by default, Laminas_Acl denies access to everything for a particular Role
      *
      * @return void
      */
@@ -576,7 +574,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Ensures that by default, Zend_Acl denies access to a privilege on anything for a particular Role
+     * Ensures that by default, Laminas_Acl denies access to a privilege on anything for a particular Role
      *
      * @return void
      */
@@ -789,7 +787,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
         $this->_acl->removeRole('guest');
         try {
             $this->_acl->isAllowed('guest');
-            $this->fail('Expected Zend\Permissions\Acl\Role\Exception not thrown upon isAllowed() on non-existent Role');
+            $this->fail('Expected Laminas\Permissions\Acl\Role\Exception not thrown upon isAllowed() on non-existent Role');
         } catch (Acl\Exception\InvalidArgumentException $e) {
             $this->assertContains('not found', $e->getMessage());
         }
@@ -810,7 +808,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
         $this->_acl->removeRoleAll();
         try {
             $this->_acl->isAllowed('guest');
-            $this->fail('Expected Zend\Permissions\Acl\Role\Exception not thrown upon isAllowed() on non-existent Role');
+            $this->fail('Expected Laminas\Permissions\Acl\Role\Exception not thrown upon isAllowed() on non-existent Role');
         } catch (Acl\Exception\InvalidArgumentException $e) {
             $this->assertContains('not found', $e->getMessage());
         }
@@ -831,7 +829,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
         $this->_acl->removeResource('area');
         try {
             $this->_acl->isAllowed(null, 'area');
-            $this->fail('Expected Zend\Permissions\Acl\Exception not thrown upon isAllowed() on non-existent Resource');
+            $this->fail('Expected Laminas\Permissions\Acl\Exception not thrown upon isAllowed() on non-existent Resource');
         } catch (Acl\Exception\ExceptionInterface $e) {
             $this->assertContains('not found', $e->getMessage());
         }
@@ -852,7 +850,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
         $this->_acl->removeResourceAll();
         try {
             $this->_acl->isAllowed(null, 'area');
-            $this->fail('Expected Zend\Permissions\Acl\Exception\ExceptionInterface not thrown upon isAllowed() on non-existent Resource');
+            $this->fail('Expected Laminas\Permissions\Acl\Exception\ExceptionInterface not thrown upon isAllowed() on non-existent Resource');
         } catch (Acl\Exception\ExceptionInterface $e) {
             $this->assertContains('not found', $e->getMessage());
         }
@@ -1031,7 +1029,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
      * Ensures that the $onlyParents argument to inheritsRole() works
      *
      * @return void
-     * @group  ZF-2502
+     * @group  Laminas-2502
      */
     public function testRoleInheritanceSupportsCheckingOnlyParents()
     {
@@ -1042,14 +1040,14 @@ class AclTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Ensures that the solution for ZF-2234 works as expected
+     * Ensures that the solution for Laminas-2234 works as expected
      *
      * @return void
-     * @group  ZF-2234
+     * @group  Laminas-2234
      */
     public function testAclInternalDFSMethodsBehaveProperly()
     {
-        $acl = new TestAsset\ExtendedAclZF2234();
+        $acl = new TestAsset\ExtendedAclLaminas2234();
 
         $someResource = new Resource\GenericResource('someResource');
         $someRole     = new Role\GenericRole('someRole');
@@ -1062,28 +1060,28 @@ class AclTest extends \PHPUnit_Framework_TestCase
 
         try {
             $acl->exroleDFSVisitAllPrivileges($someRole, $someResource, $nullReference);
-            $this->fail('Expected Zend\Permissions\Acl\Exception not thrown');
+            $this->fail('Expected Laminas\Permissions\Acl\Exception not thrown');
         } catch (Acl\Exception\ExceptionInterface $e) {
             $this->assertEquals('$dfs parameter may not be null', $e->getMessage());
         }
 
         try {
             $acl->exroleDFSOnePrivilege($someRole, $someResource, null);
-            $this->fail('Expected Zend\Permissions\Acl\Exception not thrown');
+            $this->fail('Expected Laminas\Permissions\Acl\Exception not thrown');
         } catch (Acl\Exception\ExceptionInterface $e) {
             $this->assertEquals('$privilege parameter may not be null', $e->getMessage());
         }
 
         try {
             $acl->exroleDFSVisitOnePrivilege($someRole, $someResource, null);
-            $this->fail('Expected Zend\Permissions\Acl\Exception not thrown');
+            $this->fail('Expected Laminas\Permissions\Acl\Exception not thrown');
         } catch (Acl\Exception\ExceptionInterface $e) {
             $this->assertEquals('$privilege parameter may not be null', $e->getMessage());
         }
 
         try {
             $acl->exroleDFSVisitOnePrivilege($someRole, $someResource, 'somePrivilege', $nullReference);
-            $this->fail('Expected Zend\Permissions\Acl\Exception not thrown');
+            $this->fail('Expected Laminas\Permissions\Acl\Exception not thrown');
         } catch (Acl\Exception\ExceptionInterface $e) {
             $this->assertEquals('$dfs parameter may not be null', $e->getMessage());
         }
@@ -1091,7 +1089,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-     * @group ZF-1721
+     * @group Laminas-1721
      */
     public function testAclAssertionsGetProperRoleWhenInheritenceIsUsed()
     {
@@ -1101,7 +1099,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
         $blogPost = new Resource\GenericResource('blogPost');
 
         /**
-         * @var ZendTest\Permissions\Acl\UseCase1\UserIsBlogPostOwnerAssertion
+         * @var LaminasTest\Permissions\Acl\UseCase1\UserIsBlogPostOwnerAssertion
          */
         $assertion = $acl->customAssertion;
 
@@ -1113,7 +1111,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
 
     /**
      *
-     * @group ZF-1722
+     * @group Laminas-1722
      */
     public function testAclAssertionsGetOriginalIsAllowedObjects()
     {
@@ -1125,7 +1123,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($acl->isAllowed($user, $blogPost, 'view'));
 
         /**
-         * @var ZendTest\Permissions\Acl\UseCase1\UserIsBlogPostOwnerAssertion
+         * @var LaminasTest\Permissions\Acl\UseCase1\UserIsBlogPostOwnerAssertion
          */
         $assertion = $acl->customAssertion;
 
@@ -1136,14 +1134,14 @@ class AclTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($acl->isAllowed($user, $blogPost, 'modify'), 'Assertion should return false');
 
         // check to see if the last assertion has the proper objets
-        $this->assertInstanceOf('ZendTest\Permissions\Acl\TestAsset\UseCase1\User', $assertion->lastAssertRole, 'Assertion did not receive proper role object');
-        $this->assertInstanceOf('ZendTest\Permissions\Acl\TestAsset\UseCase1\BlogPost', $assertion->lastAssertResource, 'Assertion did not receive proper resource object');
+        $this->assertInstanceOf('LaminasTest\Permissions\Acl\TestAsset\UseCase1\User', $assertion->lastAssertRole, 'Assertion did not receive proper role object');
+        $this->assertInstanceOf('LaminasTest\Permissions\Acl\TestAsset\UseCase1\BlogPost', $assertion->lastAssertResource, 'Assertion did not receive proper resource object');
 
     }
 
     /**
      *
-     * @return Zend_Acl_UseCase1_Acl
+     * @return Laminas_Acl_UseCase1_Acl
      */
     protected function _loadUseCase1()
     {
@@ -1154,7 +1152,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
      * Confirm that deleting a role after allowing access to all roles
      * raise undefined index error
      *
-     * @group ZF-5700
+     * @group Laminas-5700
      */
     public function testRemovingRoleAfterItWasAllowedAccessToAllResourcesGivesError()
     {
@@ -1174,10 +1172,10 @@ class AclTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group ZF-8039
+     * @group Laminas-8039
      *
      * Meant to test for the (in)existance of this notice:
-     * "Notice: Undefined index: allPrivileges in lib/Zend/Acl.php on line 682"
+     * "Notice: Undefined index: allPrivileges in lib/Laminas/Acl.php on line 682"
      */
     public function testMethodRemoveAllowDoesNotThrowNotice()
     {
@@ -1201,11 +1199,11 @@ class AclTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group ZF-7973
+     * @group Laminas-7973
      */
     public function testAclPassesPrivilegeToAssertClass()
     {
-        $assertion = new TestAsset\AssertionZF7973();
+        $assertion = new TestAsset\AssertionLaminas7973();
 
         $acl = new Acl\Acl();
         $acl->addRole('role');
@@ -1217,7 +1215,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group ZF-8468
+     * @group Laminas-8468
      */
     public function testgetRoles()
     {
@@ -1234,7 +1232,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group ZF-8468
+     * @group Laminas-8468
      */
     public function testgetResources()
     {
@@ -1248,7 +1246,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group ZF-9643
+     * @group Laminas-9643
      */
     public function testRemoveAllowWithNullResourceAppliesToAllResources()
     {
@@ -1275,7 +1273,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group ZF-9643
+     * @group Laminas-9643
      */
     public function testRemoveDenyWithNullResourceAppliesToAllResources()
     {
@@ -1304,7 +1302,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group ZF2-3454
+     * @group Laminas-3454
      */
     public function testAclResourcePermissionsAreInheritedWithMultilevelResourcesAndDenyPolicy()
     {
