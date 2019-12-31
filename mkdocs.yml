@@ -8,6 +8,6 @@ nav:
       - 'Ownership Assertions': ownership.md
       - 'Expression Assertions': expression.md
       - 'Advanced Usage': advanced.md
-site_name: zend-permissions-acl
+site_name: laminas-permissions-acl
 site_description: 'Create, manage, and query access control lists.'
-repo_url: 'https://github.com/zendframework/zend-permissions-acl'
+repo_url: 'https://github.com/laminas/laminas-permissions-acl'

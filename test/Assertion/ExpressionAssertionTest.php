@@ -1,19 +1,20 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-permissions-acl for the canonical source repository
- * @copyright Copyright (c) 2018 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-permissions-acl/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Permissions\Acl\Assertion;
+namespace LaminasTest\Permissions\Acl\Assertion;
 
+use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Assertion\Exception\InvalidAssertionException;
+use Laminas\Permissions\Acl\Assertion\ExpressionAssertion;
+use Laminas\Permissions\Acl\Exception\RuntimeException;
+use LaminasTest\Permissions\Acl\TestAsset\ExpressionUseCase\BlogPost;
+use LaminasTest\Permissions\Acl\TestAsset\ExpressionUseCase\User;
 use PHPUnit\Framework\TestCase;
-use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Assertion\Exception\InvalidAssertionException;
-use Zend\Permissions\Acl\Assertion\ExpressionAssertion;
-use Zend\Permissions\Acl\Exception\RuntimeException;
-use ZendTest\Permissions\Acl\TestAsset\ExpressionUseCase\User;
-use ZendTest\Permissions\Acl\TestAsset\ExpressionUseCase\BlogPost;
 
 class ExpressionAssertionTest extends TestCase
 {

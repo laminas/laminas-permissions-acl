@@ -5,7 +5,7 @@
 The basic ACL as defined in the [previous section](usage.md#defining-access-controls) shows how
 various privileges may be allowed upon the entire ACL (all resources). In practice, however,
 access controls tend to have exceptions and varying degrees of complexity.
-`Zend\Permissions\Acl\Acl` allows to you accomplish these refinements in a straightforward and
+`Laminas\Permissions\Acl\Acl` allows to you accomplish these refinements in a straightforward and
 flexible manner.
 
 For the example CMS, it has been determined that whilst the 'staff' group covers the needs of the
@@ -23,9 +23,9 @@ inherits permissions from 'staff':
 
 ```php
 // The new marketing group inherits permissions from staff
-use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Role\GenericRole as Role;
-use Zend\Permissions\Acl\Resource\GenericResource as Resource;
+use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Role\GenericRole as Role;
+use Laminas\Permissions\Acl\Resource\GenericResource as Resource;
 
 $acl = new Acl();
 
