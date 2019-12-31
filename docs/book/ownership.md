@@ -9,11 +9,11 @@ _modify_ his or her **own** posts, but **not** posts of other authors.
 
 To accomodate this use case, we provide two interfaces:
 
-- **`Zend\Acl\ProprietaryInterface`** is applicable to _resources_ and _roles_.
+- **`Laminas\Acl\ProprietaryInterface`** is applicable to _resources_ and _roles_.
   It provides information about the _owner_ of an object. Objects implementing
   this interface are used in conjunction with the `OwnershipAssertion`.
 
-- **`Zend\Acl\Assertion\OwnershipAssertion`** ensures that a resource is owned
+- **`Laminas\Acl\Assertion\OwnershipAssertion`** ensures that a resource is owned
   by a specific role by comparing it to owners provided by
   `ProprietaryInterface` implementations.
 
@@ -24,9 +24,9 @@ Consider the following entities:
 ```php
 namespace MyApp\Entity;
 
-use Zend\Permissions\Acl\ProprietaryInterface;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
-use Zend\Permissions\Acl\Role\RoleInterface;
+use Laminas\Permissions\Acl\ProprietaryInterface;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Role\RoleInterface;
 
 class User implements RoleInterface, ProprietaryInterface
 {
@@ -85,8 +85,8 @@ Now let's wire these up into an ACL:
 namespace MyApp;
 
 use MyApp\Entity;
-use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Assertion\OwnershipAssertion;
+use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Assertion\OwnershipAssertion;
 
 $acl = new Acl();
 $acl->addRole('guest');

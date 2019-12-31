@@ -13,7 +13,7 @@ While these can be easily accommodated by the `CallbackAssertion`, such
 assertions have one notable problem: they cannot be easily serialized.
 
 To facilitate such assertions, we now provide
-`Zend\Permissions\Acl\Assertion\ExpressionAssertion`. This class provides two
+`Laminas\Permissions\Acl\Assertion\ExpressionAssertion`. This class provides two
 static factory methods for creating an instance, each expecting the following:
 
 - The left operand
@@ -99,8 +99,8 @@ First, we'll define both a role and a resource:
 ```php
 namespace Blog\Entity;
 
-use Zend\Permissions\Acl\Resource\ResourceInterface;
-use Zend\Permissions\Acl\Role\RoleInterface;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Role\RoleInterface;
 
 class BlogPost implements ResourceInterface
 {
@@ -165,7 +165,7 @@ class User implements RoleInterface
 Next, let's define some assertions.
 
 ```php
-use Zend\Permissions\Acl\Assertion\ExpressionAssertion;
+use Laminas\Permissions\Acl\Assertion\ExpressionAssertion;
 
 // Username of role must be "test":
 // Will access $username property on the role instance.
