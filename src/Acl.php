@@ -1,18 +1,16 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Permissions
+ * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Permissions\Acl;
+namespace Laminas\Permissions\Acl;
 
 /**
- * @category   Zend
- * @package    Zend_Permissions
+ * @category   Laminas
+ * @package    Laminas_Permissions
  * @subpackage Acl
  */
 class Acl
@@ -110,7 +108,7 @@ class Acl
             $role = new Role\GenericRole($role);
         } elseif (!$role instanceof Role\RoleInterface) {
             throw new Exception\InvalidArgumentException(
-                'addRole() expects $role to be of type Zend\Permissions\Acl\Role\RoleInterface'
+                'addRole() expects $role to be of type Laminas\Permissions\Acl\Role\RoleInterface'
             );
         }
 
@@ -239,7 +237,7 @@ class Acl
             $resource = new Resource\GenericResource($resource);
         } elseif (!$resource instanceof Resource\ResourceInterface) {
             throw new Exception\InvalidArgumentException(
-                'addResource() expects $resource to be of type Zend\Permissions\Acl\Resource\ResourceInterface'
+                'addResource() expects $resource to be of type Laminas\Permissions\Acl\Resource\ResourceInterface'
             );
         }
 
@@ -667,7 +665,7 @@ class Acl
      *
      * If either $role or $resource is null, then the query applies to all Roles or all Resources,
      * respectively. Both may be null to query whether the ACL has a "blacklist" rule
-     * (allow everything to all). By default, Zend_Acl creates a "whitelist" rule (deny
+     * (allow everything to all). By default, Laminas_Acl creates a "whitelist" rule (deny
      * everything to all), and this method would return false unless this default has
      * been overridden (i.e., by executing $acl->allow()).
      *
@@ -906,14 +904,14 @@ class Acl
     ) {
         if (null === $privilege) {
             /**
-             * @see Zend_Acl_Exception
+             * @see Laminas_Acl_Exception
              */
             throw new Exception\RuntimeException('$privilege parameter may not be null');
         }
 
         if (null === $dfs) {
             /**
-             * @see Zend_Acl_Exception
+             * @see Laminas_Acl_Exception
              */
             throw new Exception\RuntimeException('$dfs parameter may not be null');
         }
