@@ -1,7 +1,7 @@
 <?php
-namespace Zend\Permissions\Acl\Assertion\Exception;
+namespace Laminas\Permissions\Acl\Assertion\Exception;
 
-use Zend\Permissions\Acl\Exception\ExceptionInterface;
+use Laminas\Permissions\Acl\Exception\ExceptionInterface;
 
 class InvalidAssertionException extends \InvalidArgumentException implements ExceptionInterface
 {
