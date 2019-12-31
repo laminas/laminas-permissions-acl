@@ -1,27 +1,26 @@
 <?php
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
-namespace Zend\Permissions\Acl\Assertion;
 
-use Zend\Permissions\Acl\Exception\InvalidArgumentException;
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\Exception\InvalidServiceException;
+/**
+ * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
+ */
+namespace Laminas\Permissions\Acl\Assertion;
+
+use Laminas\Permissions\Acl\Exception\InvalidArgumentException;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\Exception\InvalidServiceException;
 
 class AssertionManager extends AbstractPluginManager
 {
     /**
-     * zend-servicemanager v3 compatibility
+     * laminas-servicemanager v3 compatibility
      * @var bool
      */
     protected $shareByDefault = true;
 
     /**
-     * zend-servicemanager v2 compatibility
+     * laminas-servicemanager v2 compatibility
      * @var bool
      */
     protected $sharedByDefault = true;

@@ -1,15 +1,14 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Permissions\Acl\TestAsset\UseCase1;
+namespace LaminasTest\Permissions\Acl\TestAsset\UseCase1;
 
-class Acl extends \Zend\Permissions\Acl\Acl
+class Acl extends \Laminas\Permissions\Acl\Acl
 {
 
     public $customAssertion = null;
@@ -18,11 +17,11 @@ class Acl extends \Zend\Permissions\Acl\Acl
     {
         $this->customAssertion = new UserIsBlogPostOwnerAssertion();
 
-        $this->addRole(new \Zend\Permissions\Acl\Role\GenericRole('guest'));
-        $this->addRole(new \Zend\Permissions\Acl\Role\GenericRole('contributor'), 'guest');
-        $this->addRole(new \Zend\Permissions\Acl\Role\GenericRole('publisher'), 'contributor');
-        $this->addRole(new \Zend\Permissions\Acl\Role\GenericRole('admin'));
-        $this->addResource(new \Zend\Permissions\Acl\Resource\GenericResource('blogPost'));
+        $this->addRole(new \Laminas\Permissions\Acl\Role\GenericRole('guest'));
+        $this->addRole(new \Laminas\Permissions\Acl\Role\GenericRole('contributor'), 'guest');
+        $this->addRole(new \Laminas\Permissions\Acl\Role\GenericRole('publisher'), 'contributor');
+        $this->addRole(new \Laminas\Permissions\Acl\Role\GenericRole('admin'));
+        $this->addResource(new \Laminas\Permissions\Acl\Resource\GenericResource('blogPost'));
         $this->allow('guest', 'blogPost', 'view');
         $this->allow('contributor', 'blogPost', 'contribute');
         $this->allow('contributor', 'blogPost', 'modify', $this->customAssertion);
