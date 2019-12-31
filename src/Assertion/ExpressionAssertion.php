@@ -1,18 +1,19 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-permissions-acl for the canonical source repository
- * @copyright Copyright (c) 2018 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-permissions-acl/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Permissions\Acl\Assertion;
+namespace Laminas\Permissions\Acl\Assertion;
 
+use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Assertion\Exception\InvalidAssertionException;
+use Laminas\Permissions\Acl\Exception\RuntimeException;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Role\RoleInterface;
 use ReflectionProperty;
-use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Role\RoleInterface;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
-use Zend\Permissions\Acl\Assertion\Exception\InvalidAssertionException;
-use Zend\Permissions\Acl\Exception\RuntimeException;
 
 /**
  * Create an assertion based on expression rules.

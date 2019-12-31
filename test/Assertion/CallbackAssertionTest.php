@@ -1,16 +1,15 @@
 <?php
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
-namespace ZendTest\Permissions\Acl\Assertion;
 
+/**
+ * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
+ */
+namespace LaminasTest\Permissions\Acl\Assertion;
+
+use Laminas\Permissions\Acl;
+use Laminas\Permissions\Acl\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use Zend\Permissions\Acl;
-use Zend\Permissions\Acl\Exception\InvalidArgumentException;
 
 class CallbackAssertionTest extends TestCase
 {
@@ -47,9 +46,9 @@ class CallbackAssertionTest extends TestCase
         $assert    = new Acl\Assertion\CallbackAssertion(
             function ($aclArg, $roleArg, $resourceArg, $privilegeArg) use ($that, $acl) {
                 $that->assertSame($acl, $aclArg);
-                $that->assertInstanceOf('Zend\Permissions\Acl\Role\RoleInterface', $roleArg);
+                $that->assertInstanceOf('Laminas\Permissions\Acl\Role\RoleInterface', $roleArg);
                 $that->assertEquals('guest', $roleArg->getRoleId());
-                $that->assertInstanceOf('Zend\Permissions\Acl\Resource\ResourceInterface', $resourceArg);
+                $that->assertInstanceOf('Laminas\Permissions\Acl\Resource\ResourceInterface', $resourceArg);
                 $that->assertEquals('area1', $resourceArg->getResourceId());
                 $that->assertEquals('somePrivilege', $privilegeArg);
                 return false;

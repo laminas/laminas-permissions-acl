@@ -9,23 +9,20 @@
 namespace LaminasTest\Permissions\Acl\TestAsset;
 
 use Laminas\Permissions\Acl;
+use Laminas\Permissions\Acl\Assertion\AssertionInterface;
 
-class MockAssertion implements Acl\Assertion\AssertionInterface
+class AssertionLaminas7973 implements AssertionInterface
 {
-    protected $returnValue;
-
-    public function __construct($returnValue)
-    {
-        $this->returnValue = (bool) $returnValue;
-    }
-
     public function assert(
         Acl\Acl $acl,
         Acl\Role\RoleInterface $role = null,
         Acl\Resource\ResourceInterface $resource = null,
         $privilege = null
     ) {
+        if ($privilege != 'privilege') {
+            return false;
+        }
 
-        return $this->returnValue;
+        return true;
     }
 }
