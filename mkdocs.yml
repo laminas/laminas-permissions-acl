@@ -11,3 +11,6 @@ nav:
 site_name: laminas-permissions-acl
 site_description: 'Create, manage, and query access control lists.'
 repo_url: 'https://github.com/laminas/laminas-permissions-acl'
+extra:
+    project: Components
+    project_url: 'https://docs.laminas.dev'
