@@ -6,10 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Create, manage, and query access control lists.">  
-    <link rel="canonical" href="https://docs.laminas.dev/ownership/">
     <link rel="shortcut icon" href="/img/trademark-laminas-foundation-rgb.svg">
 
-    <title>Ownership Assertions - laminas-permissions-acl - Laminas Docs</title>
+    <title>laminas-permissions-acl - Laminas Docs</title>
 
     <link rel="stylesheet" href="/css/styles.css">
 </head>
@@ -59,7 +58,7 @@
                     
     <div class="subnavigation hidden-print">
         <h4 class="subnavigation__title">
-            <a href="..">laminas-permissions-acl</a>
+            <a href="../.">laminas-permissions-acl</a>
         </h4>
 
         <h5 class="subnavigation__subtitle">Table of Contents</h5>
@@ -106,8 +105,8 @@
                                 <ul class="subnavigation__list">
                                     
                                         
-    <li class="subnavigation__list-item subnavigation__list-item--active">
-        <a href="./" class="subnavigation__link">Ownership Assertions</a>
+    <li class="subnavigation__list-item ">
+        <a href="../ownership/" class="subnavigation__link">Ownership Assertions</a>
     </li>
 
                                     
@@ -188,201 +187,21 @@
         <div class="row">
             <div class="col-md-2 col-sm-12">
                 
-    
-
-    
-    
-
             </div>
             <div class="col-md-7 col-sm-12 content" role="main" data-spy="scroll" data-target=".toc">
                 
-                    <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        
-            <li class="breadcrumb-item"><a href="">Overview</a></li>
 
-            
-                <li class="breadcrumb-item"><a href="..">laminas-permissions-acl</a></li>
-
-                
-                    
-                        
-                        
-                            <li class="breadcrumb-item">Reference</li>
-                        
-                    
-                
-
-                <li class="breadcrumb-item active" aria-current="page">Ownership Assertions</li>
-            
-        
-    </ol>
-</nav>
-
-
-
-
-
-
-    
-    
-        <h2 class="chapter__headline">Reference</h2>
-    
-
-    <h1 id="ownership-assertions">Ownership Assertions</h1>
+<h1 class="content__title">404</h1>
 <blockquote>
-<p>Available since version 2.7.0</p>
+    <h3>Something went wrong!</h3>
+    <p>
+        We're sorry, but the page you are looking for does not exist.
+    </p>
 </blockquote>
-<p>When setting up permissions for an application, site owners common will want to
-allow roles to manipulate resources owned by the user with that role.  For
-example, a blog author should have permission to <em>write</em> new posts, and also to
-<em>modify</em> his or her <strong>own</strong> posts, but <strong>not</strong> posts of other authors.</p>
-<p>To accomodate this use case, we provide two interfaces:</p>
-<ul>
-<li>
-<p><strong><code>Laminas\Acl\ProprietaryInterface</code></strong> is applicable to <em>resources</em> and <em>roles</em>.
-  It provides information about the <em>owner</em> of an object. Objects implementing
-  this interface are used in conjunction with the <code>OwnershipAssertion</code>.</p>
-</li>
-<li>
-<p><strong><code>Laminas\Acl\Assertion\OwnershipAssertion</code></strong> ensures that a resource is owned
-  by a specific role by comparing it to owners provided by
-  <code>ProprietaryInterface</code> implementations.</p>
-</li>
-</ul>
-<h3>Example</h3>
-<p>Consider the following entities:</p>
-<pre class=codehilite><code class=language-php>namespace MyApp\Entity;
 
-use Laminas\Permissions\Acl\ProprietaryInterface;
-use Laminas\Permissions\Acl\Resource\ResourceInterface;
-use Laminas\Permissions\Acl\Role\RoleInterface;
-
-class User implements RoleInterface, ProprietaryInterface
-{
-    protected $id;
-
-    protected $role = 'guest';
-
-    public function __construct($id, $role)
-    {
-        $this-&gt;id = $id;
-        $this-&gt;role = $role;
-    }
-
-    public function getRoleId()
-    {
-        return $this-&gt;role;
-    }
-
-    public function getOwnerId()
-    {
-        return $this-&gt;id;
-    }
-}
-
-class BlogPost implements ResourceInterface, ProprietaryInterface
-{
-    public $author = null;
-
-    public function getResourceId()
-    {
-        return 'blogPost';
-    }
-
-    public function getOwnerId()
-    {
-        if ($this-&gt;author === null) {
-            return null;
-        }
-
-        return $this-&gt;author-&gt;getOwnerId();
-    }
-}</code></pre>
-<p>The <code>User</code> marks itself as an <em>owner</em> by implementing <code>ProprietaryInterface</code>;
-its <code>getOwnerId()</code> method will return the user identifier provided during
-instantiation.</p>
-<p>A <code>BlogPost</code> marks itself as a resource and an <em>owner</em> by also implementing
-<code>ProprietaryInterface</code>; in its case, it returns the author identifier, if
-present, but <code>null</code> otherwise.</p>
-<p>Now let's wire these up into an ACL:</p>
-<pre class=codehilite><code class=language-php>namespace MyApp;
-
-use MyApp\Entity;
-use Laminas\Permissions\Acl\Acl;
-use Laminas\Permissions\Acl\Assertion\OwnershipAssertion;
-
-$acl = new Acl();
-$acl-&gt;addRole('guest');
-$acl-&gt;addRole('member', 'guest');
-$acl-&gt;addRole('author', 'member');
-$acl-&gt;addRole('admin');
-
-$acl-&gt;addResource('blogPost');
-$acl-&gt;addResource('comment');
-
-$acl-&gt;allow('guest', 'blogPost', 'view');
-$acl-&gt;allow('guest', 'comment', array('view', 'submit'));
-$acl-&gt;allow('author', 'blogPost', 'write');
-$acl-&gt;allow('author', 'blogPost', 'edit', new OwnershipAssertion());
-$acl-&gt;allow('admin');
-
-$author1 = new User(1, 'author');
-$author2 = new User(2, 'author');
-
-$blogPost = new BlogPost();
-$blogPost-&gt;author = $author1;</code></pre>
-<p>The takeaways from the above should be:</p>
-<ul>
-<li>An <code>author</code> can <em>write</em> blog posts, and <em>edit</em> posts it owns.</li>
-<li><code>$author1</code> and <code>$author2</code> are both authors.</li>
-<li><code>$author1</code> is the author of <code>$blogPost</code>.</li>
-</ul>
-<p>Knowing these facts, we can expect the following assertion results:</p>
-<pre class=codehilite><code class=language-php>$acl-&gt;isAllowed($author1, 'blogPost', 'write'); // true
-$acl-&gt;isAllowed($author1, $blogPost, 'edit');   // true
-$acl-&gt;isAllowed($author2, 'blogPost', 'write'); // true
-$acl-&gt;isAllowed($author2, $blogPost, 'edit');   // false</code></pre>
+<a href="../." class="btn btn-default" role="button">Go to homepage</a>
 
 
-
-
-    <nav>
-    <ul class="page-nav hidden-print">
-
-        
-        <li class="page-nav__item">
-            
-                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../refining/">
-                    <i class="fa fa-chevron-left"></i> Previous
-                </a>
-            
-        </li>
-
-        
-        <li class="page-nav__item">
-            
-                <a rel="next" class="page-nav__link page-nav__link--next" href="../expression/">
-                    Next <i class="fa fa-chevron-right"></i>
-                </a>
-            
-        </li>
-    </ul>
-</nav>
-
-
-
-
-    <div class="help-wanted">
-        <p>
-            Found a mistake or want to contribute to the documentation?
-            <a href="https://github.com/laminas/laminas-permissions-acl/edit/master/docs/book/ownership.md" target="_blank" class="help-wanted__link">
-                Edit this page on GitHub!
-            </a>
-        </p>
-    </div>
-
-                
             </div>
             <div class="col-md-3 col-sm-12 sidebar">
                 
@@ -397,7 +216,7 @@ $acl-&gt;isAllowed($author2, $blogPost, 'edit');   // false</code></pre>
                     
     <div class="subnavigation hidden-print">
         <h4 class="subnavigation__title">
-            <a href="..">laminas-permissions-acl</a>
+            <a href="../.">laminas-permissions-acl</a>
         </h4>
 
         <h5 class="subnavigation__subtitle">Table of Contents</h5>
@@ -444,8 +263,8 @@ $acl-&gt;isAllowed($author2, $blogPost, 'edit');   // false</code></pre>
                                 <ul class="subnavigation__list">
                                     
                                         
-    <li class="subnavigation__list-item subnavigation__list-item--active">
-        <a href="./" class="subnavigation__link">Ownership Assertions</a>
+    <li class="subnavigation__list-item ">
+        <a href="../ownership/" class="subnavigation__link">Ownership Assertions</a>
     </li>
 
                                     

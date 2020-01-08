@@ -20,7 +20,7 @@
     <div class="container">
         
         <a class="logo-link navbar-brand offset-md-2" href="https://getlaminas.org/" data-tooltip data-placement="bottom" title="Go to the Laminas homepage">
-            <img src="../img/laminas-foundation-white.svg" height="28" alt="Lamnias">
+            <img src="../img/laminas-foundation-white.svg" height="28" alt="Laminas">
         </a>
         <a class="navbar-title" href="https://docs.laminas.dev/" data-tooltip data-placement="bottom" title="Go to the Laminas Documentation">
             Documentation
@@ -36,13 +36,17 @@
             
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="https://getlaminas.org/about" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://getlaminas.org/blog" class="nav-link">Blog</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://docs.laminas.dev" class="nav-link">All Docs</a>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                            All Docs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="https://docs.laminas.dev/components">Components</a>
+                            <a class="dropdown-item" href="https://docs.mezzio.dev/">Mezzio</a>
+                            <a class="dropdown-item" href="https://api-tools.getlaminas.org/docs">API Tools</a>
+                            <a class="dropdown-item" href="https://docs.laminas.dev/mvc">MVC</a>
+                        </div>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a href="https://getlaminas.org/participate" class="nav-link">Community</a>
@@ -298,19 +302,18 @@ value.</p>
   to WordCase when creating the method name to test.</p>
 <h2 id="operators">Operators</h2>
 <p><code>ExpressionAssertion</code> supports the following operators:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>const OPERATOR_EQ     = &#39;=&#39;;</span>
-<span class=x>const OPERATOR_NEQ    = &#39;!=&#39;;</span>
-<span class=x>const OPERATOR_LT     = &#39;&lt;&#39;;</span>
-<span class=x>const OPERATOR_LTE    = &#39;&lt;=&#39;;</span>
-<span class=x>const OPERATOR_GT     = &#39;&gt;&#39;;</span>
-<span class=x>const OPERATOR_GTE    = &#39;&gt;=&#39;;</span>
-<span class=x>const OPERATOR_IN     = &#39;in&#39;;</span>
-<span class=x>const OPERATOR_NIN    = &#39;!in&#39;;</span>
-<span class=x>const OPERATOR_REGEX  = &#39;regex&#39;;</span>
-<span class=x>const OPERATOR_NREGEX = &#39;!regex&#39;;</span>
-<span class=x>const OPERATOR_SAME   = &#39;===&#39;;</span>
-<span class=x>const OPERATOR_NSAME  = &#39;!==&#39;;</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>const OPERATOR_EQ     = '=';
+const OPERATOR_NEQ    = '!=';
+const OPERATOR_LT     = '&lt;';
+const OPERATOR_LTE    = '&lt;=';
+const OPERATOR_GT     = '&gt;';
+const OPERATOR_GTE    = '&gt;=';
+const OPERATOR_IN     = 'in';
+const OPERATOR_NIN    = '!in';
+const OPERATOR_REGEX  = 'regex';
+const OPERATOR_NREGEX = '!regex';
+const OPERATOR_SAME   = '===';
+const OPERATOR_NSAME  = '!==';</code></pre>
 <p>In most cases, these will operate using the operators as listed above, with the
 following exceptions:</p>
 <ul>
@@ -336,99 +339,97 @@ storing expressions in configuration or a database, the latter is useful, as you
 can pass a row of data at a time to the method to get expression instances.</p>
 <h2 id="examples">Examples</h2>
 <p>First, we'll define both a role and a resource:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>namespace Blog\Entity;</span>
+<pre class=codehilite><code class=language-php>namespace Blog\Entity;
 
-<span class=x>use Laminas\Permissions\Acl\Resource\ResourceInterface;</span>
-<span class=x>use Laminas\Permissions\Acl\Role\RoleInterface;</span>
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Role\RoleInterface;
 
-<span class=x>class BlogPost implements ResourceInterface</span>
-<span class=x>{</span>
-<span class=x>    public $title;</span>
+class BlogPost implements ResourceInterface
+{
+    public $title;
 
-<span class=x>    public $shortDescription;</span>
+    public $shortDescription;
 
-<span class=x>    public $content;</span>
+    public $content;
 
-<span class=x>    public $author;</span>
+    public $author;
 
-<span class=x>    public function __construct(array $data = [])</span>
-<span class=x>    {</span>
-<span class=x>        foreach ($data as $property =&gt; $value) {</span>
-<span class=x>            $this-&gt;$property = $value;</span>
-<span class=x>        }</span>
-<span class=x>    }</span>
+    public function __construct(array $data = [])
+    {
+        foreach ($data as $property =&gt; $value) {
+            $this-&gt;$property = $value;
+        }
+    }
 
-<span class=x>    public function getResourceId()</span>
-<span class=x>    {</span>
-<span class=x>        return &#39;blogPost&#39;;</span>
-<span class=x>    }</span>
+    public function getResourceId()
+    {
+        return 'blogPost';
+    }
 
-<span class=x>    public function getShortDescription()</span>
-<span class=x>    {</span>
-<span class=x>        return $this-&gt;shortDescription;</span>
-<span class=x>    }</span>
+    public function getShortDescription()
+    {
+        return $this-&gt;shortDescription;
+    }
 
-<span class=x>    public function getAuthorName()</span>
-<span class=x>    {</span>
-<span class=x>        return $this-&gt;author ? $this-&gt;author-&gt;username : &#39;&#39;;</span>
-<span class=x>    }</span>
-<span class=x>}</span>
+    public function getAuthorName()
+    {
+        return $this-&gt;author ? $this-&gt;author-&gt;username : '';
+    }
+}
 
-<span class=x>class User implements RoleInterface</span>
-<span class=x>{</span>
-<span class=x>    public $username;</span>
+class User implements RoleInterface
+{
+    public $username;
 
-<span class=x>    public $role = &#39;guest&#39;;</span>
+    public $role = 'guest';
 
-<span class=x>    public $age;</span>
+    public $age;
 
-<span class=x>    public function __construct(array $data = [])</span>
-<span class=x>    {</span>
-<span class=x>        foreach ($data as $property =&gt; $value) {</span>
-<span class=x>            $this-&gt;$property = $value;</span>
-<span class=x>        }</span>
-<span class=x>    }</span>
+    public function __construct(array $data = [])
+    {
+        foreach ($data as $property =&gt; $value) {
+            $this-&gt;$property = $value;
+        }
+    }
 
-<span class=x>    public function getRoleId()</span>
-<span class=x>    {</span>
-<span class=x>        return $this-&gt;role;</span>
-<span class=x>    }</span>
+    public function getRoleId()
+    {
+        return $this-&gt;role;
+    }
 
-<span class=x>    public function isAdult()</span>
-<span class=x>    {</span>
-<span class=x>        return $this-&gt;age &gt;= 18;</span>
-<span class=x>    }</span>
-<span class=x>}</span>
-</pre></div></p>
+    public function isAdult()
+    {
+        return $this-&gt;age &gt;= 18;
+    }
+}</code></pre>
 <p>Next, let's define some assertions.</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use Laminas\Permissions\Acl\Assertion\ExpressionAssertion;</span>
+<pre class=codehilite><code class=language-php>use Laminas\Permissions\Acl\Assertion\ExpressionAssertion;
 
-<span class=x>// Username of role must be &quot;test&quot;:</span>
-<span class=x>// Will access $username property on the role instance.</span>
-<span class=x>$isTestUser = ExpressionAssertion::fromProperties(</span>
-<span class=x>  [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY =&gt; &#39;role.username&#39;],</span>
-<span class=x>  &#39;===&#39;,</span>
-<span class=x>  &#39;test&#39;</span>
-<span class=x>);</span>
+// Username of role must be &quot;test&quot;:
+// Will access $username property on the role instance.
+$isTestUser = ExpressionAssertion::fromProperties(
+  [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY =&gt; 'role.username'],
+  '===',
+  'test'
+);
 
 
-<span class=x>// Role must be at least 18 years old:</span>
-<span class=x>// Will execute `isAdult()` on the role instance.</span>
-<span class=x>$isOfLegalAge = ExpressionAssertion::fromProperties(</span>
-<span class=x>  [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY =&gt; &#39;role.adult&#39;],</span>
-<span class=x>  &#39;===&#39;,</span>
-<span class=x>  true</span>
-<span class=x>);</span>
+// Role must be at least 18 years old:
+// Will execute `isAdult()` on the role instance.
+$isOfLegalAge = ExpressionAssertion::fromProperties(
+  [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY =&gt; 'role.adult'],
+  '===',
+  true
+);
 
-<span class=x>// Must have edited text:</span>
-<span class=x>// Will do a regex comparison on the shortDescription of the blog post</span>
-<span class=x>// to ensure we do not have filler text.</span>
-<span class=x>$isEditedDescription = ExpressionAssertion::fromArray([</span>
-<span class=x>  &#39;left&#39;     =&gt; [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY =&gt; &#39;resource.shortDescription&#39;],</span>
-<span class=x>  &#39;operator&#39; =&gt; &#39;!regex&#39;,</span>
-<span class=x>  &#39;right&#39;    =&gt; &#39;/lorem ipsum/i&#39;,</span>
-<span class=x>]);</span>
-</pre></div></p>
+// Must have edited text:
+// Will do a regex comparison on the shortDescription of the blog post
+// to ensure we do not have filler text.
+$isEditedDescription = ExpressionAssertion::fromArray([
+  'left'     =&gt; [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY =&gt; 'resource.shortDescription'],
+  'operator' =&gt; '!regex',
+  'right'    =&gt; '/lorem ipsum/i',
+]);</code></pre>
 
 
 
@@ -576,9 +577,10 @@ can pass a row of data at a time to the method to get expression instances.</p>
             <div class="col-md-7 offset-md-2">
                 <h5>Laminas</h5>
                 <ul>
-                    <li>Laminas Project <a href="https://getlaminas.org/">Components and MVC for Enterprise Applications</a></li>
-                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 Middleware in Minutes</a></li>
-                    <li>Laminas API Tools: <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
+                    <li>Laminas Project <a href="https://getlaminas.org/">The new foundation for the community-supported, open source continuation of Zend Framework</a></li>
+                    <li>Laminas Components and MVC <a href="https://docs.laminas.dev/">Components and MVC for enterprise applications</a></li>
+                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 middleware in minutes</a></li>
+                    <li>Laminas API Tools <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
                 </ul>
             </div>
         </div>
@@ -615,7 +617,7 @@ can pass a row of data at a time to the method to get expression instances.</p>
                 <h4 class="footer__headline">License</h4>
                 <p>
                     Code licensed under <a
-                        href="https://github.com/laminas/laminas-permissions-acl//blob/master/LICENSE.md">BSD 3-Clause</a>.
+                        href="https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md">BSD 3-Clause</a>.
                 </p>
             </div>
 
@@ -624,8 +626,8 @@ can pass a row of data at a time to the method to get expression instances.</p>
                 <h4 class="footer__headline">Copyright</h4>
                 <p>
                     <!--Built with love by the Laminas team with the help of our
-                    <a href="https://github.com/laminas/laminas-permissions-acl//graphs/contributors">contributors</a>.<br>-->
-                    &copy; 2019-2019 by <a href="https://getlaminas.org/">The Laminas Project</a>.
+                    <a href="https://github.com/laminas/laminas-permissions-acl/graphs/contributors">contributors</a>.<br>-->
+                    &copy; 2019-2020 by <a href="https://getlaminas.org/">The Laminas Project</a>.
                 </p>
             </div>
         </div>

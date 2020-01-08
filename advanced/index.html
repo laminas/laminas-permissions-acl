@@ -20,7 +20,7 @@
     <div class="container">
         
         <a class="logo-link navbar-brand offset-md-2" href="https://getlaminas.org/" data-tooltip data-placement="bottom" title="Go to the Laminas homepage">
-            <img src="../img/laminas-foundation-white.svg" height="28" alt="Lamnias">
+            <img src="../img/laminas-foundation-white.svg" height="28" alt="Laminas">
         </a>
         <a class="navbar-title" href="https://docs.laminas.dev/" data-tooltip data-placement="bottom" title="Go to the Laminas Documentation">
             Documentation
@@ -36,13 +36,17 @@
             
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="https://getlaminas.org/about" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://getlaminas.org/blog" class="nav-link">Blog</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://docs.laminas.dev" class="nav-link">All Docs</a>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                            All Docs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="https://docs.laminas.dev/components">Components</a>
+                            <a class="dropdown-item" href="https://docs.mezzio.dev/">Mezzio</a>
+                            <a class="dropdown-item" href="https://api-tools.getlaminas.org/docs">API Tools</a>
+                            <a class="dropdown-item" href="https://docs.laminas.dev/mvc">MVC</a>
+                        </div>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a href="https://getlaminas.org/participate" class="nav-link">Community</a>
@@ -264,36 +268,34 @@ on whatever conditions the developer needs.</p>
 <p><code>Laminas\Permissions\Acl\Acl</code> provides support for conditional rules with
 <code>Laminas\Permissions\Acl\Assertion\AssertionInterface</code>. In order to use the rule assertion interface, a
 developer writes a class that implements the <code>assert()</code> method of the interface:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use Laminas\Permissions\Acl\Acl;</span>
-<span class=x>use Laminas\Permissions\Acl\Assertion\AssertionInterface;</span>
-<span class=x>use Laminas\Permissions\Acl\Role\RoleInterface;</span>
-<span class=x>use Laminas\Permissions\Acl\Resource\ResourceInterface;</span>
+<pre class=codehilite><code class=language-php>use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Assertion\AssertionInterface;
+use Laminas\Permissions\Acl\Role\RoleInterface;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
-<span class=x>class CleanIPAssertion implements AssertionInterface</span>
-<span class=x>{</span>
-<span class=x>    public function assert(</span>
-<span class=x>        Acl $acl,</span>
-<span class=x>        RoleInterface $role = null,</span>
-<span class=x>        ResourceInterface $resource = null,</span>
-<span class=x>        $privilege = null</span>
-<span class=x>    ) {</span>
-<span class=x>        return $this-&gt;_isCleanIP($_SERVER[&#39;REMOTE_ADDR&#39;]);</span>
-<span class=x>    }</span>
+class CleanIPAssertion implements AssertionInterface
+{
+    public function assert(
+        Acl $acl,
+        RoleInterface $role = null,
+        ResourceInterface $resource = null,
+        $privilege = null
+    ) {
+        return $this-&gt;_isCleanIP($_SERVER['REMOTE_ADDR']);
+    }
 
-<span class=x>    protected function _isCleanIP($ip)</span>
-<span class=x>    {</span>
-<span class=x>        // ...</span>
-<span class=x>    }</span>
-<span class=x>}</span>
-</pre></div></p>
+    protected function _isCleanIP($ip)
+    {
+        // ...
+    }
+}</code></pre>
 <p>Once an assertion class is available, the developer must supply an instance of
 the assertion class when assigning conditional rules. A rule that is created
 with an assertion only applies when the assertion method returns <code>TRUE</code>.</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use Laminas\Permissions\Acl\Acl;</span>
+<pre class=codehilite><code class=language-php>use Laminas\Permissions\Acl\Acl;
 
-<span class=x>$acl = new Acl();</span>
-<span class=x>$acl-&gt;allow(null, null, null, new CleanIPAssertion());</span>
-</pre></div></p>
+$acl = new Acl();
+$acl-&gt;allow(null, null, null, new CleanIPAssertion());</code></pre>
 <p>The above code creates a conditional allow rule that allows access to all
 privileges on everything by everyone, except when the requesting IP is
 "blacklisted". If a request comes in from an IP that is not considered "clean",
@@ -450,9 +452,10 @@ conditions where needed.</p>
             <div class="col-md-7 offset-md-2">
                 <h5>Laminas</h5>
                 <ul>
-                    <li>Laminas Project <a href="https://getlaminas.org/">Components and MVC for Enterprise Applications</a></li>
-                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 Middleware in Minutes</a></li>
-                    <li>Laminas API Tools: <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
+                    <li>Laminas Project <a href="https://getlaminas.org/">The new foundation for the community-supported, open source continuation of Zend Framework</a></li>
+                    <li>Laminas Components and MVC <a href="https://docs.laminas.dev/">Components and MVC for enterprise applications</a></li>
+                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 middleware in minutes</a></li>
+                    <li>Laminas API Tools <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
                 </ul>
             </div>
         </div>
@@ -489,7 +492,7 @@ conditions where needed.</p>
                 <h4 class="footer__headline">License</h4>
                 <p>
                     Code licensed under <a
-                        href="https://github.com/laminas/laminas-permissions-acl//blob/master/LICENSE.md">BSD 3-Clause</a>.
+                        href="https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md">BSD 3-Clause</a>.
                 </p>
             </div>
 
@@ -498,8 +501,8 @@ conditions where needed.</p>
                 <h4 class="footer__headline">Copyright</h4>
                 <p>
                     <!--Built with love by the Laminas team with the help of our
-                    <a href="https://github.com/laminas/laminas-permissions-acl//graphs/contributors">contributors</a>.<br>-->
-                    &copy; 2019-2019 by <a href="https://getlaminas.org/">The Laminas Project</a>.
+                    <a href="https://github.com/laminas/laminas-permissions-acl/graphs/contributors">contributors</a>.<br>-->
+                    &copy; 2019-2020 by <a href="https://getlaminas.org/">The Laminas Project</a>.
                 </p>
             </div>
         </div>

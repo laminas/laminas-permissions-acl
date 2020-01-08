@@ -20,7 +20,7 @@
     <div class="container">
         
         <a class="logo-link navbar-brand offset-md-2" href="https://getlaminas.org/" data-tooltip data-placement="bottom" title="Go to the Laminas homepage">
-            <img src="../img/laminas-foundation-white.svg" height="28" alt="Lamnias">
+            <img src="../img/laminas-foundation-white.svg" height="28" alt="Laminas">
         </a>
         <a class="navbar-title" href="https://docs.laminas.dev/" data-tooltip data-placement="bottom" title="Go to the Laminas Documentation">
             Documentation
@@ -36,13 +36,17 @@
             
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="https://getlaminas.org/about" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://getlaminas.org/blog" class="nav-link">Blog</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://docs.laminas.dev" class="nav-link">All Docs</a>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                            All Docs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="https://docs.laminas.dev/components">Components</a>
+                            <a class="dropdown-item" href="https://docs.mezzio.dev/">Mezzio</a>
+                            <a class="dropdown-item" href="https://api-tools.getlaminas.org/docs">API Tools</a>
+                            <a class="dropdown-item" href="https://docs.laminas.dev/mvc">MVC</a>
+                        </div>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a href="https://getlaminas.org/participate" class="nav-link">Community</a>
@@ -248,140 +252,134 @@ to archive any 'announcement' news stories since they only have a lifespan of 1-
 <p>First we revise the role registry to reflect these changes. We have determined that the 'marketing'
 group has the same basic permissions as 'staff', so we define 'marketing' in such a way that it
 inherits permissions from 'staff':</p>
-<p> <div class=codehilite><pre><span></span><span class=x>// The new marketing group inherits permissions from staff</span>
-<span class=x>use Laminas\Permissions\Acl\Acl;</span>
-<span class=x>use Laminas\Permissions\Acl\Role\GenericRole as Role;</span>
-<span class=x>use Laminas\Permissions\Acl\Resource\GenericResource as Resource;</span>
+<pre class=codehilite><code class=language-php>// The new marketing group inherits permissions from staff
+use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Role\GenericRole as Role;
+use Laminas\Permissions\Acl\Resource\GenericResource as Resource;
 
-<span class=x>$acl = new Acl();</span>
+$acl = new Acl();
 
-<span class=x>$acl-&gt;addRole(new Role(&#39;marketing&#39;), &#39;staff&#39;);</span>
-</pre></div></p>
+$acl-&gt;addRole(new Role('marketing'), 'staff');</code></pre>
 <p>Next, note that the above access controls refer to specific resources (e.g., "newsletter", "latest
 news", "announcement news"). Now we add these resources:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>// Create Resources for the rules</span>
+<pre class=codehilite><code class=language-php>// Create Resources for the rules
 
-<span class=x>// newsletter</span>
-<span class=x>$acl-&gt;addResource(new Resource(&#39;newsletter&#39;));</span>
+// newsletter
+$acl-&gt;addResource(new Resource('newsletter'));
 
-<span class=x>// news</span>
-<span class=x>$acl-&gt;addResource(new Resource(&#39;news&#39;));</span>
+// news
+$acl-&gt;addResource(new Resource('news'));
 
-<span class=x>// latest news</span>
-<span class=x>$acl-&gt;addResource(new Resource(&#39;latest&#39;), &#39;news&#39;);</span>
+// latest news
+$acl-&gt;addResource(new Resource('latest'), 'news');
 
-<span class=x>// announcement news</span>
-<span class=x>$acl-&gt;addResource(new Resource(&#39;announcement&#39;), &#39;news&#39;);</span>
-</pre></div></p>
+// announcement news
+$acl-&gt;addResource(new Resource('announcement'), 'news');</code></pre>
 <p>Then it is simply a matter of defining these more specific rules on the target areas of the ACL:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>// Marketing must be able to publish and archive newsletters and the</span>
-<span class=x>// latest news</span>
-<span class=x>$acl-&gt;allow(</span>
-<span class=x>    &#39;marketing&#39;,</span>
-<span class=x>    [&#39;newsletter&#39;, &#39;latest&#39;],</span>
-<span class=x>    [&#39;publish&#39;, &#39;archive&#39;]</span>
-<span class=x>);</span>
+<pre class=codehilite><code class=language-php>// Marketing must be able to publish and archive newsletters and the
+// latest news
+$acl-&gt;allow(
+    'marketing',
+    ['newsletter', 'latest'],
+    ['publish', 'archive']
+);
 
-<span class=x>// Staff (and marketing, by inheritance), are denied permission to</span>
-<span class=x>// revise the latest news</span>
-<span class=x>$acl-&gt;deny(&#39;staff&#39;, &#39;latest&#39;, &#39;revise&#39;);</span>
+// Staff (and marketing, by inheritance), are denied permission to
+// revise the latest news
+$acl-&gt;deny('staff', 'latest', 'revise');
 
-<span class=x>// Everyone (including administrators) are denied permission to</span>
-<span class=x>// archive news announcements</span>
-<span class=x>$acl-&gt;deny(null, &#39;announcement&#39;, &#39;archive&#39;);</span>
-</pre></div></p>
+// Everyone (including administrators) are denied permission to
+// archive news announcements
+$acl-&gt;deny(null, 'announcement', 'archive');</code></pre>
 <p>We can now query the ACL with respect to the latest changes:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>echo $acl-&gt;isAllowed(&#39;staff&#39;, &#39;newsletter&#39;, &#39;publish&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// denied</span>
+<pre class=codehilite><code class=language-php>echo $acl-&gt;isAllowed('staff', 'newsletter', 'publish')
+    ? 'allowed'
+    : 'denied';
+// denied
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;marketing&#39;, &#39;newsletter&#39;, &#39;publish&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// allowed</span>
+echo $acl-&gt;isAllowed('marketing', 'newsletter', 'publish')
+    ? 'allowed'
+    : 'denied';
+// allowed
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;staff&#39;, &#39;latest&#39;, &#39;publish&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// denied</span>
+echo $acl-&gt;isAllowed('staff', 'latest', 'publish')
+    ? 'allowed'
+    : 'denied';
+// denied
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;marketing&#39;, &#39;latest&#39;, &#39;publish&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// allowed</span>
+echo $acl-&gt;isAllowed('marketing', 'latest', 'publish')
+    ? 'allowed'
+    : 'denied';
+// allowed
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;marketing&#39;, &#39;latest&#39;, &#39;archive&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// allowed</span>
+echo $acl-&gt;isAllowed('marketing', 'latest', 'archive')
+    ? 'allowed'
+    : 'denied';
+// allowed
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;marketing&#39;, &#39;latest&#39;, &#39;revise&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// denied</span>
+echo $acl-&gt;isAllowed('marketing', 'latest', 'revise')
+    ? 'allowed'
+    : 'denied';
+// denied
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;editor&#39;, &#39;announcement&#39;, &#39;archive&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// denied</span>
+echo $acl-&gt;isAllowed('editor', 'announcement', 'archive')
+    ? 'allowed'
+    : 'denied';
+// denied
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;administrator&#39;, &#39;announcement&#39;, &#39;archive&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// denied</span>
-</pre></div></p>
+echo $acl-&gt;isAllowed('administrator', 'announcement', 'archive')
+    ? 'allowed'
+    : 'denied';
+// denied</code></pre>
 <h2 id="removing-access-controls">Removing Access Controls</h2>
 <p>To remove one or more access rules from the ACL, simply use the available <code>removeAllow()</code> or
 <code>removeDeny()</code> methods. As with <code>allow()</code> and <code>deny()</code>, you may provide a <code>NULL</code> value to indicate
 application to all roles, resources, and/or privileges:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>// Remove the denial of revising latest news to staff (and marketing,</span>
-<span class=x>// by inheritance)</span>
-<span class=x>$acl-&gt;removeDeny(&#39;staff&#39;, &#39;latest&#39;, &#39;revise&#39;);</span>
+<pre class=codehilite><code class=language-php>// Remove the denial of revising latest news to staff (and marketing,
+// by inheritance)
+$acl-&gt;removeDeny('staff', 'latest', 'revise');
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;marketing&#39;, &#39;latest&#39;, &#39;revise&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// allowed</span>
+echo $acl-&gt;isAllowed('marketing', 'latest', 'revise')
+    ? 'allowed'
+    : 'denied';
+// allowed
 
-<span class=x>// Remove the allowance of publishing and archiving newsletters to</span>
-<span class=x>// marketing</span>
-<span class=x>$acl-&gt;removeAllow(</span>
-<span class=x>    &#39;marketing&#39;,</span>
-<span class=x>    &#39;newsletter&#39;,</span>
-<span class=x>    [&#39;publish&#39;, &#39;archive&#39;]</span>
-<span class=x>);</span>
+// Remove the allowance of publishing and archiving newsletters to
+// marketing
+$acl-&gt;removeAllow(
+    'marketing',
+    'newsletter',
+    ['publish', 'archive']
+);
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;marketing&#39;, &#39;newsletter&#39;, &#39;publish&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// denied</span>
+echo $acl-&gt;isAllowed('marketing', 'newsletter', 'publish')
+    ? 'allowed'
+    : 'denied';
+// denied
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;marketing&#39;, &#39;newsletter&#39;, &#39;archive&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// denied</span>
-</pre></div></p>
+echo $acl-&gt;isAllowed('marketing', 'newsletter', 'archive')
+    ? 'allowed'
+    : 'denied';
+// denied</code></pre>
 <p>Privileges may be modified incrementally as indicated above, but a <code>NULL</code> value for the privileges
 overrides such incremental changes:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>// Allow marketing all permissions upon the latest news</span>
-<span class=x>$acl-&gt;allow(&#39;marketing&#39;, &#39;latest&#39;);</span>
+<pre class=codehilite><code class=language-php>// Allow marketing all permissions upon the latest news
+$acl-&gt;allow('marketing', 'latest');
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;marketing&#39;, &#39;latest&#39;, &#39;publish&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// allowed</span>
+echo $acl-&gt;isAllowed('marketing', 'latest', 'publish')
+    ? 'allowed'
+    : 'denied';
+// allowed
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;marketing&#39;, &#39;latest&#39;, &#39;archive&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// allowed</span>
+echo $acl-&gt;isAllowed('marketing', 'latest', 'archive')
+    ? 'allowed'
+    : 'denied';
+// allowed
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;marketing&#39;, &#39;latest&#39;, &#39;anything&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// allowed</span>
-</pre></div></p>
+echo $acl-&gt;isAllowed('marketing', 'latest', 'anything')
+    ? 'allowed'
+    : 'denied';
+// allowed</code></pre>
 
 
 
@@ -529,9 +527,10 @@ overrides such incremental changes:</p>
             <div class="col-md-7 offset-md-2">
                 <h5>Laminas</h5>
                 <ul>
-                    <li>Laminas Project <a href="https://getlaminas.org/">Components and MVC for Enterprise Applications</a></li>
-                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 Middleware in Minutes</a></li>
-                    <li>Laminas API Tools: <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
+                    <li>Laminas Project <a href="https://getlaminas.org/">The new foundation for the community-supported, open source continuation of Zend Framework</a></li>
+                    <li>Laminas Components and MVC <a href="https://docs.laminas.dev/">Components and MVC for enterprise applications</a></li>
+                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 middleware in minutes</a></li>
+                    <li>Laminas API Tools <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
                 </ul>
             </div>
         </div>
@@ -568,7 +567,7 @@ overrides such incremental changes:</p>
                 <h4 class="footer__headline">License</h4>
                 <p>
                     Code licensed under <a
-                        href="https://github.com/laminas/laminas-permissions-acl//blob/master/LICENSE.md">BSD 3-Clause</a>.
+                        href="https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md">BSD 3-Clause</a>.
                 </p>
             </div>
 
@@ -577,8 +576,8 @@ overrides such incremental changes:</p>
                 <h4 class="footer__headline">Copyright</h4>
                 <p>
                     <!--Built with love by the Laminas team with the help of our
-                    <a href="https://github.com/laminas/laminas-permissions-acl//graphs/contributors">contributors</a>.<br>-->
-                    &copy; 2019-2019 by <a href="https://getlaminas.org/">The Laminas Project</a>.
+                    <a href="https://github.com/laminas/laminas-permissions-acl/graphs/contributors">contributors</a>.<br>-->
+                    &copy; 2019-2020 by <a href="https://getlaminas.org/">The Laminas Project</a>.
                 </p>
             </div>
         </div>

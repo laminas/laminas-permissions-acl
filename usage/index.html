@@ -20,7 +20,7 @@
     <div class="container">
         
         <a class="logo-link navbar-brand offset-md-2" href="https://getlaminas.org/" data-tooltip data-placement="bottom" title="Go to the Laminas homepage">
-            <img src="../img/laminas-foundation-white.svg" height="28" alt="Lamnias">
+            <img src="../img/laminas-foundation-white.svg" height="28" alt="Laminas">
         </a>
         <a class="navbar-title" href="https://docs.laminas.dev/" data-tooltip data-placement="bottom" title="Go to the Laminas Documentation">
             Documentation
@@ -36,13 +36,17 @@
             
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="https://getlaminas.org/about" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://getlaminas.org/blog" class="nav-link">Blog</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://docs.laminas.dev" class="nav-link">All Docs</a>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                            All Docs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="https://docs.laminas.dev/components">Components</a>
+                            <a class="dropdown-item" href="https://docs.mezzio.dev/">Mezzio</a>
+                            <a class="dropdown-item" href="https://api-tools.getlaminas.org/docs">API Tools</a>
+                            <a class="dropdown-item" href="https://docs.laminas.dev/mvc">MVC</a>
+                        </div>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a href="https://getlaminas.org/participate" class="nav-link">Community</a>
@@ -301,26 +305,25 @@ other roles. The order in which these roles appear in the <code>$parents</code> 
 necessary, <code>Laminas\Permissions\Acl\Acl</code> searches for access rules defined not only for the queried
 role (herein, "someUser"), but also upon the roles from which the queried role inherits (herein,
 "guest", "member", and "admin"):</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use Laminas\Permissions\Acl\Acl;</span>
-<span class=x>use Laminas\Permissions\Acl\Role\GenericRole as Role;</span>
-<span class=x>use Laminas\Permissions\Acl\Resource\GenericResource as Resource;</span>
+<pre class=codehilite><code class=language-php>use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Role\GenericRole as Role;
+use Laminas\Permissions\Acl\Resource\GenericResource as Resource;
 
-<span class=x>$acl = new Acl();</span>
+$acl = new Acl();
 
-<span class=x>$acl-&gt;addRole(new Role(&#39;guest&#39;))</span>
-<span class=x>    -&gt;addRole(new Role(&#39;member&#39;))</span>
-<span class=x>    -&gt;addRole(new Role(&#39;admin&#39;));</span>
+$acl-&gt;addRole(new Role('guest'))
+    -&gt;addRole(new Role('member'))
+    -&gt;addRole(new Role('admin'));
 
-<span class=x>$parents = array(&#39;guest&#39;, &#39;member&#39;, &#39;admin&#39;);</span>
-<span class=x>$acl-&gt;addRole(new Role(&#39;someUser&#39;), $parents);</span>
+$parents = array('guest', 'member', 'admin');
+$acl-&gt;addRole(new Role('someUser'), $parents);
 
-<span class=x>$acl-&gt;addResource(new Resource(&#39;someResource&#39;));</span>
+$acl-&gt;addResource(new Resource('someResource'));
 
-<span class=x>$acl-&gt;deny(&#39;guest&#39;, &#39;someResource&#39;);</span>
-<span class=x>$acl-&gt;allow(&#39;member&#39;, &#39;someResource&#39;);</span>
+$acl-&gt;deny('guest', 'someResource');
+$acl-&gt;allow('member', 'someResource');
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;someUser&#39;, &#39;someResource&#39;) ? &#39;allowed&#39; : &#39;denied&#39;;</span>
-</pre></div></p>
+echo $acl-&gt;isAllowed('someUser', 'someResource') ? 'allowed' : 'denied';</code></pre>
 <p>Since there is no rule specifically defined for the "someUser" role and "someResource",
 <code>Laminas\Permissions\Acl\Acl</code> must search for rules that may be defined for roles that "someUser"
 inherits. First, the "admin" role is visited, and there is no access rule defined for it. Next, the
@@ -343,9 +346,8 @@ one searched for rules applicable to an authorization query.</p>
 For the purposes of demonstration, however, we will create a basic Content Management System (CMS)
 ACL that maintains several tiers of groups over a wide variety of areas. To create a new ACL
 object, we instantiate the ACL with no parameters:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use Laminas\Permissions\Acl\Acl;</span>
-<span class=x>$acl = new Acl();</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>use Laminas\Permissions\Acl\Acl;
+$acl = new Acl();</code></pre>
 <blockquote>
 <h3>Denied by default</h3>
 <p>Until a developer specifies an "allow" rule, <code>Laminas\Permissions\Acl\Acl</code> denies access to every
@@ -395,30 +397,29 @@ group only. The permissions may be expressed as follows:</p>
 <p>For this example, <code>Laminas\Permissions\Acl\Role\GenericRole</code> is used, but any object that implements
 <code>Laminas\Permissions\Acl\Role\RoleInterface</code> is acceptable. These groups can be added to the role
 registry as follows:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use Laminas\Permissions\Acl\Acl;</span>
-<span class=x>use Laminas\Permissions\Acl\Role\GenericRole as Role;</span>
+<pre class=codehilite><code class=language-php>use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Role\GenericRole as Role;
 
-<span class=x>$acl = new Acl();</span>
+$acl = new Acl();
 
-<span class=x>// Add groups to the Role registry using Laminas\Permissions\Acl\Role\GenericRole</span>
-<span class=x>// Guest does not inherit access controls</span>
-<span class=x>$roleGuest = new Role(&#39;guest&#39;);</span>
-<span class=x>$acl-&gt;addRole($roleGuest);</span>
+// Add groups to the Role registry using Laminas\Permissions\Acl\Role\GenericRole
+// Guest does not inherit access controls
+$roleGuest = new Role('guest');
+$acl-&gt;addRole($roleGuest);
 
-<span class=x>// Staff inherits from guest</span>
-<span class=x>$acl-&gt;addRole(new Role(&#39;staff&#39;), $roleGuest);</span>
+// Staff inherits from guest
+$acl-&gt;addRole(new Role('staff'), $roleGuest);
 
-<span class=x>/*</span>
-<span class=x>Alternatively, the above could be written:</span>
-<span class=x>$acl-&gt;addRole(new Role(&#39;staff&#39;), &#39;guest&#39;);</span>
-<span class=x>*/</span>
+/*
+Alternatively, the above could be written:
+$acl-&gt;addRole(new Role('staff'), 'guest');
+*/
 
-<span class=x>// Editor inherits from staff</span>
-<span class=x>$acl-&gt;addRole(new Role(&#39;editor&#39;), &#39;staff&#39;);</span>
+// Editor inherits from staff
+$acl-&gt;addRole(new Role('editor'), 'staff');
 
-<span class=x>// Administrator does not inherit access controls</span>
-<span class=x>$acl-&gt;addRole(new Role(&#39;administrator&#39;));</span>
-</pre></div></p>
+// Administrator does not inherit access controls
+$acl-&gt;addRole(new Role('administrator'));</code></pre>
 <h2 id="defining-access-controls">Defining Access Controls</h2>
 <p>Now that the ACL contains the relevant roles, rules can be established that define how resources
 may be accessed by roles. You may have noticed that we have not defined any particular resources for
@@ -433,82 +434,80 @@ more specific rule does not apply.</p>
 </blockquote>
 <p>Consequently, we can define a reasonably complex set of rules with a minimum amount of code. To
 apply the base permissions as defined above:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use Laminas\Permissions\Acl\Acl;</span>
-<span class=x>use Laminas\Permissions\Acl\Role\GenericRole as Role;</span>
+<pre class=codehilite><code class=language-php>use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Role\GenericRole as Role;
 
-<span class=x>$acl = new Acl();</span>
+$acl = new Acl();
 
-<span class=x>$roleGuest = new Role(&#39;guest&#39;);</span>
-<span class=x>$acl-&gt;addRole($roleGuest);</span>
-<span class=x>$acl-&gt;addRole(new Role(&#39;staff&#39;), $roleGuest);</span>
-<span class=x>$acl-&gt;addRole(new Role(&#39;editor&#39;), &#39;staff&#39;);</span>
-<span class=x>$acl-&gt;addRole(new Role(&#39;administrator&#39;));</span>
+$roleGuest = new Role('guest');
+$acl-&gt;addRole($roleGuest);
+$acl-&gt;addRole(new Role('staff'), $roleGuest);
+$acl-&gt;addRole(new Role('editor'), 'staff');
+$acl-&gt;addRole(new Role('administrator'));
 
-<span class=x>// Guest may only view content</span>
-<span class=x>$acl-&gt;allow($roleGuest, null, &#39;view&#39;);</span>
+// Guest may only view content
+$acl-&gt;allow($roleGuest, null, 'view');
 
-<span class=x>/*</span>
-<span class=x>Alternatively, the above could be written:</span>
-<span class=x>$acl-&gt;allow(&#39;guest&#39;, null, &#39;view&#39;);</span>
-<span class=x> */</span>
+/*
+Alternatively, the above could be written:
+$acl-&gt;allow('guest', null, 'view');
+ */
 
-<span class=x>// Staff inherits view privilege from guest, but also needs additional</span>
-<span class=x>// privileges</span>
-<span class=x>$acl-&gt;allow(&#39;staff&#39;, null, array(&#39;edit&#39;, &#39;submit&#39;, &#39;revise&#39;));</span>
+// Staff inherits view privilege from guest, but also needs additional
+// privileges
+$acl-&gt;allow('staff', null, array('edit', 'submit', 'revise'));
 
-<span class=x>// Editor inherits view, edit, submit, and revise privileges from</span>
-<span class=x>// staff, but also needs additional privileges</span>
-<span class=x>$acl-&gt;allow(&#39;editor&#39;, null, array(&#39;publish&#39;, &#39;archive&#39;, &#39;delete&#39;));</span>
+// Editor inherits view, edit, submit, and revise privileges from
+// staff, but also needs additional privileges
+$acl-&gt;allow('editor', null, array('publish', 'archive', 'delete'));
 
-<span class=x>// Administrator inherits nothing, but is allowed all privileges</span>
-<span class=x>$acl-&gt;allow(&#39;administrator&#39;);</span>
-</pre></div></p>
+// Administrator inherits nothing, but is allowed all privileges
+$acl-&gt;allow('administrator');</code></pre>
 <p>The <code>NULL</code> values in the above <code>allow()</code> calls are used to indicate that the allow rules apply to
 all resources.</p>
 <h2 id="querying-an-acl">Querying an ACL</h2>
 <p>We now have a flexible ACL that can be used to determine whether requesters have permission to
 perform functions throughout the web application. Performing queries is quite simple using the
 <code>isAllowed()</code> method:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>echo $acl-&gt;isAllowed(&#39;guest&#39;, null, &#39;view&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// allowed</span>
+<pre class=codehilite><code class=language-php>echo $acl-&gt;isAllowed('guest', null, 'view')
+    ? 'allowed'
+    : 'denied';
+// allowed
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;staff&#39;, null, &#39;publish&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// denied</span>
+echo $acl-&gt;isAllowed('staff', null, 'publish')
+    ? 'allowed'
+    : 'denied';
+// denied
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;staff&#39;, null, &#39;revise&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// allowed</span>
+echo $acl-&gt;isAllowed('staff', null, 'revise')
+    ? 'allowed'
+    : 'denied';
+// allowed
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;editor&#39;, null, &#39;view&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// allowed because of inheritance from guest</span>
+echo $acl-&gt;isAllowed('editor', null, 'view')
+    ? 'allowed'
+    : 'denied';
+// allowed because of inheritance from guest
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;editor&#39;, null, &#39;update&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// denied because no allow rule for &#39;update&#39;</span>
+echo $acl-&gt;isAllowed('editor', null, 'update')
+    ? 'allowed'
+    : 'denied';
+// denied because no allow rule for 'update'
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;administrator&#39;, null, &#39;view&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// allowed because administrator is allowed all privileges</span>
+echo $acl-&gt;isAllowed('administrator', null, 'view')
+    ? 'allowed'
+    : 'denied';
+// allowed because administrator is allowed all privileges
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;administrator&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// allowed because administrator is allowed all privileges</span>
+echo $acl-&gt;isAllowed('administrator')
+    ? 'allowed'
+    : 'denied';
+// allowed because administrator is allowed all privileges
 
-<span class=x>echo $acl-&gt;isAllowed(&#39;administrator&#39;, null, &#39;update&#39;)</span>
-<span class=x>    ? &#39;allowed&#39;</span>
-<span class=x>    : &#39;denied&#39;;</span>
-<span class=x>// allowed because administrator is allowed all privileges</span>
-</pre></div></p>
+echo $acl-&gt;isAllowed('administrator', null, 'update')
+    ? 'allowed'
+    : 'denied';
+// allowed because administrator is allowed all privileges</code></pre>
 
 
 
@@ -656,9 +655,10 @@ perform functions throughout the web application. Performing queries is quite si
             <div class="col-md-7 offset-md-2">
                 <h5>Laminas</h5>
                 <ul>
-                    <li>Laminas Project <a href="https://getlaminas.org/">Components and MVC for Enterprise Applications</a></li>
-                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 Middleware in Minutes</a></li>
-                    <li>Laminas API Tools: <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
+                    <li>Laminas Project <a href="https://getlaminas.org/">The new foundation for the community-supported, open source continuation of Zend Framework</a></li>
+                    <li>Laminas Components and MVC <a href="https://docs.laminas.dev/">Components and MVC for enterprise applications</a></li>
+                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 middleware in minutes</a></li>
+                    <li>Laminas API Tools <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
                 </ul>
             </div>
         </div>
@@ -695,7 +695,7 @@ perform functions throughout the web application. Performing queries is quite si
                 <h4 class="footer__headline">License</h4>
                 <p>
                     Code licensed under <a
-                        href="https://github.com/laminas/laminas-permissions-acl//blob/master/LICENSE.md">BSD 3-Clause</a>.
+                        href="https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md">BSD 3-Clause</a>.
                 </p>
             </div>
 
@@ -704,8 +704,8 @@ perform functions throughout the web application. Performing queries is quite si
                 <h4 class="footer__headline">Copyright</h4>
                 <p>
                     <!--Built with love by the Laminas team with the help of our
-                    <a href="https://github.com/laminas/laminas-permissions-acl//graphs/contributors">contributors</a>.<br>-->
-                    &copy; 2019-2019 by <a href="https://getlaminas.org/">The Laminas Project</a>.
+                    <a href="https://github.com/laminas/laminas-permissions-acl/graphs/contributors">contributors</a>.<br>-->
+                    &copy; 2019-2020 by <a href="https://getlaminas.org/">The Laminas Project</a>.
                 </p>
             </div>
         </div>
