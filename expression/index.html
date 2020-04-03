@@ -361,7 +361,7 @@ value.</p>
   to WordCase when creating the method name to test.</p>
 <h2 id="operators">Operators</h2>
 <p><code>ExpressionAssertion</code> supports the following operators:</p>
-<pre class=codehilite><code class=language-php>const OPERATOR_EQ     = '=';
+<pre class="highlight"><code class="language-php">const OPERATOR_EQ     = '=';
 const OPERATOR_NEQ    = '!=';
 const OPERATOR_LT     = '&lt;';
 const OPERATOR_LTE    = '&lt;=';
@@ -373,6 +373,7 @@ const OPERATOR_REGEX  = 'regex';
 const OPERATOR_NREGEX = '!regex';
 const OPERATOR_SAME   = '===';
 const OPERATOR_NSAME  = '!==';</code></pre>
+
 <p>In most cases, these will operate using the operators as listed above, with the
 following exceptions:</p>
 <ul>
@@ -398,7 +399,7 @@ storing expressions in configuration or a database, the latter is useful, as you
 can pass a row of data at a time to the method to get expression instances.</p>
 <h2 id="examples">Examples</h2>
 <p>First, we'll define both a role and a resource:</p>
-<pre class=codehilite><code class=language-php>namespace Blog\Entity;
+<pre class="highlight"><code class="language-php">namespace Blog\Entity;
 
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Laminas\Permissions\Acl\Role\RoleInterface;
@@ -461,10 +462,11 @@ class User implements RoleInterface
         return $this-&gt;age &gt;= 18;
     }
 }</code></pre>
-<p>Next, let's define some assertions.</p>
-<pre class=codehilite><code class=language-php>use Laminas\Permissions\Acl\Assertion\ExpressionAssertion;
 
-// Username of role must be &quot;test&quot;:
+<p>Next, let's define some assertions.</p>
+<pre class="highlight"><code class="language-php">use Laminas\Permissions\Acl\Assertion\ExpressionAssertion;
+
+// Username of role must be "test":
 // Will access $username property on the role instance.
 $isTestUser = ExpressionAssertion::fromProperties(
   [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY =&gt; 'role.username'],

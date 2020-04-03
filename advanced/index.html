@@ -327,7 +327,7 @@ on whatever conditions the developer needs.</p>
 <p><code>Laminas\Permissions\Acl\Acl</code> provides support for conditional rules with
 <code>Laminas\Permissions\Acl\Assertion\AssertionInterface</code>. In order to use the rule assertion interface, a
 developer writes a class that implements the <code>assert()</code> method of the interface:</p>
-<pre class=codehilite><code class=language-php>use Laminas\Permissions\Acl\Acl;
+<pre class="highlight"><code class="language-php">use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\Assertion\AssertionInterface;
 use Laminas\Permissions\Acl\Role\RoleInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
@@ -348,13 +348,15 @@ class CleanIPAssertion implements AssertionInterface
         // ...
     }
 }</code></pre>
+
 <p>Once an assertion class is available, the developer must supply an instance of
 the assertion class when assigning conditional rules. A rule that is created
 with an assertion only applies when the assertion method returns <code>TRUE</code>.</p>
-<pre class=codehilite><code class=language-php>use Laminas\Permissions\Acl\Acl;
+<pre class="highlight"><code class="language-php">use Laminas\Permissions\Acl\Acl;
 
 $acl = new Acl();
 $acl-&gt;allow(null, null, null, new CleanIPAssertion());</code></pre>
+
 <p>The above code creates a conditional allow rule that allows access to all
 privileges on everything by everyone, except when the requesting IP is
 "blacklisted". If a request comes in from an IP that is not considered "clean",

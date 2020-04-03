@@ -364,7 +364,7 @@ other roles. The order in which these roles appear in the <code>$parents</code> 
 necessary, <code>Laminas\Permissions\Acl\Acl</code> searches for access rules defined not only for the queried
 role (herein, "someUser"), but also upon the roles from which the queried role inherits (herein,
 "guest", "member", and "admin"):</p>
-<pre class=codehilite><code class=language-php>use Laminas\Permissions\Acl\Acl;
+<pre class="highlight"><code class="language-php">use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\Role\GenericRole as Role;
 use Laminas\Permissions\Acl\Resource\GenericResource as Resource;
 
@@ -383,6 +383,7 @@ $acl-&gt;deny('guest', 'someResource');
 $acl-&gt;allow('member', 'someResource');
 
 echo $acl-&gt;isAllowed('someUser', 'someResource') ? 'allowed' : 'denied';</code></pre>
+
 <p>Since there is no rule specifically defined for the "someUser" role and "someResource",
 <code>Laminas\Permissions\Acl\Acl</code> must search for rules that may be defined for roles that "someUser"
 inherits. First, the "admin" role is visited, and there is no access rule defined for it. Next, the
@@ -405,8 +406,9 @@ one searched for rules applicable to an authorization query.</p>
 For the purposes of demonstration, however, we will create a basic Content Management System (CMS)
 ACL that maintains several tiers of groups over a wide variety of areas. To create a new ACL
 object, we instantiate the ACL with no parameters:</p>
-<pre class=codehilite><code class=language-php>use Laminas\Permissions\Acl\Acl;
+<pre class="highlight"><code class="language-php">use Laminas\Permissions\Acl\Acl;
 $acl = new Acl();</code></pre>
+
 <blockquote>
 <h3>Denied by default</h3>
 <p>Until a developer specifies an "allow" rule, <code>Laminas\Permissions\Acl\Acl</code> denies access to every
@@ -456,7 +458,7 @@ group only. The permissions may be expressed as follows:</p>
 <p>For this example, <code>Laminas\Permissions\Acl\Role\GenericRole</code> is used, but any object that implements
 <code>Laminas\Permissions\Acl\Role\RoleInterface</code> is acceptable. These groups can be added to the role
 registry as follows:</p>
-<pre class=codehilite><code class=language-php>use Laminas\Permissions\Acl\Acl;
+<pre class="highlight"><code class="language-php">use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\Role\GenericRole as Role;
 
 $acl = new Acl();
@@ -479,6 +481,7 @@ $acl-&gt;addRole(new Role('editor'), 'staff');
 
 // Administrator does not inherit access controls
 $acl-&gt;addRole(new Role('administrator'));</code></pre>
+
 <h2 id="defining-access-controls">Defining Access Controls</h2>
 <p>Now that the ACL contains the relevant roles, rules can be established that define how resources
 may be accessed by roles. You may have noticed that we have not defined any particular resources for
@@ -493,7 +496,7 @@ more specific rule does not apply.</p>
 </blockquote>
 <p>Consequently, we can define a reasonably complex set of rules with a minimum amount of code. To
 apply the base permissions as defined above:</p>
-<pre class=codehilite><code class=language-php>use Laminas\Permissions\Acl\Acl;
+<pre class="highlight"><code class="language-php">use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\Role\GenericRole as Role;
 
 $acl = new Acl();
@@ -522,13 +525,14 @@ $acl-&gt;allow('editor', null, array('publish', 'archive', 'delete'));
 
 // Administrator inherits nothing, but is allowed all privileges
 $acl-&gt;allow('administrator');</code></pre>
+
 <p>The <code>NULL</code> values in the above <code>allow()</code> calls are used to indicate that the allow rules apply to
 all resources.</p>
 <h2 id="querying-an-acl">Querying an ACL</h2>
 <p>We now have a flexible ACL that can be used to determine whether requesters have permission to
 perform functions throughout the web application. Performing queries is quite simple using the
 <code>isAllowed()</code> method:</p>
-<pre class=codehilite><code class=language-php>echo $acl-&gt;isAllowed('guest', null, 'view')
+<pre class="highlight"><code class="language-php">echo $acl-&gt;isAllowed('guest', null, 'view')
     ? 'allowed'
     : 'denied';
 // allowed

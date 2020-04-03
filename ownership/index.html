@@ -311,7 +311,7 @@ example, a blog author should have permission to <em>write</em> new posts, and a
 </ul>
 <h3>Example</h3>
 <p>Consider the following entities:</p>
-<pre class=codehilite><code class=language-php>namespace MyApp\Entity;
+<pre class="highlight"><code class="language-php">namespace MyApp\Entity;
 
 use Laminas\Permissions\Acl\ProprietaryInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
@@ -358,6 +358,7 @@ class BlogPost implements ResourceInterface, ProprietaryInterface
         return $this-&gt;author-&gt;getOwnerId();
     }
 }</code></pre>
+
 <p>The <code>User</code> marks itself as an <em>owner</em> by implementing <code>ProprietaryInterface</code>;
 its <code>getOwnerId()</code> method will return the user identifier provided during
 instantiation.</p>
@@ -365,7 +366,7 @@ instantiation.</p>
 <code>ProprietaryInterface</code>; in its case, it returns the author identifier, if
 present, but <code>null</code> otherwise.</p>
 <p>Now let's wire these up into an ACL:</p>
-<pre class=codehilite><code class=language-php>namespace MyApp;
+<pre class="highlight"><code class="language-php">namespace MyApp;
 
 use MyApp\Entity;
 use Laminas\Permissions\Acl\Acl;
@@ -391,6 +392,7 @@ $author2 = new User(2, 'author');
 
 $blogPost = new BlogPost();
 $blogPost-&gt;author = $author1;</code></pre>
+
 <p>The takeaways from the above should be:</p>
 <ul>
 <li>An <code>author</code> can <em>write</em> blog posts, and <em>edit</em> posts it owns.</li>
@@ -398,7 +400,7 @@ $blogPost-&gt;author = $author1;</code></pre>
 <li><code>$author1</code> is the author of <code>$blogPost</code>.</li>
 </ul>
 <p>Knowing these facts, we can expect the following assertion results:</p>
-<pre class=codehilite><code class=language-php>$acl-&gt;isAllowed($author1, 'blogPost', 'write'); // true
+<pre class="highlight"><code class="language-php">$acl-&gt;isAllowed($author1, 'blogPost', 'write'); // true
 $acl-&gt;isAllowed($author1, $blogPost, 'edit');   // true
 $acl-&gt;isAllowed($author2, 'blogPost', 'write'); // true
 $acl-&gt;isAllowed($author2, $blogPost, 'edit');   // false</code></pre>
