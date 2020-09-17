@@ -105,9 +105,9 @@ before the "guest" role, the example code would print "allowed".
 
 ### LIFO order for Role parents
 
-When specifying multiple parents for a role the last parent listed is the first
-one searched for rules applicable to an authorization query. This Last-In-First-Out (LIFO) strategy is represented with this example.
-Here the `first` role inherits from `second`, `third`, and `last` and is the most permissioned role:
+When specifying multiple parents for a role the last parent listed is the first one searched for rules applicable to an authorization query.
+This Last-In-First-Out (LIFO) strategy is represented with this example.
+Here the `first` role inherits from `second`, `third`, and `last`, and is the most permissioned role:
 
 ```php
 use Zend\Permissions\Acl\Acl;
@@ -131,13 +131,16 @@ $acl->allow('third', 'someResource');
 echo $acl->isAllowed('first', 'someResource') ? 'allowed' : 'denied';
 ```
 
-Less-permissioned roles will be first in the parents array. For instance, where a`guest`
-role is unauthenticated, a `user` role is authenticated, and an `admin` role has the highest
-permissions. As soon as any ACL query returns false evaluation of `isAllowed` is terminated and false is returned.  For this reason your least permissioned roles come first in the parents array. Adding the `admin` role is as follows:
+Less-permissioned roles will be first in the parents array.
+For instance, where a`guest` role is unauthenticated, a `user` role is authenticated, and an `admin` role has the highest permissions.
+As soon as any ACL query returns false evaluation of `isAllowed` is terminated and false is returned.
+For this reason your least permissioned roles come first in the parents array.
+Adding the `admin` role is as follows:
 
 ```php
 $acl->addRole(new Role('admin'), ['guest', 'user']);
 ```
+
 ## Creating the Access Control List
 
 An Access Control List (ACL) can represent any set of physical or virtual objects that you wish.
