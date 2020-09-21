@@ -999,44 +999,36 @@ class Acl implements AclInterface
         Role\RoleInterface $role = null,
         $privilege = null
     ) {
-        // get the rules for the $resource and $role
+        // Pull all rules for the specified $resource and $role
         if (null === ($rules = $this->getRules($resource, $role))) {
-            return;
+            // No rules discovered
+            return null;
         }
 
-        // follow $privilege
-        if (null === $privilege) {
-            if (isset($rules['allPrivileges'])) {
-                $rule = $rules['allPrivileges'];
-            } else {
-                return;
-            }
-        } elseif (! isset($rules['byPrivilegeId'][$privilege])) {
-            return;
-        } else {
+        // Follow $privilege
+        $rule = null;
+        if (null === $privilege && isset($rules['allPrivileges'])) {
+            // No privilege specified, but allPrivileges rule exists
+            $rule = $rules['allPrivileges'];
+        }
+
+        if (null !== $privilege && isset($rules['byPrivilegeId'][$privilege])) {
+            // Privilege specified, and found in ruleset
             $rule = $rules['byPrivilegeId'][$privilege];
         }
 
-        // check assertion first
+        if (null === $rule) {
+            // No rule identified
+            return null;
+        }
+
+        // Was a custom assertion supplied? Use it to retrieve the rule type.
         if ($rule['assert']) {
-            $assertion = $rule['assert'];
-            $assertionValue = $assertion->assert(
-                $this,
-                ($this->isAllowedRole instanceof Role\RoleInterface) ? $this->isAllowedRole : $role,
-                ($this->isAllowedResource instanceof Resource\ResourceInterface) ? $this->isAllowedResource : $resource,
-                $this->isAllowedPrivilege
-            );
+            return $this->getRuleTypeFromAssertion($rule['assert'], $rule['type'], $role, $resource);
         }
 
-        if (null === $rule['assert'] || $assertionValue) {
-            return $rule['type'];
-        } elseif (null !== $resource || null !== $role || null !== $privilege) {
-            return;
-        } elseif (self::TYPE_ALLOW === $rule['type']) {
-            return self::TYPE_DENY;
-        }
-
-        return self::TYPE_ALLOW;
+        // Return the type supplied with the rule.
+        return $rule['type'];
     }
 
     /**
@@ -1111,5 +1103,32 @@ class Acl implements AclInterface
     public function getResources()
     {
         return array_keys($this->resources);
+    }
+
+    /**
+     * Run the assertion to determine what rule type is selected
+     *
+     * Runs the assertion. When the assertion returns true, return the rule type
+     * as defined; otherwise, return its inversion.
+     *
+     * @param string $ruleType
+     * @return string
+     */
+    private function getRuleTypeFromAssertion(
+        Assertion\AssertionInterface $assertion,
+        $ruleType,
+        Role\RoleInterface $role = null,
+        Resource\ResourceInterface $resource = null
+    ) {
+        if ($assertion->assert(
+            $this,
+            $this->isAllowedRole instanceof Role\RoleInterface ? $this->isAllowedRole : $role,
+            $this->isAllowedResource instanceof Resource\ResourceInterface ? $this->isAllowedResource : $resource,
+            $this->isAllowedPrivilege
+        )) {
+            return $ruleType;
+        }
+
+        return $ruleType === self::TYPE_ALLOW ? self::TYPE_DENY : self::TYPE_ALLOW;
     }
 }
