@@ -24,6 +24,22 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing.
 
+## 2.7.2 - 2020-09-22
+
+### Release Notes for [2.7.2](https://github.com/laminas/laminas-permissions-acl/milestone/1)
+
+- Total issues resolved: **2**
+- Total pull requests resolved: **2**
+- Total contributors: **1**
+
+#### Bug
+
+ - [8: Use provided assertion implementation to determine rule type](https://github.com/laminas/laminas-permissions-acl/pull/8) thanks to @weierophinney
+
+#### Documentation
+
+ - [7: Add LIFO example to documentation](https://github.com/laminas/laminas-permissions-acl/pull/7) thanks to @weierophinney
+
 ## 2.7.1 - 2019-06-25
 
 ### Added

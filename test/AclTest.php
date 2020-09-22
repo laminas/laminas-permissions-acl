@@ -1462,4 +1462,22 @@ class AclTest extends TestCase
         $this->acl->allow('admin');
         $this->assertTrue($this->acl->isAllowed('admin'));
     }
+
+    /**
+     * @see https://github.com/laminas/laminas-permissions-acl/issues/2
+     */
+    public function testWhenAssertionReturnsFalseTheInversionOfItsTypeShouldBeUsed()
+    {
+        $assertAllow = new TestAsset\ChildBooleanAssertion(true);
+        $assertDeny  = new TestAsset\ChildBooleanAssertion(false);
+
+        $this->acl->addRole('staff');
+        $this->acl->addResource('base');
+        $this->acl->allow('staff', 'base', 'update', $assertAllow);
+
+        $this->acl->addResource('user', 'base');
+        $this->acl->allow('staff', 'user', 'update', $assertDeny);
+
+        $this->assertFalse($this->acl->isAllowed('staff', 'user', 'update'));
+    }
 }
