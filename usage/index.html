@@ -396,11 +396,37 @@ having inherited conflicting rules from different parent roles.</p>
 <p><code>Laminas\Permissions\Acl\Acl</code> resolves this ambiguity by completing a query when it finds the first
 rule that is directly applicable to the query. In this case, since the "member" role is examined
 before the "guest" role, the example code would print "allowed".</p>
-<blockquote>
-<h3>LIFO Order for Role Queries</h3>
-<p>When specifying multiple parents for a role, keep in mind that the last parent listed is the first
-one searched for rules applicable to an authorization query.</p>
-</blockquote>
+<h3>LIFO order for Role parents</h3>
+<p>When specifying multiple parents for a role the last parent listed is the first one searched for rules applicable to an authorization query.
+This Last-In-First-Out (LIFO) strategy is represented with this example.
+Here the <code>first</code> role inherits from <code>second</code>, <code>third</code>, and <code>last</code>, and is the most permissioned role:</p>
+<pre class="highlight"><code class="language-php">use Zend\Permissions\Acl\Acl;
+use Zend\Permissions\Acl\Role\GenericRole as Role;
+use Zend\Permissions\Acl\Resource\GenericResource as Resource;
+
+$acl = new Acl();
+
+$acl-&gt;addRole(new Role('last'))
+    -&gt;addRole(new Role('third'))
+    -&gt;addRole(new Role('second'));
+
+$acl-&gt;addRole(new Role('first'), ['last', 'third', 'second']);
+
+$acl-&gt;addResource(new Resource('someResource'));
+
+$acl-&gt;deny('last', 'someResource');
+$acl-&gt;allow('third', 'someResource');
+
+// allowed
+echo $acl-&gt;isAllowed('first', 'someResource') ? 'allowed' : 'denied';</code></pre>
+
+<p>Less-permissioned roles will be first in the parents array.
+For instance, where a<code>guest</code> role is unauthenticated, a <code>user</code> role is authenticated, and an <code>admin</code> role has the highest permissions.
+As soon as any ACL query returns false evaluation of <code>isAllowed</code> is terminated and false is returned.
+For this reason your least permissioned roles come first in the parents array.
+Adding the <code>admin</code> role is as follows:</p>
+<pre class="highlight"><code class="language-php">$acl-&gt;addRole(new Role('admin'), ['guest', 'user']);</code></pre>
+
 <h2 id="creating-the-access-control-list">Creating the Access Control List</h2>
 <p>An Access Control List (ACL) can represent any set of physical or virtual objects that you wish.
 For the purposes of demonstration, however, we will create a basic Content Management System (CMS)
