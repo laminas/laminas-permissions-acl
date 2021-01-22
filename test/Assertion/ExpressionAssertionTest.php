@@ -379,12 +379,12 @@ class ExpressionAssertionTest extends TestCase
 
         $serializedAssertion = serialize($assertion);
 
-        $this->assertContains('left', $serializedAssertion);
-        $this->assertContains('foo', $serializedAssertion);
-        $this->assertContains('operator', $serializedAssertion);
-        $this->assertContains('=', $serializedAssertion);
-        $this->assertContains('right', $serializedAssertion);
-        $this->assertContains('bar', $serializedAssertion);
+        $this->assertStringContainsString('left', $serializedAssertion);
+        $this->assertStringContainsString('foo', $serializedAssertion);
+        $this->assertStringContainsString('operator', $serializedAssertion);
+        $this->assertStringContainsString('=', $serializedAssertion);
+        $this->assertStringContainsString('right', $serializedAssertion);
+        $this->assertStringContainsString('bar', $serializedAssertion);
     }
 
     public function testSerializationShouldNotSerializeAssertContext()
@@ -397,6 +397,6 @@ class ExpressionAssertionTest extends TestCase
 
         $serializedAssertion = serialize($assertion);
 
-        $this->assertNotContains('assertContext', $serializedAssertion);
+        $this->assertStringNotContainsString('assertContext', $serializedAssertion);
     }
 }
