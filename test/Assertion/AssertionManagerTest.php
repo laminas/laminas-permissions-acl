@@ -17,7 +17,7 @@ class AssertionManagerTest extends TestCase
 {
     protected $manager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->manager = new AssertionManager(new ServiceManager);
     }

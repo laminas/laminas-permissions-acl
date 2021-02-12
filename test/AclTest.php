@@ -30,7 +30,7 @@ class AclTest extends TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->acl = new Acl\Acl();
     }
@@ -140,7 +140,7 @@ class AclTest extends TestCase
                 'Expected Laminas\Permissions\Acl\Role\Exception not thrown upon specifying a non-existent child Role'
             );
         } catch (Acl\Exception\InvalidArgumentException $e) {
-            $this->assertContains('not found', $e->getMessage());
+            $this->assertStringContainsString('not found', $e->getMessage());
         }
         try {
             $this->acl->inheritsRole($roleGuest, 'nonexistent');
@@ -148,7 +148,7 @@ class AclTest extends TestCase
                 'Expected Laminas\Permissions\Acl\Role\Exception not thrown upon specifying a non-existent child Role'
             );
         } catch (Acl\Exception\InvalidArgumentException $e) {
-            $this->assertContains('not found', $e->getMessage());
+            $this->assertStringContainsString('not found', $e->getMessage());
         }
     }
 
@@ -405,7 +405,7 @@ class AclTest extends TestCase
                 . ' thrown upon specifying a non-existent child Resource'
             );
         } catch (Acl\Exception\ExceptionInterface $e) {
-            $this->assertContains('not found', $e->getMessage());
+            $this->assertStringContainsString('not found', $e->getMessage());
         }
         try {
             $this->acl->inheritsResource($resourceArea, 'nonexistent');
@@ -414,7 +414,7 @@ class AclTest extends TestCase
                 . 'upon specifying a non-existent parent Resource'
             );
         } catch (Acl\Exception\ExceptionInterface $e) {
-            $this->assertContains('not found', $e->getMessage());
+            $this->assertStringContainsString('not found', $e->getMessage());
         }
     }
 
@@ -490,7 +490,7 @@ class AclTest extends TestCase
                 'Expected Laminas\Permissions\Acl\Role\Exception\ExceptionInterface not thrown upon non-existent Role'
             );
         } catch (Acl\Exception\InvalidArgumentException $e) {
-            $this->assertContains('not found', $e->getMessage());
+            $this->assertStringContainsString('not found', $e->getMessage());
         }
         try {
             $this->acl->isAllowed(null, 'nonexistent');
@@ -498,7 +498,7 @@ class AclTest extends TestCase
                 'Expected Laminas\Permissions\Acl\Exception\ExceptionInterface not thrown upon non-existent Resource'
             );
         } catch (Acl\Exception\InvalidArgumentException $e) {
-            $this->assertContains('not found', $e->getMessage());
+            $this->assertStringContainsString('not found', $e->getMessage());
         }
     }
 
@@ -880,7 +880,7 @@ class AclTest extends TestCase
                 'Expected Laminas\Permissions\Acl\Role\Exception not thrown upon isAllowed() on non-existent Role'
             );
         } catch (Acl\Exception\InvalidArgumentException $e) {
-            $this->assertContains('not found', $e->getMessage());
+            $this->assertStringContainsString('not found', $e->getMessage());
         }
         $this->acl->addRole(new Role\GenericRole('guest'));
         $this->assertFalse($this->acl->isAllowed('guest'));
@@ -905,7 +905,7 @@ class AclTest extends TestCase
                 'Expected Laminas\Permissions\Acl\Role\Exception not thrown upon isAllowed() on non-existent Role'
             );
         } catch (Acl\Exception\InvalidArgumentException $e) {
-            $this->assertContains('not found', $e->getMessage());
+            $this->assertStringContainsString('not found', $e->getMessage());
         }
         $this->acl->addRole(new Role\GenericRole('guest'));
         $this->assertFalse($this->acl->isAllowed('guest'));
@@ -929,7 +929,7 @@ class AclTest extends TestCase
                 'Expected Laminas\Permissions\Acl\Exception not thrown upon isAllowed() on non-existent Resource'
             );
         } catch (Acl\Exception\ExceptionInterface $e) {
-            $this->assertContains('not found', $e->getMessage());
+            $this->assertStringContainsString('not found', $e->getMessage());
         }
         $this->acl->addResource(new Resource\GenericResource('area'));
         $this->assertFalse($this->acl->isAllowed(null, 'area'));
@@ -954,7 +954,7 @@ class AclTest extends TestCase
                 . 'isAllowed() on non-existent Resource'
             );
         } catch (Acl\Exception\ExceptionInterface $e) {
-            $this->assertContains('not found', $e->getMessage());
+            $this->assertStringContainsString('not found', $e->getMessage());
         }
         $this->acl->addResource(new Resource\GenericResource('area'));
         $this->assertFalse($this->acl->isAllowed(null, 'area'));

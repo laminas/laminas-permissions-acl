@@ -9,6 +9,7 @@ namespace LaminasTest\Permissions\Acl\Assertion;
 
 use Laminas\Permissions\Acl;
 use Laminas\Permissions\Acl\Exception\InvalidArgumentException;
+use LaminasTest\Permissions\Acl\Assertion\TestSubclasses\CallbackAssertion;
 use PHPUnit\Framework\TestCase;
 
 class CallbackAssertionTest extends TestCase
@@ -22,7 +23,7 @@ class CallbackAssertionTest extends TestCase
             InvalidArgumentException::class,
             'Invalid callback provided; not callable'
         );
-        new Acl\Assertion\CallbackAssertion('I am not callable!');
+        new CallbackAssertion('I am not callable!');
     }
 
     /**
@@ -32,8 +33,8 @@ class CallbackAssertionTest extends TestCase
     {
         $callback   = function () {
         };
-        $assert     = new Acl\Assertion\CallbackAssertion($callback);
-        $this->assertAttributeSame($callback, 'callback', $assert);
+        $assert     = new CallbackAssertion($callback);
+        $this->assertSame($callback, $assert->peakCallback());
     }
 
     /**
@@ -43,7 +44,7 @@ class CallbackAssertionTest extends TestCase
     {
         $acl       = new Acl\Acl();
         $that      = $this;
-        $assert    = new Acl\Assertion\CallbackAssertion(
+        $assert    = new CallbackAssertion(
             function ($aclArg, $roleArg, $resourceArg, $privilegeArg) use ($that, $acl) {
                 $that->assertSame($acl, $aclArg);
                 $that->assertInstanceOf('Laminas\Permissions\Acl\Role\RoleInterface', $roleArg);
@@ -74,9 +75,9 @@ class CallbackAssertionTest extends TestCase
             };
         };
         $acl->addRole($roleGuest);
-        $acl->allow($roleGuest, null, 'somePrivilege', new Acl\Assertion\CallbackAssertion($assertMock(true)));
+        $acl->allow($roleGuest, null, 'somePrivilege', new CallbackAssertion($assertMock(true)));
         $this->assertTrue($acl->isAllowed($roleGuest, null, 'somePrivilege'));
-        $acl->allow($roleGuest, null, 'somePrivilege', new Acl\Assertion\CallbackAssertion($assertMock(false)));
+        $acl->allow($roleGuest, null, 'somePrivilege', new CallbackAssertion($assertMock(false)));
         $this->assertFalse($acl->isAllowed($roleGuest, null, 'somePrivilege'));
     }
 }
