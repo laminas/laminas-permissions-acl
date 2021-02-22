@@ -9,10 +9,6 @@ namespace LaminasTest\Permissions\Acl\Assertion\TestSubclasses;
 
 final class AssertionAggregate extends \Laminas\Permissions\Acl\Assertion\AssertionAggregate
 {
-    /**
-     *
-     * @return array
-     */
     public function peakAssertions(): array
     {
         return $this->assertions;
