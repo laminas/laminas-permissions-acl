@@ -14,10 +14,6 @@ final class AssertionAggregate extends \Laminas\Permissions\Acl\Assertion\Assert
         return $this->assertions;
     }
 
-    /**
-     *
-     * @return string
-     */
     public function peakMode(): string
     {
         return $this->mode;
