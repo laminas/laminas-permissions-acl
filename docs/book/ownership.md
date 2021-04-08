@@ -17,7 +17,7 @@ To accomodate this use case, we provide two interfaces:
   by a specific role by comparing it to owners provided by
   `ProprietaryInterface` implementations.
 
-### Example
+## Example
 
 Consider the following entities:
 
