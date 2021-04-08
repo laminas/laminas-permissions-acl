@@ -1480,4 +1480,16 @@ class AclTest extends TestCase
 
         $this->assertFalse($this->acl->isAllowed('staff', 'user', 'update'));
     }
+
+    public function testRegressionOfIssue12IsBeingFixed()
+    {
+        $this->acl->addRole('user');
+        $this->acl->addResource('asset');
+        $this->acl->allow('user', 'asset', 'read', new Acl\Assertion\CallbackAssertion(
+           function () { return false; }
+        ));
+        $this->acl->allow('user');
+
+        $this->assertTrue($this->acl->isAllowed('user', 'asset', 'read'));
+    }
 }
