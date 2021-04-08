@@ -9,7 +9,7 @@ namespace LaminasTest\Permissions\Acl\Assertion;
 
 use InvalidArgumentException as PHPInvalidArgumentException;
 use Laminas\Permissions\Acl\Acl;
-use Laminas\Permissions\Acl\Assertion\AssertionAggregate;
+use LaminasTest\Permissions\Acl\Assertion\TestSubclasses\AssertionAggregate;
 use Laminas\Permissions\Acl\Assertion\Exception\InvalidAssertionException;
 use Laminas\Permissions\Acl\Exception\InvalidArgumentException;
 use Laminas\Permissions\Acl\Exception\RuntimeException;
@@ -21,7 +21,7 @@ class AssertionAggregateTest extends TestCase
 {
     protected $assertionAggregate;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->assertionAggregate = new AssertionAggregate();
     }
@@ -31,15 +31,13 @@ class AssertionAggregateTest extends TestCase
         $assertion = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
         $this->assertionAggregate->addAssertion($assertion);
 
-        $this->assertAttributeEquals([
-            $assertion
-        ], 'assertions', $this->assertionAggregate);
+        $this->assertEquals([$assertion], $this->assertionAggregate->peakAssertions());
 
         $aggregate = $this->assertionAggregate->addAssertion('other.assertion');
-        $this->assertAttributeEquals([
+        $this->assertEquals([
             $assertion,
             'other.assertion'
-        ], 'assertions', $this->assertionAggregate);
+        ], $this->assertionAggregate->peakAssertions());
 
         // test fluent interface
         $this->assertSame($this->assertionAggregate, $aggregate);
@@ -54,7 +52,7 @@ class AssertionAggregateTest extends TestCase
 
         $aggregate = $this->assertionAggregate->addAssertions($assertions);
 
-        $this->assertAttributeEquals($assertions, 'assertions', $this->assertionAggregate);
+        $this->assertEquals($assertions, $this->assertionAggregate->peakAssertions());
 
         // test fluent interface
         $this->assertSame($this->assertionAggregate, $aggregate);
@@ -65,11 +63,11 @@ class AssertionAggregateTest extends TestCase
      */
     public function testClearAssertions(AssertionAggregate $assertionAggregate)
     {
-        $this->assertAttributeCount(2, 'assertions', $assertionAggregate);
+        $this->assertCount(2, $assertionAggregate->peakAssertions());
 
         $aggregate = $assertionAggregate->clearAssertions();
 
-        $this->assertAttributeEmpty('assertions', $assertionAggregate);
+        $this->assertEmpty($assertionAggregate->peakAssertions());
 
         // test fluent interface
         $this->assertSame($assertionAggregate, $aggregate);
@@ -77,7 +75,7 @@ class AssertionAggregateTest extends TestCase
 
     public function testDefaultModeValue()
     {
-        $this->assertAttributeEquals(AssertionAggregate::MODE_ALL, 'mode', $this->assertionAggregate);
+        $this->assertEquals(AssertionAggregate::MODE_ALL, $this->assertionAggregate->peakMode());
     }
 
     /**
@@ -90,7 +88,7 @@ class AssertionAggregateTest extends TestCase
             $this->assertionAggregate->setMode($mode);
         } else {
             $this->assertionAggregate->setMode($mode);
-            $this->assertAttributeEquals($mode, 'mode', $this->assertionAggregate);
+            $this->assertEquals($mode, $this->assertionAggregate->peakMode());
         }
     }
 
@@ -117,7 +115,6 @@ class AssertionAggregateTest extends TestCase
                         ->getMock();
 
         $aggregate = $this->assertionAggregate->setAssertionManager($manager);
-        $this->assertAttributeEquals($manager, 'assertionManager', $this->assertionAggregate);
         $this->assertEquals($manager, $this->assertionAggregate->getAssertionManager());
         $this->assertSame($this->assertionAggregate, $aggregate);
     }
