@@ -18,7 +18,8 @@
     "config": {
         "sort-packages": true
     },
-    "extra": {
+    "conflict": {
+        "laminas/laminas-servicemanager": "<3.0"
     },
     "require": {
         "php": "^7.3 || ~8.0.0",
@@ -26,7 +27,7 @@
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "~1.0.0",
-        "laminas/laminas-servicemanager": "^2.7.5 || ^3.0.3",
+        "laminas/laminas-servicemanager": "^3.0.3",
         "phpunit/phpunit": "^9.5"
     },
     "suggest": {

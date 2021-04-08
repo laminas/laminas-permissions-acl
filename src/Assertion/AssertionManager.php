@@ -13,18 +13,6 @@ use Laminas\ServiceManager\Exception\InvalidServiceException;
 
 class AssertionManager extends AbstractPluginManager
 {
-    /**
-     * laminas-servicemanager v3 compatibility
-     * @var bool
-     */
-    protected $shareByDefault = true;
-
-    /**
-     * laminas-servicemanager v2 compatibility
-     * @var bool
-     */
-    protected $sharedByDefault = true;
-
     protected $instanceOf = AssertionInterface::class;
 
     /**
@@ -54,6 +42,7 @@ class AssertionManager extends AbstractPluginManager
      *
      * @param mixed $instance
      * @throws InvalidArgumentException
+     * @deprecated Please use {@see AssertionManager::validate()} instead.
      */
     public function validatePlugin($instance)
     {
