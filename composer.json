@@ -29,6 +29,7 @@
         "laminas/laminas-coding-standard": "~1.0.0",
         "laminas/laminas-servicemanager": "^3.0.3",
         "phpunit/phpunit": "^9.5.0",
+        "psalm/plugin-phpunit": "^0.15.1",
         "vimeo/psalm": "^4.7"
     },
     "suggest": {
