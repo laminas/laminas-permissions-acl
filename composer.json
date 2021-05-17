@@ -1,29 +1,21 @@
 {
     "name": "laminas/laminas-permissions-acl",
     "description": "Provides a lightweight and flexible access control list (ACL) implementation for privileges management",
-    "license": "BSD-3-Clause",
     "keywords": [
         "laminas",
         "acl"
     ],
     "homepage": "https://laminas.dev",
-    "support": {
-        "docs": "https://docs.laminas.dev/laminas-permissions-acl/",
-        "issues": "https://github.com/laminas/laminas-permissions-acl/issues",
-        "source": "https://github.com/laminas/laminas-permissions-acl",
-        "rss": "https://github.com/laminas/laminas-permissions-acl/releases.atom",
-        "chat": "https://laminas.dev/chat",
-        "forum": "https://discourse.laminas.dev"
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "conflict": {
-        "laminas/laminas-servicemanager": "<3.0"
-    },
+    "license": "BSD-3-Clause",
     "require": {
         "php": "^7.3 || ~8.0.0",
         "laminas/laminas-zendframework-bridge": "^1.0"
+    },
+    "replace": {
+        "zendframework/zend-permissions-acl": "^2.7.1"
+    },
+    "conflict": {
+        "laminas/laminas-servicemanager": "<3.0"
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "~1.0.0",
@@ -32,6 +24,9 @@
     },
     "suggest": {
         "laminas/laminas-servicemanager": "To support Laminas\\Permissions\\Acl\\Assertion\\AssertionManager plugin manager usage"
+    },
+    "config": {
+        "sort-packages": true
     },
     "autoload": {
         "psr-4": {
@@ -53,7 +48,12 @@
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     },
-    "replace": {
-        "zendframework/zend-permissions-acl": "^2.7.1"
+    "support": {
+        "issues": "https://github.com/laminas/laminas-permissions-acl/issues",
+        "forum": "https://discourse.laminas.dev",
+        "chat": "https://laminas.dev/chat",
+        "source": "https://github.com/laminas/laminas-permissions-acl",
+        "docs": "https://docs.laminas.dev/laminas-permissions-acl/",
+        "rss": "https://github.com/laminas/laminas-permissions-acl/releases.atom"
     }
 }
