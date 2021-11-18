@@ -1460,7 +1460,7 @@ class AclTest extends TestCase
     /**
      * @see https://github.com/laminas/laminas-permissions-acl/issues/2
      */
-    public function testCanDenyAnInheritedRuleThatAllows()
+    public function testCanDenyAnInheritedAllowRule()
     {
         $assertAllow = new MockAssertion(true);
 
