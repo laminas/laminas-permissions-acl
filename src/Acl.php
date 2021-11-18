@@ -1030,11 +1030,11 @@ class Acl implements AclInterface
         if (null === $rule['assert'] || $assertionValue) {
             return $rule['type'];
         }
-        
+
         if (null !== $resource || null !== $role || null !== $privilege) {
             return;
         }
-        
+
         if (self::TYPE_ALLOW === $rule['type']) {
             return self::TYPE_DENY;
         }
