@@ -28,7 +28,7 @@
     "require-dev": {
         "laminas/laminas-coding-standard": "~1.0.0",
         "laminas/laminas-servicemanager": "^3.0.3",
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5.5"
     },
     "suggest": {
         "laminas/laminas-servicemanager": "To support Laminas\\Permissions\\Acl\\Assertion\\AssertionManager plugin manager usage"
