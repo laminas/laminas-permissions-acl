@@ -12,10 +12,12 @@ use Laminas\Permissions\Acl\Role\RoleInterface;
 
 class User implements RoleInterface
 {
+    /** @var mixed */
     public $username;
 
-    public $role = 'guest';
+    public string $role = 'guest';
 
+    /** @var mixed */
     public $age;
 
     public function __construct(array $data = [])
@@ -25,12 +27,12 @@ class User implements RoleInterface
         }
     }
 
-    public function getRoleId()
+    public function getRoleId(): string
     {
         return $this->role;
     }
 
-    public function isAdult()
+    public function isAdult(): bool
     {
         return $this->age >= 18;
     }

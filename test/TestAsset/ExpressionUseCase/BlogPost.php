@@ -12,12 +12,16 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class BlogPost implements ResourceInterface
 {
+    /** @var mixed */
     public $title;
 
+    /** @var mixed */
     public $shortDescription;
 
+    /** @var mixed */
     public $content;
 
+    /** @var mixed */
     public $author;
 
     public function __construct(array $data = [])
@@ -27,17 +31,20 @@ class BlogPost implements ResourceInterface
         }
     }
 
-    public function getResourceId()
+    public function getResourceId(): string
     {
         return 'blogPost';
     }
 
+    /**
+     * @return mixed
+     */
     public function getShortDescription()
     {
         return $this->shortDescription;
     }
 
-    public function getAuthorName()
+    public function getAuthorName(): string
     {
         return $this->author ? $this->author->username : '';
     }

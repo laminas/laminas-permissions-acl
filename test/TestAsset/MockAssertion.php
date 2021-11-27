@@ -12,19 +12,19 @@ use Laminas\Permissions\Acl;
 
 class MockAssertion implements Acl\Assertion\AssertionInterface
 {
-    protected $returnValue;
+    protected bool $returnValue;
 
-    public function __construct($returnValue)
+    public function __construct(bool $returnValue)
     {
-        $this->returnValue = (bool) $returnValue;
+        $this->returnValue = $returnValue;
     }
 
     public function assert(
         Acl\Acl $acl,
         ?Acl\Role\RoleInterface $role = null,
         ?Acl\Resource\ResourceInterface $resource = null,
-        $privilege = null
-    ) {
+        ?string $privilege = null
+    ): bool {
         return $this->returnValue;
     }
 }

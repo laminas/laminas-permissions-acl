@@ -12,7 +12,7 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class Comment implements ResourceInterface
 {
-    public function getResourceId()
+    public function getResourceId(): string
     {
         return 'comment';
     }

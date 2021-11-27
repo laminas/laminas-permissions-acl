@@ -15,19 +15,21 @@ use Laminas\Permissions\Acl\Role\RoleInterface;
 
 class UserIsBlogPostOwnerAssertion implements AssertionInterface
 {
-    public $lastAssertRole;
-    public $lastAssertResource;
+    public ?RoleInterface $lastAssertRole;
+    public ?ResourceInterface $lastAssertResource;
+
+    /** @var mixed|null */
     public $lastAssertPrivilege;
-    public $assertReturnValue = true;
+    public bool $assertReturnValue = true;
 
     public function assert(
         LaminasAcl $acl,
-        ?RoleInterface $user = null,
-        ?ResourceInterface $blogPost = null,
-        $privilege = null
-    ) {
-        $this->lastAssertRole      = $user;
-        $this->lastAssertResource  = $blogPost;
+        ?RoleInterface $role = null,
+        ?ResourceInterface $resource = null,
+        ?string $privilege = null
+    ): bool {
+        $this->lastAssertRole      = $role;
+        $this->lastAssertResource  = $resource;
         $this->lastAssertPrivilege = $privilege;
         return $this->assertReturnValue;
     }

@@ -12,9 +12,7 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class BlogPost implements ResourceInterface
 {
-    public $owner;
-
-    public function getResourceId()
+    public function getResourceId(): string
     {
         return 'blogPost';
     }

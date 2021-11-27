@@ -18,16 +18,19 @@ use Laminas\Permissions\Acl\Role\RoleInterface;
  */
 class ChildBooleanAssertion implements AssertionInterface
 {
-    /** @var bool */
-    private $value;
+    private bool $value;
 
-    public function __construct($value)
+    public function __construct(bool $value)
     {
-        $this->value = (bool) $value;
+        $this->value = $value;
     }
 
-    public function assert(Acl $acl, ?RoleInterface $role = null, ?ResourceInterface $resource = null, $privilege = null)
-    {
+    public function assert(
+        Acl $acl,
+        ?RoleInterface $role = null,
+        ?ResourceInterface $resource = null,
+        ?string $privilege = null
+    ): bool {
         return $this->value;
     }
 }

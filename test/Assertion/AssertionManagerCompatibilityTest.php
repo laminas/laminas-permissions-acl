@@ -19,22 +19,26 @@ class AssertionManagerCompatibilityTest extends TestCase
 {
     use CommonPluginManagerTrait;
 
+    // This method deprecated at PHPUnit 5.*, removed at 6.*.
+    // This code does nothing actually but shows errors by phpcs.
+    // phpcs:disable
     public function setExpectedException($exception, $message = '', $code = null)
     {
         $this->expectException($exception, $message, $code);
     }
+    // phpcs:enable
 
-    protected function getPluginManager()
+    protected function getPluginManager(): AssertionManager
     {
         return new AssertionManager(new ServiceManager());
     }
 
-    protected function getV2InvalidPluginException()
+    protected function getV2InvalidPluginException(): string
     {
         return InvalidArgumentException::class;
     }
 
-    protected function getInstanceOf()
+    protected function getInstanceOf(): string
     {
         return AssertionInterface::class;
     }

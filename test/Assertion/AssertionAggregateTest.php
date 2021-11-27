@@ -22,14 +22,14 @@ use PHPUnit\Framework\TestCase;
 
 class AssertionAggregateTest extends TestCase
 {
-    protected $assertionAggregate;
+    protected AssertionAggregate $assertionAggregate;
 
     protected function setUp(): void
     {
         $this->assertionAggregate = new AssertionAggregate();
     }
 
-    public function testAddAssertion()
+    public function testAddAssertion(): AssertionAggregate
     {
         $assertion = $this->getMockForAbstractClass(AssertionInterface::class);
         $this->assertionAggregate->addAssertion($assertion);
@@ -84,7 +84,7 @@ class AssertionAggregateTest extends TestCase
     /**
      * @dataProvider getDataForTestSetMode
      */
-    public function testSetMode($mode, $exception = false)
+    public function testSetMode(string $mode, bool $exception = false)
     {
         if ($exception) {
             $this->expectException(InvalidArgumentException::class);
@@ -95,7 +95,7 @@ class AssertionAggregateTest extends TestCase
         }
     }
 
-    public static function getDataForTestSetMode()
+    public static function getDataForTestSetMode(): array
     {
         return [
             [

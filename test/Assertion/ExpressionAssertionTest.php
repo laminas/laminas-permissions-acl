@@ -77,8 +77,13 @@ class ExpressionAssertionTest extends TestCase
     /**
      * @dataProvider getExpressions
      */
-    public function testExpressionsEvaluation(array $expression, $role, $resource, $privilege, $expectedAssert)
-    {
+    public function testExpressionsEvaluation(
+        array $expression,
+        User $role,
+        BlogPost $resource,
+        string $privilege,
+        bool $expectedAssert
+    ) {
         $assertion = ExpressionAssertion::fromArray($expression);
 
         $this->assertThat(
@@ -87,7 +92,7 @@ class ExpressionAssertionTest extends TestCase
         );
     }
 
-    public function getExpressions()
+    public function getExpressions(): array
     {
         $author3 = new User([
             'username' => 'author3',

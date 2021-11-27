@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 class AssertionManagerTest extends TestCase
 {
-    protected $manager;
+    protected AssertionManager $manager;
 
     protected function setUp(): void
     {

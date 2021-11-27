@@ -13,13 +13,16 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class BlogPost implements ResourceInterface, ProprietaryInterface
 {
-    public $author;
+    public ?User $author;
 
-    public function getResourceId()
+    public function getResourceId(): string
     {
         return 'blogPost';
     }
 
+    /**
+     * @return mixed|null
+     */
     public function getOwnerId()
     {
         if ($this->author === null) {

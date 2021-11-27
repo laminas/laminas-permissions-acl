@@ -13,16 +13,16 @@ use Laminas\Permissions\Acl\Role\RoleInterface;
 
 class User implements RoleInterface, ProprietaryInterface
 {
-    public $id;
+    public int $id;
 
-    public $role = 'guest';
+    public string $role = 'guest';
 
-    public function getRoleId()
+    public function getRoleId(): string
     {
         return $this->role;
     }
 
-    public function getOwnerId()
+    public function getOwnerId(): int
     {
         return $this->id;
     }

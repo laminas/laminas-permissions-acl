@@ -14,7 +14,7 @@ use Laminas\Permissions\Acl\Role\GenericRole;
 
 class Acl extends BaseAcl
 {
-    public $customAssertion;
+    public UserIsBlogPostOwnerAssertion $customAssertion;
 
     public function __construct()
     {
