@@ -23,7 +23,7 @@
     },
     "require": {
         "php": "~7.4.0 || ~8.0.0",
-        "laminas/laminas-zendframework-bridge": "^1.0"
+        "laminas/laminas-zendframework-bridge": "^1.4.0"
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "~1.0.0",
