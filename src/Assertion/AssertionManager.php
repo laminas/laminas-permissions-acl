@@ -19,6 +19,7 @@ use function sprintf;
 
 class AssertionManager extends AbstractPluginManager
 {
+    /** @var mixed */
     protected $instanceOf = AssertionInterface::class;
 
     /**
@@ -36,7 +37,9 @@ class AssertionManager extends AbstractPluginManager
                 '%s can only create instances of %s; %s is invalid',
                 static::class,
                 $this->instanceOf,
+                // phpcs:disable SlevomatCodingStandard.Classes.ModernClassNameReference
                 is_object($instance) ? get_class($instance) : gettype($instance)
+                // phpcs:enable
             ));
         }
     }

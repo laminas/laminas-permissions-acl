@@ -41,16 +41,13 @@ class CallbackAssertion implements AssertionInterface
      * If the $role, $resource, or $privilege parameters are null, it means
      * that the query applies to all Roles, Resources, or privileges,
      * respectively.
-     *
-     * @param string            $privilege
-     * @return bool
      */
     public function assert(
         Acl $acl,
         ?RoleInterface $role = null,
         ?ResourceInterface $resource = null,
-        $privilege = null
-    ) {
+        ?string $privilege = null
+    ): bool {
         return (bool) call_user_func($this->callback, $acl, $role, $resource, $privilege);
     }
 }

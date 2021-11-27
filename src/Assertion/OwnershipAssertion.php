@@ -18,8 +18,12 @@ use Laminas\Permissions\Acl\Role\RoleInterface;
  */
 class OwnershipAssertion implements AssertionInterface
 {
-    public function assert(Acl $acl, ?RoleInterface $role = null, ?ResourceInterface $resource = null, $privilege = null)
-    {
+    public function assert(
+        Acl $acl,
+        ?RoleInterface $role = null,
+        ?ResourceInterface $resource = null,
+        ?string $privilege = null
+    ): bool {
         //Assert passes if role or resource is not proprietary
         if (! $role instanceof ProprietaryInterface || ! $resource instanceof ProprietaryInterface) {
             return true;

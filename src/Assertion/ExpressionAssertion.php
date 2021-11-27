@@ -56,23 +56,23 @@ use function ucwords;
  */
 final class ExpressionAssertion implements AssertionInterface
 {
-    const OPERAND_CONTEXT_PROPERTY = '__context';
+    public const OPERAND_CONTEXT_PROPERTY = '__context';
 
-    const OPERATOR_EQ     = '=';
-    const OPERATOR_NEQ    = '!=';
-    const OPERATOR_LT     = '<';
-    const OPERATOR_LTE    = '<=';
-    const OPERATOR_GT     = '>';
-    const OPERATOR_GTE    = '>=';
-    const OPERATOR_IN     = 'in';
-    const OPERATOR_NIN    = '!in';
-    const OPERATOR_REGEX  = 'regex';
-    const OPERATOR_NREGEX = '!regex';
-    const OPERATOR_SAME   = '===';
-    const OPERATOR_NSAME  = '!==';
+    public const OPERATOR_EQ     = '=';
+    public const OPERATOR_NEQ    = '!=';
+    public const OPERATOR_LT     = '<';
+    public const OPERATOR_LTE    = '<=';
+    public const OPERATOR_GT     = '>';
+    public const OPERATOR_GTE    = '>=';
+    public const OPERATOR_IN     = 'in';
+    public const OPERATOR_NIN    = '!in';
+    public const OPERATOR_REGEX  = 'regex';
+    public const OPERATOR_NREGEX = '!regex';
+    public const OPERATOR_SAME   = '===';
+    public const OPERATOR_NSAME  = '!==';
 
     /** @var array */
-    private static $validOperators = [
+    private static array $validOperators = [
         self::OPERATOR_EQ,
         self::OPERATOR_NEQ,
         self::OPERATOR_LT,
@@ -90,8 +90,7 @@ final class ExpressionAssertion implements AssertionInterface
     /** @var mixed */
     private $left;
 
-    /** @var string */
-    private $operator;
+    private string $operator;
 
     /** @var mixed */
     private $right;
@@ -118,8 +117,8 @@ final class ExpressionAssertion implements AssertionInterface
      * @param string $operator One of the OPERATOR constants (or their values)
      * @param mixed|array $right See the class description for valid values.
      * @return self
-     * @throws InvalidAssertionException if either operand is invalid.
-     * @throws InvalidAssertionException if the operator is not supported.
+     * @throws InvalidAssertionException If either operand is invalid.
+     * @throws InvalidAssertionException If the operator is not supported.
      */
     public static function fromProperties($left, $operator, $right)
     {
@@ -140,9 +139,9 @@ final class ExpressionAssertion implements AssertionInterface
      *     See the class description for valid values for the left and right
      *     hand side values.
      * @return self
-     * @throws InvalidAssertionException if missing one of the required keys.
-     * @throws InvalidAssertionException if either operand is invalid.
-     * @throws InvalidAssertionException if the operator is not supported.
+     * @throws InvalidAssertionException If missing one of the required keys.
+     * @throws InvalidAssertionException If either operand is invalid.
+     * @throws InvalidAssertionException If the operator is not supported.
      */
     public static function fromArray(array $expression)
     {
@@ -163,7 +162,7 @@ final class ExpressionAssertion implements AssertionInterface
 
     /**
      * @param mixed|array $operand
-     * @throws InvalidAssertionException if the operand is invalid.
+     * @throws InvalidAssertionException If the operand is invalid.
      */
     private static function validateOperand($operand)
     {
@@ -175,10 +174,9 @@ final class ExpressionAssertion implements AssertionInterface
     }
 
     /**
-     * @param string $operand
-     * @throws InvalidAssertionException if the operator is not supported.
+     * @throws InvalidAssertionException If the operator is not supported.
      */
-    private static function validateOperator($operator)
+    private static function validateOperator(string $operator)
     {
         if (! in_array($operator, self::$validOperators, true)) {
             throw new InvalidAssertionException('Provided expression assertion operator is not supported');
@@ -188,8 +186,12 @@ final class ExpressionAssertion implements AssertionInterface
     /**
      * {@inheritDoc}
      */
-    public function assert(Acl $acl, ?RoleInterface $role = null, ?ResourceInterface $resource = null, $privilege = null)
-    {
+    public function assert(
+        Acl $acl,
+        ?RoleInterface $role = null,
+        ?ResourceInterface $resource = null,
+        ?string $privilege = null
+    ): bool {
         return $this->evaluate([
             'acl'       => $acl,
             'role'      => $role,
@@ -232,12 +234,12 @@ final class ExpressionAssertion implements AssertionInterface
     }
 
     /**
-     * @param mixed|array
+     * @param mixed|array $operand
      * @param array $context Contains the acl, privilege, role, and resource
      *     being tested currently.
      * @return mixed
-     * @throws RuntimeException if object cannot be resolved in context.
-     * @throws RuntimeException if property cannot be resolved.
+     * @throws RuntimeException If object cannot be resolved in context.
+     * @throws RuntimeException If property cannot be resolved.
      */
     private function resolveOperandValue($operand, array $context)
     {
@@ -268,8 +270,8 @@ final class ExpressionAssertion implements AssertionInterface
      * @param string $objectName Name of object in context to use.
      * @param string $field
      * @return mixed
-     * @throws RuntimeException if object cannot be resolved in context.
-     * @throws RuntimeException if property cannot be resolved.
+     * @throws RuntimeException If object cannot be resolved in context.
+     * @throws RuntimeException If property cannot be resolved.
      */
     private function getObjectFieldValue(array $context, $objectName, $field)
     {
@@ -307,17 +309,16 @@ final class ExpressionAssertion implements AssertionInterface
 
     /**
      * @param mixed $left
-     * @param string $right
      * @param mixed $right
-     * @throws RuntimeException if operand is not supported.
+     * @throws RuntimeException If operand is not supported.
      */
-    private static function evaluateExpression($left, $operator, $right)
+    private static function evaluateExpression($left, string $operator, $right): bool
     {
         switch ($operator) {
             case self::OPERATOR_EQ:
-                return $left == $right;
+                return $left == $right; // phpcs:ignore -- strict checking
             case self::OPERATOR_NEQ:
-                return $left != $right;
+                return $left != $right; // phpcs:ignore -- strict checking
             case self::OPERATOR_LT:
                 return $left < $right;
             case self::OPERATOR_LTE:
@@ -343,10 +344,8 @@ final class ExpressionAssertion implements AssertionInterface
 
     /**
      * @param object $object
-     * @param string $field
-     * @return mixed
      */
-    private function propertyExists($object, $property)
+    private function propertyExists($object, string $property): bool
     {
         if (! property_exists($object, $property)) {
             return false;

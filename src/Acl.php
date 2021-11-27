@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Laminas\Permissions\Acl;
 
+use Exception as PHPException;
+
 use function array_key_exists;
 use function array_keys;
 use function array_merge;
@@ -24,22 +26,22 @@ class Acl implements AclInterface
     /**
      * Rule type: allow
      */
-    const TYPE_ALLOW = 'TYPE_ALLOW';
+    public const TYPE_ALLOW = 'TYPE_ALLOW';
 
     /**
      * Rule type: deny
      */
-    const TYPE_DENY = 'TYPE_DENY';
+    public const TYPE_DENY = 'TYPE_DENY';
 
     /**
      * Rule operation: add
      */
-    const OP_ADD = 'OP_ADD';
+    public const OP_ADD = 'OP_ADD';
 
     /**
      * Rule operation: remove
      */
-    const OP_REMOVE = 'OP_REMOVE';
+    public const OP_REMOVE = 'OP_REMOVE';
 
     /**
      * Role registry
@@ -256,7 +258,7 @@ class Acl implements AclInterface
                     $resourceParentId = $parent;
                 }
                 $resourceParent = $this->getResource($resourceParentId);
-            } catch (\Exception $e) {
+            } catch (PHPException $e) {
                 throw new Exception\InvalidArgumentException(sprintf(
                     'Parent Resource id "%s" does not exist',
                     $resourceParentId
@@ -327,7 +329,7 @@ class Acl implements AclInterface
      * inherits from $inherit through its ancestor Resources.
      *
      * @param  Resource\ResourceInterface|string    $resource
-     * @param  Resource\ResourceInterface|string    inherit
+     * @param  Resource\ResourceInterface|string    $inherit
      * @param  bool                              $onlyParent
      * @throws Exception\InvalidArgumentException
      * @return bool
@@ -682,10 +684,10 @@ class Acl implements AclInterface
 
         $children = $this->resources[$id]['children'];
         foreach ($children as $child) {
-            $child_return                          = $this->getChildResources($child);
-            $child_return[$child->getResourceId()] = $child;
+            $childReturn                          = $this->getChildResources($child);
+            $childReturn[$child->getResourceId()] = $child;
 
-            $return = array_merge($return, $child_return);
+            $return = array_merge($return, $childReturn);
         }
 
         return $return;
@@ -838,8 +840,6 @@ class Acl implements AclInterface
                 }
             }
         }
-
-        return;
     }
 
     /**
@@ -878,8 +878,6 @@ class Acl implements AclInterface
         foreach ($this->getRoleRegistry()->getParents($role) as $roleParent) {
             $dfs['stack'][] = $roleParent;
         }
-
-        return;
     }
 
     /**
@@ -919,8 +917,6 @@ class Acl implements AclInterface
                 }
             }
         }
-
-        return;
     }
 
     /**
@@ -966,8 +962,6 @@ class Acl implements AclInterface
         foreach ($this->getRoleRegistry()->getParents($role) as $roleParent) {
             $dfs['stack'][] = $roleParent;
         }
-
-        return;
     }
 
     /**

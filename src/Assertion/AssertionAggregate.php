@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Laminas\Permissions\Acl\Assertion;
 
+use Exception as PHPException;
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\Exception\InvalidArgumentException;
 use Laminas\Permissions\Acl\Exception\RuntimeException;
@@ -18,32 +19,30 @@ use function class_exists;
 
 class AssertionAggregate implements AssertionInterface
 {
-    const MODE_ALL = 'all';
+    public const MODE_ALL = 'all';
 
-    const MODE_AT_LEAST_ONE = 'at_least_one';
+    public const MODE_AT_LEAST_ONE = 'at_least_one';
 
-    protected $assertions = [];
+    protected array $assertions = [];
 
-    /** @var $manager AssertionManager */
-    protected $assertionManager;
+    protected AssertionManager $assertionManager;
 
-    protected $mode = self::MODE_ALL;
+    protected string $mode = self::MODE_ALL;
 
     /**
      * Stacks an assertion in aggregate
      *
      * @param AssertionInterface|string $assertion
      *    if string, must match a AssertionManager declared service (checked later)
-     * @return self
      */
-    public function addAssertion($assertion)
+    public function addAssertion($assertion): self
     {
         $this->assertions[] = $assertion;
 
         return $this;
     }
 
-    public function addAssertions(array $assertions)
+    public function addAssertions(array $assertions): self
     {
         foreach ($assertions as $assertion) {
             $this->addAssertion($assertion);
@@ -54,27 +53,22 @@ class AssertionAggregate implements AssertionInterface
 
     /**
      * Empties assertions stack
-     *
-     * @return self
      */
-    public function clearAssertions()
+    public function clearAssertions(): self
     {
         $this->assertions = [];
 
         return $this;
     }
 
-    /**
-     * @return self
-     */
-    public function setAssertionManager(AssertionManager $manager)
+    public function setAssertionManager(AssertionManager $manager): self
     {
         $this->assertionManager = $manager;
 
         return $this;
     }
 
-    public function getAssertionManager()
+    public function getAssertionManager(): AssertionManager
     {
         return $this->assertionManager;
     }
@@ -87,14 +81,11 @@ class AssertionAggregate implements AssertionInterface
      * - all assertions are true with MODE_ALL
      * - at least one assertion is true with MODE_AT_LEAST_ONE
      *
-     * @param string $mode
-     *    indicates how assertion chain result should interpreted (either 'all' or 'at_least_one')
      * @throws InvalidArgumentException
-     * @return self
      */
-    public function setMode($mode)
+    public function setMode(string $mode): self
     {
-        if ($mode != self::MODE_ALL && $mode != self::MODE_AT_LEAST_ONE) {
+        if ($mode !== self::MODE_ALL && $mode !== self::MODE_AT_LEAST_ONE) {
             throw new InvalidArgumentException('invalid assertion aggregate mode');
         }
 
@@ -105,10 +96,8 @@ class AssertionAggregate implements AssertionInterface
 
     /**
      * Return current mode
-     *
-     * @return string
      */
-    public function getMode()
+    public function getMode(): string
     {
         return $this->mode;
     }
@@ -117,14 +106,13 @@ class AssertionAggregate implements AssertionInterface
      * @see \Laminas\Permissions\Acl\Assertion\AssertionInterface::assert()
      *
      * @throws RuntimeException
-     * @return bool
      */
     public function assert(
         Acl $acl,
         ?RoleInterface $role = null,
         ?ResourceInterface $resource = null,
-        $privilege = null
-    ) {
+        ?string $privilege = null
+    ): bool {
         // check if assertions are set
         if (! $this->assertions) {
             throw new RuntimeException('no assertion have been aggregated to this AssertionAggregate');
@@ -139,7 +127,7 @@ class AssertionAggregate implements AssertionInterface
                     if ($manager = $this->getAssertionManager()) {
                         try {
                             $assertion = $manager->get($assertion);
-                        } catch (\Exception $e) {
+                        } catch (PHPException $e) {
                             throw new Exception\InvalidAssertionException(
                                 'assertion "'
                                 . $assertion
@@ -154,18 +142,18 @@ class AssertionAggregate implements AssertionInterface
 
             $result = (bool) $assertion->assert($acl, $role, $resource, $privilege);
 
-            if ($this->getMode() == self::MODE_ALL && ! $result) {
+            if ($this->getMode() === self::MODE_ALL && ! $result) {
                 // on false is enough
                 return false;
             }
 
-            if ($this->getMode() == self::MODE_AT_LEAST_ONE && $result) {
+            if ($this->getMode() === self::MODE_AT_LEAST_ONE && $result) {
                 // one true is enough
                 return true;
             }
         }
 
-        if ($this->getMode() == self::MODE_ALL) {
+        if ($this->getMode() === self::MODE_ALL) {
             // none of the assertions returned false
             return true;
         } else {
