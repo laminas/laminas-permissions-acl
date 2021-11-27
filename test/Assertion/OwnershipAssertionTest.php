@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
- * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
  */
 
 namespace LaminasTest\Permissions\Acl\Assertion;
@@ -37,7 +37,7 @@ class OwnershipAssertionTest extends TestCase
 
         $author = new OwnershipUseCase\Author1();
 
-        $blogPost = new OwnershipUseCase\BlogPost();
+        $blogPost         = new OwnershipUseCase\BlogPost();
         $blogPost->author = null;
 
         $this->assertTrue($acl->isAllowed($author, 'blogPost', 'write'));
@@ -51,7 +51,7 @@ class OwnershipAssertionTest extends TestCase
         $author1 = new OwnershipUseCase\Author1();
         $author2 = new OwnershipUseCase\Author2();
 
-        $blogPost = new OwnershipUseCase\BlogPost();
+        $blogPost         = new OwnershipUseCase\BlogPost();
         $blogPost->author = $author1;
 
         $this->assertTrue($acl->isAllowed($author2, 'blogPost', 'write'));

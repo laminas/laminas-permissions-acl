@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
- * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
  */
 
 namespace Laminas\Permissions\Acl\Assertion;
@@ -14,6 +14,22 @@ use Laminas\Permissions\Acl\Exception\RuntimeException;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Laminas\Permissions\Acl\Role\RoleInterface;
 use ReflectionProperty;
+
+use function array_flip;
+use function array_intersect_key;
+use function count;
+use function explode;
+use function in_array;
+use function is_array;
+use function is_string;
+use function method_exists;
+use function preg_match;
+use function property_exists;
+use function sprintf;
+use function str_replace;
+use function strpos;
+use function strtolower;
+use function ucwords;
 
 /**
  * Create an assertion based on expression rules.
@@ -55,9 +71,7 @@ final class ExpressionAssertion implements AssertionInterface
     const OPERATOR_SAME   = '===';
     const OPERATOR_NSAME  = '!==';
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private static $validOperators = [
         self::OPERATOR_EQ,
         self::OPERATOR_NEQ,
@@ -73,19 +87,13 @@ final class ExpressionAssertion implements AssertionInterface
         self::OPERATOR_NSAME,
     ];
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $left;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $operator;
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $right;
 
     /**
@@ -100,9 +108,9 @@ final class ExpressionAssertion implements AssertionInterface
      */
     private function __construct($left, $operator, $right)
     {
-        $this->left = $left;
+        $this->left     = $left;
         $this->operator = $operator;
-        $this->right = $right;
+        $this->right    = $right;
     }
 
     /**
@@ -180,7 +188,7 @@ final class ExpressionAssertion implements AssertionInterface
     /**
      * {@inheritDoc}
      */
-    public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
+    public function assert(Acl $acl, ?RoleInterface $role = null, ?ResourceInterface $resource = null, $privilege = null)
     {
         return $this->evaluate([
             'acl'       => $acl,
@@ -197,7 +205,7 @@ final class ExpressionAssertion implements AssertionInterface
      */
     private function evaluate(array $context)
     {
-        $left = $this->getLeftValue($context);
+        $left  = $this->getLeftValue($context);
         $right = $this->getRightValue($context);
 
         return static::evaluateExpression($left, $this->operator, $right);
@@ -240,7 +248,7 @@ final class ExpressionAssertion implements AssertionInterface
         $contextProperty = $operand[self::OPERAND_CONTEXT_PROPERTY];
 
         if (strpos($contextProperty, '.') !== false) { // property path?
-            list($objectName, $objectField) = explode('.', $contextProperty, 2);
+            [$objectName, $objectField] = explode('.', $contextProperty, 2);
             return $this->getObjectFieldValue($context, $objectName, $objectField);
         }
 
@@ -272,8 +280,8 @@ final class ExpressionAssertion implements AssertionInterface
             ));
         }
 
-        $object = $context[$objectName];
-        $accessors = ['get', 'is'];
+        $object        = $context[$objectName];
+        $accessors     = ['get', 'is'];
         $fieldAccessor = false === strpos($field, '_')
             ? $field
             : str_replace(' ', '', ucwords(str_replace('_', ' ', $field)));

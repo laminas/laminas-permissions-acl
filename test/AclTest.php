@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
- * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
  */
 
 namespace LaminasTest\Permissions\Acl;
 
+use ArrayIterator;
 use Laminas\Permissions\Acl;
 use Laminas\Permissions\Acl\Exception\ExceptionInterface;
 use Laminas\Permissions\Acl\Exception\InvalidArgumentException;
@@ -27,8 +28,6 @@ class AclTest extends TestCase
 
     /**
      * Instantiates a new ACL object and creates internal reference to it for each test method
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -122,7 +121,7 @@ class AclTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('addRole() expects $role to be of type Laminas\Permissions\Acl\Role');
-        $this->acl->addRole(new \stdClass, 'guest');
+        $this->acl->addRole(new stdClass(), 'guest');
     }
 
     /**
@@ -159,9 +158,9 @@ class AclTest extends TestCase
      */
     public function testRoleRegistryInherits()
     {
-        $roleGuest  = new Role\GenericRole('guest');
-        $roleMember = new Role\GenericRole('member');
-        $roleEditor = new Role\GenericRole('editor');
+        $roleGuest    = new Role\GenericRole('guest');
+        $roleMember   = new Role\GenericRole('member');
+        $roleEditor   = new Role\GenericRole('editor');
         $roleRegistry = new Role\Registry();
         $roleRegistry
             ->add($roleGuest)
@@ -192,9 +191,9 @@ class AclTest extends TestCase
      */
     public function testRoleRegistryInheritsMultipleArray()
     {
-        $roleParent1 = new Role\GenericRole('parent1');
-        $roleParent2 = new Role\GenericRole('parent2');
-        $roleChild   = new Role\GenericRole('child');
+        $roleParent1  = new Role\GenericRole('parent1');
+        $roleParent2  = new Role\GenericRole('parent2');
+        $roleChild    = new Role\GenericRole('child');
         $roleRegistry = new Role\Registry();
         $roleRegistry
             ->add($roleParent1)
@@ -223,16 +222,16 @@ class AclTest extends TestCase
      */
     public function testRoleRegistryInheritsMultipleTraversable()
     {
-        $roleParent1 = new Role\GenericRole('parent1');
-        $roleParent2 = new Role\GenericRole('parent2');
-        $roleChild   = new Role\GenericRole('child');
+        $roleParent1  = new Role\GenericRole('parent1');
+        $roleParent2  = new Role\GenericRole('parent2');
+        $roleChild    = new Role\GenericRole('child');
         $roleRegistry = new Role\Registry();
         $roleRegistry
             ->add($roleParent1)
             ->add($roleParent2)
             ->add(
                 $roleChild,
-                new \ArrayIterator([$roleParent1, $roleParent2])
+                new ArrayIterator([$roleParent1, $roleParent2])
             );
         $roleChildParents = $roleRegistry->getParents($roleChild);
         $this->assertCount(2, $roleChildParents);
@@ -257,7 +256,7 @@ class AclTest extends TestCase
      */
     public function testRoleRegistryDuplicate()
     {
-        $roleGuest = new Role\GenericRole('guest');
+        $roleGuest    = new Role\GenericRole('guest');
         $roleRegistry = new Role\Registry();
         $this->expectException(InvalidArgumentException::class, 'already exists');
         $roleRegistry
@@ -272,8 +271,8 @@ class AclTest extends TestCase
      */
     public function testRoleRegistryDuplicateId()
     {
-        $roleGuest1 = new Role\GenericRole('guest');
-        $roleGuest2 = new Role\GenericRole('guest');
+        $roleGuest1   = new Role\GenericRole('guest');
+        $roleGuest2   = new Role\GenericRole('guest');
         $roleRegistry = new Role\Registry();
         $this->expectException(InvalidArgumentException::class, 'already exists');
         $roleRegistry
@@ -289,7 +288,7 @@ class AclTest extends TestCase
     public function testResourceAddAndGetOne()
     {
         $resourceArea = new Resource\GenericResource('area');
-        $resource = $this->acl
+        $resource     = $this->acl
             ->addResource($resourceArea)
             ->getResource($resourceArea->getResourceId());
         $this->assertEquals($resourceArea, $resource);
@@ -317,7 +316,7 @@ class AclTest extends TestCase
     public function testResourceAddAndGetOneWithAddResourceMethod()
     {
         $resourceArea = new Resource\GenericResource('area');
-        $resource = $this->acl
+        $resource     = $this->acl
             ->addResource($resourceArea)
             ->getResource($resourceArea->getResourceId());
         $this->assertEquals($resourceArea, $resource);
@@ -386,7 +385,7 @@ class AclTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('addResource() expects $resource to be of type Laminas\Permissions\Acl\Resource');
-        $this->acl->addResource(new stdClass);
+        $this->acl->addResource(new stdClass());
     }
 
     /**
@@ -1160,7 +1159,7 @@ class AclTest extends TestCase
             ->addRole($someRole);
 
         $nullValue     = null;
-        $nullReference =& $nullValue;
+        $nullReference = &$nullValue;
 
         try {
             $acl->exroleDFSVisitAllPrivileges($someRole, $someResource, $nullReference);
@@ -1191,7 +1190,6 @@ class AclTest extends TestCase
         }
     }
 
-
     /**
      * @group Laminas-1721
      */
@@ -1199,7 +1197,7 @@ class AclTest extends TestCase
     {
         $acl = $this->loadStandardUseCase();
 
-        $user = new Role\GenericRole('publisher');
+        $user     = new Role\GenericRole('publisher');
         $blogPost = new Resource\GenericResource('blogPost');
 
         /**
@@ -1213,7 +1211,6 @@ class AclTest extends TestCase
     }
 
     /**
-     *
      * @group Laminas-1722
      */
     public function testAclAssertionsGetOriginalIsAllowedObjects()
@@ -1231,7 +1228,7 @@ class AclTest extends TestCase
         $assertion = $acl->customAssertion;
 
         $assertion->assertReturnValue = true;
-        $user->role = 'contributor';
+        $user->role                   = 'contributor';
         $this->assertTrue($acl->isAllowed($user, $blogPost, 'modify'), 'Assertion should return true');
         $assertion->assertReturnValue = false;
         $this->assertFalse($acl->isAllowed($user, $blogPost, 'modify'), 'Assertion should return false');
@@ -1250,7 +1247,6 @@ class AclTest extends TestCase
     }
 
     /**
-     *
      * @return TestAsset\StandardUseCase\Acl
      */
     protected function loadStandardUseCase()
@@ -1339,7 +1335,7 @@ class AclTest extends TestCase
         $this->acl->addRole(new Role\GenericRole('editor'), 'staff');
         $this->acl->addRole(new Role\GenericRole('administrator'));
 
-        $expected = ['guest', 'staff','editor','administrator'];
+        $expected = ['guest', 'staff', 'editor', 'administrator'];
         $this->assertEquals($expected, $this->acl->getRoles());
     }
 

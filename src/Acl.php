@@ -1,12 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
- * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
  */
 
 namespace Laminas\Permissions\Acl;
+
+use function array_key_exists;
+use function array_keys;
+use function array_merge;
+use function array_pop;
+use function array_unshift;
+use function in_array;
+use function is_array;
+use function is_string;
+use function sprintf;
+use function strtoupper;
 
 class Acl implements AclInterface
 {
@@ -18,7 +29,7 @@ class Acl implements AclInterface
     /**
      * Rule type: deny
      */
-    const TYPE_DENY  = 'TYPE_DENY';
+    const TYPE_DENY = 'TYPE_DENY';
 
     /**
      * Rule operation: add
@@ -35,7 +46,7 @@ class Acl implements AclInterface
      *
      * @var Role\Registry
      */
-    protected $roleRegistry = null;
+    protected $roleRegistry;
 
     /**
      * Resource tree
@@ -44,20 +55,14 @@ class Acl implements AclInterface
      */
     protected $resources = [];
 
-    /**
-     * @var Role\RoleInterface
-     */
-    protected $isAllowedRole     = null;
+    /** @var Role\RoleInterface */
+    protected $isAllowedRole;
 
-    /**
-     * @var Resource
-     */
-    protected $isAllowedResource = null;
+    /** @var Resource */
+    protected $isAllowedResource;
 
-    /**
-     * @var string
-     */
-    protected $isAllowedPrivilege = null;
+    /** @var string */
+    protected $isAllowedPrivilege;
 
     /**
      * ACL rules; whitelist (deny everything to all) by default
@@ -69,13 +74,13 @@ class Acl implements AclInterface
             'allRoles' => [
                 'allPrivileges' => [
                     'type'   => self::TYPE_DENY,
-                    'assert' => null
+                    'assert' => null,
                 ],
-                'byPrivilegeId' => []
+                'byPrivilegeId' => [],
             ],
-            'byRoleId' => []
+            'byRoleId' => [],
         ],
-        'byResourceId' => []
+        'byResourceId' => [],
     ];
 
     /**
@@ -263,7 +268,7 @@ class Acl implements AclInterface
         $this->resources[$resourceId] = [
             'instance' => $resource,
             'parent'   => $resourceParent,
-            'children' => []
+            'children' => [],
         ];
 
         return $this;
@@ -418,14 +423,13 @@ class Acl implements AclInterface
      * @param  Role\RoleInterface|string|array          $roles
      * @param  Resource\ResourceInterface|string|array  $resources
      * @param  string|array                             $privileges
-     * @param  Assertion\AssertionInterface             $assert
      * @return Acl Provides a fluent interface
      */
     public function allow(
         $roles = null,
         $resources = null,
         $privileges = null,
-        Assertion\AssertionInterface $assert = null
+        ?Assertion\AssertionInterface $assert = null
     ) {
         return $this->setRule(self::OP_ADD, self::TYPE_ALLOW, $roles, $resources, $privileges, $assert);
     }
@@ -436,14 +440,13 @@ class Acl implements AclInterface
      * @param  Role\RoleInterface|string|array          $roles
      * @param  Resource\ResourceInterface|string|array  $resources
      * @param  string|array                             $privileges
-     * @param  Assertion\AssertionInterface             $assert
      * @return Acl Provides a fluent interface
      */
     public function deny(
         $roles = null,
         $resources = null,
         $privileges = null,
-        Assertion\AssertionInterface $assert = null
+        ?Assertion\AssertionInterface $assert = null
     ) {
         return $this->setRule(self::OP_ADD, self::TYPE_DENY, $roles, $resources, $privileges, $assert);
     }
@@ -520,7 +523,6 @@ class Acl implements AclInterface
      * @param  Role\RoleInterface|string|array          $roles
      * @param  Resource\ResourceInterface|string|array  $resources
      * @param  string|array                             $privileges
-     * @param  Assertion\AssertionInterface             $assert
      * @throws Exception\InvalidArgumentException
      * @return Acl Provides a fluent interface
      */
@@ -530,7 +532,7 @@ class Acl implements AclInterface
         $roles = null,
         $resources = null,
         $privileges = null,
-        Assertion\AssertionInterface $assert = null
+        ?Assertion\AssertionInterface $assert = null
     ) {
         // ensure that the rule type is valid; normalize input to uppercase
         $type = strtoupper($type);
@@ -549,7 +551,7 @@ class Acl implements AclInterface
             $roles = [null];
         }
         $rolesTemp = $roles;
-        $roles = [];
+        $roles     = [];
         foreach ($rolesTemp as $role) {
             if (null !== $role) {
                 $roles[] = $this->getRoleRegistry()->get($role);
@@ -574,13 +576,13 @@ class Acl implements AclInterface
             $resources = [null];
         }
         $resourcesTemp = $resources;
-        $resources = [];
+        $resources     = [];
         foreach ($resourcesTemp as $resource) {
             if (null !== $resource) {
-                $resourceObj = $this->getResource($resource);
-                $resourceId = $resourceObj->getResourceId();
-                $children = $this->getChildResources($resourceObj);
-                $resources = array_merge($resources, $children);
+                $resourceObj            = $this->getResource($resource);
+                $resourceId             = $resourceObj->getResourceId();
+                $children               = $this->getChildResources($resourceObj);
+                $resources              = array_merge($resources, $children);
                 $resources[$resourceId] = $resourceObj;
             } else {
                 $resources[] = null;
@@ -600,7 +602,7 @@ class Acl implements AclInterface
             case self::OP_ADD:
                 foreach ($resources as $resource) {
                     foreach ($roles as $role) {
-                        $rules =& $this->getRules($resource, $role, true);
+                        $rules = &$this->getRules($resource, $role, true);
                         if (! $privileges) {
                             $rules['allPrivileges']['type']   = $type;
                             $rules['allPrivileges']['assert'] = $assert;
@@ -621,7 +623,7 @@ class Acl implements AclInterface
             case self::OP_REMOVE:
                 foreach ($resources as $resource) {
                     foreach ($roles as $role) {
-                        $rules =& $this->getRules($resource, $role);
+                        $rules = &$this->getRules($resource, $role);
                         if (null === $rules) {
                             continue;
                         }
@@ -631,9 +633,9 @@ class Acl implements AclInterface
                                     $rules = [
                                         'allPrivileges' => [
                                             'type'   => self::TYPE_DENY,
-                                            'assert' => null
+                                            'assert' => null,
                                         ],
-                                        'byPrivilegeId' => []
+                                        'byPrivilegeId' => [],
                                     ];
                                 }
                                 continue;
@@ -644,7 +646,8 @@ class Acl implements AclInterface
                             }
                         } else {
                             foreach ($privileges as $privilege) {
-                                if (isset($rules['byPrivilegeId'][$privilege])
+                                if (
+                                    isset($rules['byPrivilegeId'][$privilege])
                                     && $type === $rules['byPrivilegeId'][$privilege]['type']
                                 ) {
                                     unset($rules['byPrivilegeId'][$privilege]);
@@ -675,11 +678,11 @@ class Acl implements AclInterface
     protected function getChildResources(Resource\ResourceInterface $resource)
     {
         $return = [];
-        $id = $resource->getResourceId();
+        $id     = $resource->getResourceId();
 
         $children = $this->resources[$id]['children'];
         foreach ($children as $child) {
-            $child_return = $this->getChildResources($child);
+            $child_return                          = $this->getChildResources($child);
             $child_return[$child->getResourceId()] = $child;
 
             $return = array_merge($return, $child_return);
@@ -717,14 +720,14 @@ class Acl implements AclInterface
     public function isAllowed($role = null, $resource = null, $privilege = null)
     {
         // reset role & resource to null
-        $this->isAllowedRole = null;
-        $this->isAllowedResource = null;
+        $this->isAllowedRole      = null;
+        $this->isAllowedResource  = null;
         $this->isAllowedPrivilege = null;
 
         if (null !== $role) {
             // keep track of originally called role
             $this->isAllowedRole = $role;
-            $role = $this->getRoleRegistry()->get($role);
+            $role                = $this->getRoleRegistry()->get($role);
             if (! $this->isAllowedRole instanceof Role\RoleInterface) {
                 $this->isAllowedRole = $role;
             }
@@ -733,7 +736,7 @@ class Acl implements AclInterface
         if (null !== $resource) {
             // keep track of originally called resource
             $this->isAllowedResource = $resource;
-            $resource = $this->getResource($resource);
+            $resource                = $this->getResource($resource);
             if (! $this->isAllowedResource instanceof Resource\ResourceInterface) {
                 $this->isAllowedResource = $resource;
             }
@@ -750,9 +753,11 @@ class Acl implements AclInterface
                 // look for rule on 'allRoles' pseudo-parent
                 if (null !== ($rules = $this->getRules($resource, null))) {
                     foreach ($rules['byPrivilegeId'] as $privilege => $rule) {
-                        if (self::TYPE_DENY === (
+                        if (
+                            self::TYPE_DENY === (
                             $ruleTypeOnePrivilege = $this->getRuleType($resource, null, $privilege)
-                        )) {
+                            )
+                        ) {
                             return false;
                         }
                     }
@@ -812,15 +817,13 @@ class Acl implements AclInterface
      * This method returns true if a rule is found and allows access. If a rule exists and denies access,
      * then this method returns false. If no applicable rule is found, then this method returns null.
      *
-     * @param  Role\RoleInterface           $role
-     * @param  Resource\ResourceInterface   $resource
      * @return bool|null
      */
-    protected function roleDFSAllPrivileges(Role\RoleInterface $role, Resource\ResourceInterface $resource = null)
+    protected function roleDFSAllPrivileges(Role\RoleInterface $role, ?Resource\ResourceInterface $resource = null)
     {
         $dfs = [
             'visited' => [],
-            'stack'   => []
+            'stack'   => [],
         ];
 
         if (null !== ($result = $this->roleDFSVisitAllPrivileges($role, $resource, $dfs))) {
@@ -847,15 +850,13 @@ class Acl implements AclInterface
      *
      * This method is used by the internal depth-first search algorithm and may modify the DFS data structure.
      *
-     * @param  Role\RoleInterface           $role
-     * @param  Resource\ResourceInterface   $resource
      * @param  array                        $dfs
      * @return bool|null
      * @throws Exception\RuntimeException
      */
     protected function roleDFSVisitAllPrivileges(
         Role\RoleInterface $role,
-        Resource\ResourceInterface $resource = null,
+        ?Resource\ResourceInterface $resource = null,
         &$dfs = null
     ) {
         if (null === $dfs) {
@@ -888,15 +889,13 @@ class Acl implements AclInterface
      * This method returns true if a rule is found and allows access. If a rule exists and denies access,
      * then this method returns false. If no applicable rule is found, then this method returns null.
      *
-     * @param  Role\RoleInterface           $role
-     * @param  Resource\ResourceInterface   $resource
      * @param  string                       $privilege
      * @return bool|null
      * @throws Exception\RuntimeException
      */
     protected function roleDFSOnePrivilege(
         Role\RoleInterface $role,
-        Resource\ResourceInterface $resource = null,
+        ?Resource\ResourceInterface $resource = null,
         $privilege = null
     ) {
         if (null === $privilege) {
@@ -905,7 +904,7 @@ class Acl implements AclInterface
 
         $dfs = [
             'visited' => [],
-            'stack'   => []
+            'stack'   => [],
         ];
 
         if (null !== ($result = $this->roleDFSVisitOnePrivilege($role, $resource, $privilege, $dfs))) {
@@ -932,8 +931,6 @@ class Acl implements AclInterface
      *
      * This method is used by the internal depth-first search algorithm and may modify the DFS data structure.
      *
-     * @param  Role\RoleInterface           $role
-     * @param  Resource\ResourceInterface   $resource
      * @param  string                       $privilege
      * @param  array                        $dfs
      * @return bool|null
@@ -941,7 +938,7 @@ class Acl implements AclInterface
      */
     protected function roleDFSVisitOnePrivilege(
         Role\RoleInterface $role,
-        Resource\ResourceInterface $resource = null,
+        ?Resource\ResourceInterface $resource = null,
         $privilege = null,
         &$dfs = null
     ) {
@@ -989,14 +986,12 @@ class Acl implements AclInterface
      * If all three parameters are null, then the default ACL rule type is returned,
      * based on whether its assertion method passes.
      *
-     * @param  null|Resource\ResourceInterface  $resource
-     * @param  null|Role\RoleInterface          $role
      * @param  null|string                      $privilege
      * @return string|null
      */
     protected function getRuleType(
-        Resource\ResourceInterface $resource = null,
-        Role\RoleInterface $role = null,
+        ?Resource\ResourceInterface $resource = null,
+        ?Role\RoleInterface $role = null,
         $privilege = null
     ) {
         // Pull all rules for the specified $resource and $role
@@ -1039,24 +1034,22 @@ class Acl implements AclInterface
      *
      * If the $create parameter is true, then a rule set is first created and then returned to the caller.
      *
-     * @param  Resource\ResourceInterface $resource
-     * @param  Role\RoleInterface         $role
      * @param  bool                    $create
      * @return array|null
      */
     protected function &getRules(
-        Resource\ResourceInterface $resource = null,
-        Role\RoleInterface $role = null,
+        ?Resource\ResourceInterface $resource = null,
+        ?Role\RoleInterface $role = null,
         $create = false
     ) {
         // create a reference to null
-        $null = null;
-        $nullRef =& $null;
+        $null    = null;
+        $nullRef = &$null;
 
         // follow $resource
         do {
             if (null === $resource) {
-                $visitor =& $this->rules['allResources'];
+                $visitor = &$this->rules['allResources'];
                 break;
             }
             $resourceId = $resource->getResourceId();
@@ -1066,7 +1059,7 @@ class Acl implements AclInterface
                 }
                 $this->rules['byResourceId'][$resourceId] = [];
             }
-            $visitor =& $this->rules['byResourceId'][$resourceId];
+            $visitor = &$this->rules['byResourceId'][$resourceId];
         } while (false);
 
         // follow $role
@@ -1117,15 +1110,17 @@ class Acl implements AclInterface
     private function getRuleTypeFromAssertion(
         Assertion\AssertionInterface $assertion,
         $ruleType,
-        Role\RoleInterface $role = null,
-        Resource\ResourceInterface $resource = null
+        ?Role\RoleInterface $role = null,
+        ?Resource\ResourceInterface $resource = null
     ) {
-        if ($assertion->assert(
-            $this,
-            $this->isAllowedRole instanceof Role\RoleInterface ? $this->isAllowedRole : $role,
-            $this->isAllowedResource instanceof Resource\ResourceInterface ? $this->isAllowedResource : $resource,
-            $this->isAllowedPrivilege
-        )) {
+        if (
+            $assertion->assert(
+                $this,
+                $this->isAllowedRole instanceof Role\RoleInterface ? $this->isAllowedRole : $role,
+                $this->isAllowedResource instanceof Resource\ResourceInterface ? $this->isAllowedResource : $resource,
+                $this->isAllowedPrivilege
+            )
+        ) {
             return $ruleType;
         }
 

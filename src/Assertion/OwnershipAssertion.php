@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
- * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
  */
 
 namespace Laminas\Permissions\Acl\Assertion;
@@ -18,7 +18,7 @@ use Laminas\Permissions\Acl\Role\RoleInterface;
  */
 class OwnershipAssertion implements AssertionInterface
 {
-    public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
+    public function assert(Acl $acl, ?RoleInterface $role = null, ?ResourceInterface $resource = null, $privilege = null)
     {
         //Assert passes if role or resource is not proprietary
         if (! $role instanceof ProprietaryInterface || ! $resource instanceof ProprietaryInterface) {
@@ -30,6 +30,6 @@ class OwnershipAssertion implements AssertionInterface
             return true;
         }
 
-        return ($resource->getOwnerId() === $role->getOwnerId());
+        return $resource->getOwnerId() === $role->getOwnerId();
     }
 }

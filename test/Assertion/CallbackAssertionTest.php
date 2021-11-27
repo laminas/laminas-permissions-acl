@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
- * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
  */
+
 namespace LaminasTest\Permissions\Acl\Assertion;
 
 use Laminas\Permissions\Acl;
 use Laminas\Permissions\Acl\Exception\InvalidArgumentException;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Role\RoleInterface;
 use LaminasTest\Permissions\Acl\Assertion\TestSubclasses\CallbackAssertion;
 use PHPUnit\Framework\TestCase;
 
@@ -31,9 +34,9 @@ class CallbackAssertionTest extends TestCase
      */
     public function testCallbackIsSet()
     {
-        $callback   = function () {
+        $callback = function () {
         };
-        $assert     = new CallbackAssertion($callback);
+        $assert   = new CallbackAssertion($callback);
         $this->assertSame($callback, $assert->peakCallback());
     }
 
@@ -42,14 +45,14 @@ class CallbackAssertionTest extends TestCase
      */
     public function testAssertMethodPassArgsToCallback()
     {
-        $acl       = new Acl\Acl();
-        $that      = $this;
-        $assert    = new CallbackAssertion(
+        $acl    = new Acl\Acl();
+        $that   = $this;
+        $assert = new CallbackAssertion(
             function ($aclArg, $roleArg, $resourceArg, $privilegeArg) use ($that, $acl) {
                 $that->assertSame($acl, $aclArg);
-                $that->assertInstanceOf('Laminas\Permissions\Acl\Role\RoleInterface', $roleArg);
+                $that->assertInstanceOf(RoleInterface::class, $roleArg);
                 $that->assertEquals('guest', $roleArg->getRoleId());
-                $that->assertInstanceOf('Laminas\Permissions\Acl\Resource\ResourceInterface', $resourceArg);
+                $that->assertInstanceOf(ResourceInterface::class, $resourceArg);
                 $that->assertEquals('area1', $resourceArg->getResourceId());
                 $that->assertEquals('somePrivilege', $privilegeArg);
                 return false;
@@ -67,8 +70,8 @@ class CallbackAssertionTest extends TestCase
      */
     public function testAssertMethod()
     {
-        $acl       = new Acl\Acl();
-        $roleGuest = new Acl\Role\GenericRole('guest');
+        $acl        = new Acl\Acl();
+        $roleGuest  = new Acl\Role\GenericRole('guest');
         $assertMock = function ($value) {
             return function ($aclArg, $roleArg, $resourceArg, $privilegeArg) use ($value) {
                 return $value;

@@ -1,15 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
- * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
  */
 
 namespace Laminas\Permissions\Acl\Role;
 
 use Laminas\Permissions\Acl\Exception;
 use Traversable;
+
+use function is_array;
+use function sprintf;
 
 class Registry
 {
@@ -34,7 +37,6 @@ class Registry
      * will have the least priority, and the last parent added will have the
      * highest priority.
      *
-     * @param  RoleInterface                           $role
      * @param  RoleInterface|string|array|Traversable $parents
      * @throws Exception\InvalidArgumentException
      * @return Registry Provides a fluent interface
@@ -70,7 +72,7 @@ class Registry
                         $roleParentId
                     ), 0, $e);
                 }
-                $roleParents[$roleParentId] = $roleParent;
+                $roleParents[$roleParentId]                      = $roleParent;
                 $this->roles[$roleParentId]['children'][$roleId] = $role;
             }
         }

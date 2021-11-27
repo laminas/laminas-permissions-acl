@@ -1,15 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
- * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
  */
+
 namespace Laminas\Permissions\Acl\Assertion;
 
 use Laminas\Permissions\Acl\Exception\InvalidArgumentException;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
+
+use function get_class;
+use function gettype;
+use function is_object;
+use function sprintf;
 
 class AssertionManager extends AbstractPluginManager
 {
@@ -28,9 +34,9 @@ class AssertionManager extends AbstractPluginManager
         if (! $instance instanceof $this->instanceOf) {
             throw new InvalidServiceException(sprintf(
                 '%s can only create instances of %s; %s is invalid',
-                get_class($this),
+                static::class,
                 $this->instanceOf,
-                (is_object($instance) ? get_class($instance) : gettype($instance))
+                is_object($instance) ? get_class($instance) : gettype($instance)
             ));
         }
     }
@@ -40,9 +46,10 @@ class AssertionManager extends AbstractPluginManager
      *
      * Proxies to `validate()`.
      *
+     * @deprecated Please use {@see AssertionManager::validate()} instead.
+     *
      * @param mixed $instance
      * @throws InvalidArgumentException
-     * @deprecated Please use {@see AssertionManager::validate()} instead.
      */
     public function validatePlugin($instance)
     {

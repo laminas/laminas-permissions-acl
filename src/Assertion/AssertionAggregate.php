@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
- * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
  */
+
 namespace Laminas\Permissions\Acl\Assertion;
 
 use Laminas\Permissions\Acl\Acl;
@@ -12,6 +13,8 @@ use Laminas\Permissions\Acl\Exception\InvalidArgumentException;
 use Laminas\Permissions\Acl\Exception\RuntimeException;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Laminas\Permissions\Acl\Role\RoleInterface;
+
+use function class_exists;
 
 class AssertionAggregate implements AssertionInterface
 {
@@ -21,10 +24,7 @@ class AssertionAggregate implements AssertionInterface
 
     protected $assertions = [];
 
-    /**
-     *
-     * @var $manager AssertionManager
-     */
+    /** @var $manager AssertionManager */
     protected $assertionManager;
 
     protected $mode = self::MODE_ALL;
@@ -34,7 +34,6 @@ class AssertionAggregate implements AssertionInterface
      *
      * @param AssertionInterface|string $assertion
      *    if string, must match a AssertionManager declared service (checked later)
-     *
      * @return self
      */
     public function addAssertion($assertion)
@@ -66,9 +65,6 @@ class AssertionAggregate implements AssertionInterface
     }
 
     /**
-     *
-     * @param AssertionManager $manager
-     *
      * @return self
      */
     public function setAssertionManager(AssertionManager $manager)
@@ -94,7 +90,6 @@ class AssertionAggregate implements AssertionInterface
      * @param string $mode
      *    indicates how assertion chain result should interpreted (either 'all' or 'at_least_one')
      * @throws InvalidArgumentException
-     *
      * @return self
      */
     public function setMode($mode)
@@ -126,8 +121,8 @@ class AssertionAggregate implements AssertionInterface
      */
     public function assert(
         Acl $acl,
-        RoleInterface $role = null,
-        ResourceInterface $resource = null,
+        ?RoleInterface $role = null,
+        ?ResourceInterface $resource = null,
         $privilege = null
     ) {
         // check if assertions are set

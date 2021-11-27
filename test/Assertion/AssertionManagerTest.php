@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
- * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
  */
+
 namespace LaminasTest\Permissions\Acl\Assertion;
 
 use Laminas\Permissions\Acl\Assertion\AssertionInterface;
@@ -19,7 +20,7 @@ class AssertionManagerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->manager = new AssertionManager(new ServiceManager);
+        $this->manager = new AssertionManager(new ServiceManager());
     }
 
     public function testValidatePlugin()
