@@ -19,11 +19,11 @@
         "sort-packages": true
     },
     "conflict": {
-        "laminas/laminas-servicemanager": "<3.0"
+        "laminas/laminas-servicemanager": "<3.0",
+        "zendframework/zend-permissions-acl": "*"
     },
     "require": {
-        "php": "^7.3 || ~8.0.0",
-        "laminas/laminas-zendframework-bridge": "^1.0"
+        "php": "^7.3 || ~8.0.0"
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "~1.0.0",
@@ -55,8 +55,5 @@
         "static-analysis": "psalm --shepherd --stats",
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
-    },
-    "replace": {
-        "zendframework/zend-permissions-acl": "^2.7.1"
     }
 }
