@@ -1460,7 +1460,7 @@ class AclTest extends TestCase
     /**
      * @see https://github.com/laminas/laminas-permissions-acl/issues/2
      */
-    public function testCanDenyAnInheritedAllowRule()
+    public function testCanDenyAnInheritedAllowRule(): void
     {
         $assertAllow = new MockAssertion(true);
 
@@ -1477,7 +1477,7 @@ class AclTest extends TestCase
     /**
      * @see https://github.com/laminas/laminas-permissions-acl/issues/12
      */
-    public function testCanFallbackOnGenericAllowedRuleWhenSpecificAllowRuleIsRejectedWithFailingAssertion()
+    public function testCanFallbackOnGenericAllowedRuleWhenSpecificAllowRuleIsRejectedWithFailingAssertion(): void
     {
         $this->acl->addRole('user');
         $this->acl->addResource('asset');
@@ -1490,7 +1490,7 @@ class AclTest extends TestCase
     /**
      * @see https://github.com/laminas/laminas-permissions-acl/issues/12
      */
-    public function testCanInheritRolesInAnyOrderAndStillCumulateAllAllowedRulesWithSuccessfulAssertions()
+    public function testCanInheritRolesInAnyOrderAndStillCumulateAllAllowedRulesWithSuccessfulAssertions(): void
     {
         $this->acl->addRole('user-allow');
         $this->acl->addRole('user-deny');

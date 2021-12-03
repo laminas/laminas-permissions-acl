@@ -2,6 +2,8 @@
 
 namespace Laminas\Permissions\Acl;
 
+use Laminas\Permissions\Acl\Assertion\AssertionInterface;
+
 class Acl implements AclInterface
 {
     /**
@@ -1018,6 +1020,7 @@ class Acl implements AclInterface
 
         // Was a custom assertion supplied? Use it to retrieve the rule type.
         if ($rule['assert']) {
+            /** @var AssertionInterface $assertion */
             $assertion = $rule['assert'];
             $assertionValue = $assertion->assert(
                 $this,
@@ -1025,9 +1028,11 @@ class Acl implements AclInterface
                 ($this->isAllowedResource instanceof Resource\ResourceInterface) ? $this->isAllowedResource : $resource,
                 $this->isAllowedPrivilege
             );
+        } else {
+            $assertionValue = true;
         }
 
-        if (null === $rule['assert'] || $assertionValue) {
+        if ($assertionValue) {
             return $rule['type'];
         }
 
