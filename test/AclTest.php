@@ -7,6 +7,7 @@ use Laminas\Permissions\Acl\Exception\ExceptionInterface;
 use Laminas\Permissions\Acl\Exception\InvalidArgumentException;
 use Laminas\Permissions\Acl\Resource;
 use Laminas\Permissions\Acl\Role;
+use LaminasTest\Permissions\Acl\TestAsset\MockAssertion;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -513,7 +514,7 @@ class AclTest extends TestCase
      */
     public function testDefaultAssert()
     {
-        $this->acl->deny(null, null, null, new TestAsset\MockAssertion(false));
+        $this->acl->deny(null, null, null, new MockAssertion(false));
         $this->assertTrue($this->acl->isAllowed());
         $this->assertTrue($this->acl->isAllowed(null, null, 'somePrivilege'));
     }
@@ -605,10 +606,10 @@ class AclTest extends TestCase
      */
     public function testPrivilegeAssert()
     {
-        $this->acl->allow(null, null, 'somePrivilege', new TestAsset\MockAssertion(true));
+        $this->acl->allow(null, null, 'somePrivilege', new MockAssertion(true));
         $this->assertTrue($this->acl->isAllowed(null, null, 'somePrivilege'));
 
-        $this->acl->allow(null, null, 'somePrivilege', new TestAsset\MockAssertion(false));
+        $this->acl->allow(null, null, 'somePrivilege', new MockAssertion(false));
         $this->assertFalse($this->acl->isAllowed(null, null, 'somePrivilege'));
     }
 
@@ -734,10 +735,10 @@ class AclTest extends TestCase
         $roleGuest = new Role\GenericRole('guest');
         $this->acl
             ->addRole($roleGuest)
-            ->allow($roleGuest, null, 'somePrivilege', new TestAsset\MockAssertion(true));
+            ->allow($roleGuest, null, 'somePrivilege', new MockAssertion(true));
         $this->assertTrue($this->acl->isAllowed($roleGuest, null, 'somePrivilege'));
 
-        $this->acl->allow($roleGuest, null, 'somePrivilege', new TestAsset\MockAssertion(false));
+        $this->acl->allow($roleGuest, null, 'somePrivilege', new MockAssertion(false));
         $this->assertFalse($this->acl->isAllowed($roleGuest, null, 'somePrivilege'));
     }
 
@@ -760,7 +761,7 @@ class AclTest extends TestCase
      */
     public function testRemoveDefaultDenyAssert()
     {
-        $this->acl->deny(null, null, null, new TestAsset\MockAssertion(false));
+        $this->acl->deny(null, null, null, new MockAssertion(false));
         $this->assertTrue($this->acl->isAllowed());
         $this->acl->removeDeny();
         $this->assertFalse($this->acl->isAllowed());
@@ -1185,7 +1186,6 @@ class AclTest extends TestCase
         }
     }
 
-
     /**
      * @group Laminas-1721
      */
@@ -1333,7 +1333,7 @@ class AclTest extends TestCase
         $this->acl->addRole(new Role\GenericRole('editor'), 'staff');
         $this->acl->addRole(new Role\GenericRole('administrator'));
 
-        $expected = ['guest', 'staff','editor','administrator'];
+        $expected = ['guest', 'staff', 'editor','administrator'];
         $this->assertEquals($expected, $this->acl->getRoles());
     }
 
@@ -1460,18 +1460,50 @@ class AclTest extends TestCase
     /**
      * @see https://github.com/laminas/laminas-permissions-acl/issues/2
      */
-    public function testWhenAssertionReturnsFalseTheInversionOfItsTypeShouldBeUsed()
+    public function testCanDenyAnInheritedAllowRule(): void
     {
-        $assertAllow = new TestAsset\ChildBooleanAssertion(true);
-        $assertDeny  = new TestAsset\ChildBooleanAssertion(false);
+        $assertAllow = new MockAssertion(true);
 
         $this->acl->addRole('staff');
         $this->acl->addResource('base');
         $this->acl->allow('staff', 'base', 'update', $assertAllow);
 
         $this->acl->addResource('user', 'base');
-        $this->acl->allow('staff', 'user', 'update', $assertDeny);
+        $this->acl->deny('staff', 'user', 'update', $assertAllow);
 
         $this->assertFalse($this->acl->isAllowed('staff', 'user', 'update'));
+    }
+
+    /**
+     * @see https://github.com/laminas/laminas-permissions-acl/issues/12
+     */
+    public function testCanFallbackOnGenericAllowedRuleWhenSpecificAllowRuleIsRejectedWithFailingAssertion(): void
+    {
+        $this->acl->addRole('user');
+        $this->acl->addResource('asset');
+        $this->acl->allow('user', 'asset', 'read', new MockAssertion(false));
+        $this->acl->allow('user');
+
+        $this->assertTrue($this->acl->isAllowed('user', 'asset', 'read'));
+    }
+
+    /**
+     * @see https://github.com/laminas/laminas-permissions-acl/issues/12
+     */
+    public function testCanInheritRolesInAnyOrderAndStillCumulateAllAllowedRulesWithSuccessfulAssertions(): void
+    {
+        $this->acl->addRole('user-allow');
+        $this->acl->addRole('user-deny');
+        $this->acl->addRole('super-user-1', ['user-deny', 'user-allow']);
+        $this->acl->addRole('super-user-2', ['user-allow', 'user-deny']);
+        $this->acl->addResource('asset');
+
+        $this->acl->allow('user-allow', 'asset', 'read', new MockAssertion(true));
+        $this->acl->allow('user-deny', 'asset', 'read', new MockAssertion(false));
+
+        $this->assertTrue($this->acl->isAllowed('user-allow', 'asset', 'read'));
+        $this->assertFalse($this->acl->isAllowed('user-deny', 'asset', 'read'));
+        $this->assertTrue($this->acl->isAllowed('super-user-1', 'asset', 'read'));
+        $this->assertTrue($this->acl->isAllowed('super-user-2', 'asset', 'read'));
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Laminas\Permissions\Acl;
 
+use Laminas\Permissions\Acl\Assertion\AssertionInterface;
+
 class Acl implements AclInterface
 {
     /**
@@ -1018,11 +1020,31 @@ class Acl implements AclInterface
 
         // Was a custom assertion supplied? Use it to retrieve the rule type.
         if ($rule['assert']) {
-            return $this->getRuleTypeFromAssertion($rule['assert'], $rule['type'], $role, $resource);
+            /** @var AssertionInterface $assertion */
+            $assertion = $rule['assert'];
+            $assertionValue = $assertion->assert(
+                $this,
+                ($this->isAllowedRole instanceof Role\RoleInterface) ? $this->isAllowedRole : $role,
+                ($this->isAllowedResource instanceof Resource\ResourceInterface) ? $this->isAllowedResource : $resource,
+                $this->isAllowedPrivilege
+            );
+        } else {
+            $assertionValue = true;
         }
 
-        // Return the type supplied with the rule.
-        return $rule['type'];
+        if ($assertionValue) {
+            return $rule['type'];
+        }
+
+        if (null !== $resource || null !== $role || null !== $privilege) {
+            return;
+        }
+
+        if (self::TYPE_ALLOW === $rule['type']) {
+            return self::TYPE_DENY;
+        }
+
+        return self::TYPE_ALLOW;
     }
 
     /**
@@ -1097,32 +1119,5 @@ class Acl implements AclInterface
     public function getResources()
     {
         return array_keys($this->resources);
-    }
-
-    /**
-     * Run the assertion to determine what rule type is selected
-     *
-     * Runs the assertion. When the assertion returns true, return the rule type
-     * as defined; otherwise, return its inversion.
-     *
-     * @param string $ruleType
-     * @return string
-     */
-    private function getRuleTypeFromAssertion(
-        Assertion\AssertionInterface $assertion,
-        $ruleType,
-        Role\RoleInterface $role = null,
-        Resource\ResourceInterface $resource = null
-    ) {
-        if ($assertion->assert(
-            $this,
-            $this->isAllowedRole instanceof Role\RoleInterface ? $this->isAllowedRole : $role,
-            $this->isAllowedResource instanceof Resource\ResourceInterface ? $this->isAllowedResource : $resource,
-            $this->isAllowedPrivilege
-        )) {
-            return $ruleType;
-        }
-
-        return $ruleType === self::TYPE_ALLOW ? self::TYPE_DENY : self::TYPE_ALLOW;
     }
 }
