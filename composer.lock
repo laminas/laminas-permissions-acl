@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "89db90caa518078841ff93a4a6566c9e",
+    "content-hash": "e525a79d1a27ccb5b795f32b493bef1c",
     "packages": [],
     "packages-dev": [
         {
@@ -175,16 +175,16 @@
         },
         {
             "name": "composer/package-versions-deprecated",
-            "version": "1.11.99.1",
+            "version": "1.11.99.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/package-versions-deprecated.git",
-                "reference": "7413f0b55a051e89485c5cb9f765fe24bb02a7b6"
+                "reference": "b4f54f74ef3453349c24a845d22392cd31e65f1d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/package-versions-deprecated/zipball/7413f0b55a051e89485c5cb9f765fe24bb02a7b6",
-                "reference": "7413f0b55a051e89485c5cb9f765fe24bb02a7b6",
+                "url": "https://api.github.com/repos/composer/package-versions-deprecated/zipball/b4f54f74ef3453349c24a845d22392cd31e65f1d",
+                "reference": "b4f54f74ef3453349c24a845d22392cd31e65f1d",
                 "shasum": ""
             },
             "require": {
@@ -228,7 +228,7 @@
             "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
             "support": {
                 "issues": "https://github.com/composer/package-versions-deprecated/issues",
-                "source": "https://github.com/composer/package-versions-deprecated/tree/1.11.99.1"
+                "source": "https://github.com/composer/package-versions-deprecated/tree/1.11.99.5"
             },
             "funding": [
                 {
@@ -244,27 +244,27 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-11-11T10:22:58+00:00"
+            "time": "2022-01-17T14:14:24+00:00"
         },
         {
             "name": "composer/semver",
-            "version": "3.2.4",
+            "version": "3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
-                "reference": "a02fdf930a3c1c3ed3a49b5f63859c0c20e10464"
+                "reference": "3953f23262f2bff1919fc82183ad9acb13ff62c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/semver/zipball/a02fdf930a3c1c3ed3a49b5f63859c0c20e10464",
-                "reference": "a02fdf930a3c1c3ed3a49b5f63859c0c20e10464",
+                "url": "https://api.github.com/repos/composer/semver/zipball/3953f23262f2bff1919fc82183ad9acb13ff62c9",
+                "reference": "3953f23262f2bff1919fc82183ad9acb13ff62c9",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.3.2 || ^7.0 || ^8.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "^0.12.54",
+                "phpstan/phpstan": "^1.4",
                 "symfony/phpunit-bridge": "^4.2 || ^5"
             },
             "type": "library",
@@ -309,7 +309,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/semver/issues",
-                "source": "https://github.com/composer/semver/tree/3.2.4"
+                "source": "https://github.com/composer/semver/tree/3.3.2"
             },
             "funding": [
                 {
@@ -325,7 +325,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-11-13T08:59:24+00:00"
+            "time": "2022-04-01T19:23:25+00:00"
         },
         {
             "name": "composer/xdebug-handler",
@@ -1857,16 +1857,16 @@
         },
         {
             "name": "psalm/plugin-phpunit",
-            "version": "0.15.1",
+            "version": "0.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psalm/psalm-plugin-phpunit.git",
-                "reference": "30ca25ce069bf4943c36e59b7df6954f6af05e64"
+                "reference": "45951541beef07e93e3ad197daf01da88e85c31d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psalm/psalm-plugin-phpunit/zipball/30ca25ce069bf4943c36e59b7df6954f6af05e64",
-                "reference": "30ca25ce069bf4943c36e59b7df6954f6af05e64",
+                "url": "https://api.github.com/repos/psalm/psalm-plugin-phpunit/zipball/45951541beef07e93e3ad197daf01da88e85c31d",
+                "reference": "45951541beef07e93e3ad197daf01da88e85c31d",
                 "shasum": ""
             },
             "require": {
@@ -1874,7 +1874,7 @@
                 "composer/semver": "^1.4 || ^2.0 || ^3.0",
                 "ext-simplexml": "*",
                 "php": "^7.1 || ^8.0",
-                "vimeo/psalm": "dev-master || dev-4.x || ^4.0"
+                "vimeo/psalm": "dev-master || dev-4.x || ^4.5"
             },
             "conflict": {
                 "phpunit/phpunit": "<7.5"
@@ -1911,9 +1911,9 @@
             "description": "Psalm plugin for PHPUnit",
             "support": {
                 "issues": "https://github.com/psalm/psalm-plugin-phpunit/issues",
-                "source": "https://github.com/psalm/psalm-plugin-phpunit/tree/0.15.1"
+                "source": "https://github.com/psalm/psalm-plugin-phpunit/tree/0.17.0"
             },
-            "time": "2021-01-23T00:19:07+00:00"
+            "time": "2022-06-14T17:05:57+00:00"
         },
         {
             "name": "psr/container",
@@ -4082,5 +4082,5 @@
     "platform-overrides": {
         "php": "7.3.99"
     },
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
