@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.7.2@83a0325c0a95c0ab531d6b90c877068b464377b5">
+<files psalm-version="4.24.0@06dd975cb55d36af80f242561738f16c5f58264f">
   <file src="src/Acl.php">
-    <DocblockTypeContradiction occurrences="4">
-      <code>$resource instanceof Resource\ResourceInterface</code>
-      <code>$role</code>
-      <code>$role instanceof Role\RoleInterface</code>
+    <DocblockTypeContradiction occurrences="1">
       <code>null === $this-&gt;roleRegistry</code>
     </DocblockTypeContradiction>
     <InvalidArgument occurrences="8">
@@ -34,7 +31,7 @@
     <MissingParamType occurrences="1">
       <code>$inherit</code>
     </MissingParamType>
-    <MixedArgument occurrences="18">
+    <MixedArgument occurrences="16">
       <code>$child</code>
       <code>$childId</code>
       <code>$dfs['stack']</code>
@@ -50,8 +47,6 @@
       <code>$role</code>
       <code>$role</code>
       <code>$role</code>
-      <code>$rule['assert']</code>
-      <code>$rule['type']</code>
       <code>$visitor</code>
     </MixedArgument>
     <MixedArrayAccess occurrences="28">
@@ -94,7 +89,7 @@
       <code>$visitor['allRoles']</code>
       <code>$visitor['byRoleId']</code>
     </MixedArrayAssignment>
-    <MixedArrayOffset occurrences="19">
+    <MixedArrayOffset occurrences="18">
       <code>$dfs['visited'][$role-&gt;getRoleId()]</code>
       <code>$dfs['visited'][$role-&gt;getRoleId()]</code>
       <code>$resources[$resourceId]</code>
@@ -109,7 +104,6 @@
       <code>$this-&gt;resources[$resourceId]</code>
       <code>$this-&gt;resources[$resourceId]</code>
       <code>$this-&gt;resources[$resourceParent-&gt;getResourceId()]</code>
-      <code>$this-&gt;rules['allResources']['byRoleId'][$roleIdCurrent]</code>
       <code>$this-&gt;rules['allResources']['byRoleId'][$roleIdCurrent]</code>
       <code>$this-&gt;rules['byResourceId'][$resourceIdCurrent]</code>
       <code>$this-&gt;rules['byResourceId'][$resourceIdCurrent]</code>
@@ -225,9 +219,6 @@
       <code>(string) $resource</code>
       <code>(string) $resource</code>
     </RedundantCastGivenDocblockType>
-    <RedundantConditionGivenDocblockType occurrences="1">
-      <code>$this-&gt;isAllowedRole instanceof Role\RoleInterface</code>
-    </RedundantConditionGivenDocblockType>
     <TooManyArguments occurrences="1">
       <code>roleDFSAllPrivileges</code>
     </TooManyArguments>
@@ -242,18 +233,20 @@
       <code>Resource</code>
       <code>protected $isAllowedResource = null;</code>
     </UndefinedDocblockClass>
-    <UnusedVariable occurrences="11">
+    <UnusedForeachValue occurrences="9">
       <code>$child</code>
       <code>$resource</code>
       <code>$rule</code>
       <code>$rule</code>
+      <code>$rules</code>
+      <code>$rules</code>
+      <code>$rules</code>
+      <code>$rules</code>
+      <code>$rules</code>
+    </UnusedForeachValue>
+    <UnusedVariable occurrences="2">
       <code>$ruleTypeOnePrivilege</code>
       <code>$ruleTypeOnePrivilege</code>
-      <code>$rules</code>
-      <code>$rules</code>
-      <code>$rules</code>
-      <code>$rules</code>
-      <code>$rules</code>
     </UnusedVariable>
   </file>
   <file src="src/Assertion/AssertionAggregate.php">
@@ -301,18 +294,12 @@
     </MixedReturnStatement>
   </file>
   <file src="src/Assertion/AssertionManager.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>$e-&gt;getCode()</code>
-    </InvalidScalarArgument>
     <MissingReturnType occurrences="1">
       <code>validatePlugin</code>
     </MissingReturnType>
     <MixedArgument occurrences="1">
       <code>$this-&gt;instanceOf</code>
     </MixedArgument>
-    <PossiblyNullArgument occurrences="1">
-      <code>$this-&gt;instanceOf</code>
-    </PossiblyNullArgument>
   </file>
   <file src="src/Assertion/ExpressionAssertion.php">
     <InvalidDocblock occurrences="2">
@@ -331,9 +318,8 @@
       <code>$property</code>
       <code>$right</code>
     </MissingParamType>
-    <MissingReturnType occurrences="4">
+    <MissingReturnType occurrences="3">
       <code>evaluateExpression</code>
-      <code>resolveOperandValue</code>
       <code>validateOperand</code>
       <code>validateOperator</code>
     </MissingReturnType>
@@ -436,11 +422,11 @@
       <code>(string) $role</code>
       <code>(string) $role</code>
     </RedundantCastGivenDocblockType>
-    <UnusedVariable occurrences="3">
+    <UnusedForeachValue occurrences="3">
       <code>$child</code>
       <code>$parent</code>
       <code>$parent</code>
-    </UnusedVariable>
+    </UnusedForeachValue>
   </file>
   <file src="test/AclTest.php">
     <InvalidArgument occurrences="5">
@@ -455,7 +441,7 @@
       <code>$acl-&gt;customAssertion</code>
       <code>$acl-&gt;customAssertion</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="18">
+    <MissingReturnType occurrences="17">
       <code>testAclAssertionsGetOriginalIsAllowedObjects</code>
       <code>testAclAssertionsGetProperRoleWhenInheritenceIsUsed</code>
       <code>testAclPassesPrivilegeToAssertClass</code>
@@ -471,7 +457,6 @@
       <code>testRoleAddAndGetOneByString</code>
       <code>testRoleObjectImplementsToString</code>
       <code>testSetRuleWorksWithResourceInterface</code>
-      <code>testWhenAssertionReturnsFalseTheInversionOfItsTypeShouldBeUsed</code>
       <code>testgetResources</code>
       <code>testgetRoles</code>
     </MissingReturnType>
@@ -500,10 +485,10 @@
       <code>$assertion-&gt;lastAssertRole</code>
       <code>$assertion-&gt;lastAssertRole</code>
     </UndefinedDocblockClass>
-    <UnusedVariable occurrences="2">
+    <UnusedForeachValue occurrences="2">
       <code>$roleParent</code>
       <code>$roleParent</code>
-    </UnusedVariable>
+    </UnusedForeachValue>
   </file>
   <file src="test/Assertion/AssertionAggregateTest.php">
     <ArgumentTypeCoercion occurrences="19">
@@ -772,11 +757,6 @@
       <code>$this-&gt;assertions</code>
       <code>$this-&gt;mode</code>
     </MixedReturnStatement>
-  </file>
-  <file src="test/TestAsset/ChildBooleanAssertion.php">
-    <MissingParamType occurrences="1">
-      <code>$value</code>
-    </MissingParamType>
   </file>
   <file src="test/TestAsset/ExpressionUseCase/BlogPost.php">
     <MissingPropertyType occurrences="4">
