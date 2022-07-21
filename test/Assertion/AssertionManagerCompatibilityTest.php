@@ -1,10 +1,7 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
- * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
- */
+declare(strict_types=1);
+
 namespace LaminasTest\Permissions\Acl\Assertion;
 
 use Laminas\Permissions\Acl\Assertion\AssertionInterface;
@@ -13,32 +10,30 @@ use Laminas\Permissions\Acl\Exception\InvalidArgumentException;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\ServiceManager\Test\CommonPluginManagerTrait;
 use PHPUnit\Framework\TestCase;
+use Throwable;
 
 class AssertionManagerCompatibilityTest extends TestCase
 {
     use CommonPluginManagerTrait;
 
-    public function setExpectedException($exception, $message = '', $code = null)
-    {
-        $this->expectException($exception, $message, $code);
-    }
-
-    protected function getPluginManager()
+    protected function getPluginManager(): AssertionManager
     {
         return new AssertionManager(new ServiceManager());
     }
 
-    protected function getV2InvalidPluginException()
+    /** @return class-string<Throwable> */
+    protected function getV2InvalidPluginException(): string
     {
         return InvalidArgumentException::class;
     }
 
-    protected function getInstanceOf()
+    /** @return class-string */
+    protected function getInstanceOf(): string
     {
         return AssertionInterface::class;
     }
 
-    public function testPluginAliasesResolve()
+    public function testPluginAliasesResolve(): void
     {
         $this->markTestSkipped(
             'No aliases yet defined; remove implementation if/when aliases are added to AssertionManager'

@@ -1,18 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Permissions\Acl\Assertion;
 
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\Assertion\Exception\InvalidAssertionException;
 use Laminas\Permissions\Acl\Assertion\ExpressionAssertion;
 use Laminas\Permissions\Acl\Exception\RuntimeException;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Role\RoleInterface;
 use LaminasTest\Permissions\Acl\TestAsset\ExpressionUseCase\BlogPost;
 use LaminasTest\Permissions\Acl\TestAsset\ExpressionUseCase\User;
 use PHPUnit\Framework\TestCase;
 
+use function serialize;
+
 class ExpressionAssertionTest extends TestCase
 {
-    public function testFromPropertiesCreation()
+    public function testFromPropertiesCreation(): void
     {
         $assertion = ExpressionAssertion::fromProperties(
             'foo',
@@ -23,18 +29,18 @@ class ExpressionAssertionTest extends TestCase
         $this->assertInstanceOf(ExpressionAssertion::class, $assertion);
     }
 
-    public function testFromArrayCreation()
+    public function testFromArrayCreation(): void
     {
         $assertion = ExpressionAssertion::fromArray([
-            'left' => 'foo',
+            'left'     => 'foo',
             'operator' => ExpressionAssertion::OPERATOR_EQ,
-            'right' => 'bar'
+            'right'    => 'bar',
         ]);
 
         $this->assertInstanceOf(ExpressionAssertion::class, $assertion);
     }
 
-    public function testExceptionIsRaisedInCaseOfInvalidExpressionArray()
+    public function testExceptionIsRaisedInCaseOfInvalidExpressionArray(): void
     {
         $this->expectException(InvalidAssertionException::class);
         $this->expectExceptionMessage("Expression assertion requires 'left', 'operator' and 'right' to be supplied");
@@ -42,7 +48,7 @@ class ExpressionAssertionTest extends TestCase
         ExpressionAssertion::fromArray(['left' => 'test', 'foo' => 'bar']);
     }
 
-    public function testExceptionIsRaisedInCaseOfInvalidExpressionContextOperandType()
+    public function testExceptionIsRaisedInCaseOfInvalidExpressionContextOperandType(): void
     {
         $this->expectException(InvalidAssertionException::class);
         $this->expectExceptionMessage('Expression assertion context operand must be string');
@@ -54,7 +60,7 @@ class ExpressionAssertionTest extends TestCase
         );
     }
 
-    public function testExceptionIsRaisedInCaseOfInvalidExpressionOperator()
+    public function testExceptionIsRaisedInCaseOfInvalidExpressionOperator(): void
     {
         $this->expectException(InvalidAssertionException::class);
         $this->expectExceptionMessage('Provided expression assertion operator is not supported');
@@ -68,9 +74,15 @@ class ExpressionAssertionTest extends TestCase
 
     /**
      * @dataProvider getExpressions
+     * @param array<string, mixed> $expression
      */
-    public function testExpressionsEvaluation(array $expression, $role, $resource, $privilege, $expectedAssert)
-    {
+    public function testExpressionsEvaluation(
+        array $expression,
+        RoleInterface $role,
+        ResourceInterface $resource,
+        string $privilege,
+        bool $expectedAssert
+    ) {
         $assertion = ExpressionAssertion::fromArray($expression);
 
         $this->assertThat(
@@ -79,235 +91,243 @@ class ExpressionAssertionTest extends TestCase
         );
     }
 
-    public function getExpressions()
+    /** @return array<string, array {
+     *      expression: array<string, mixed>,
+     *      role: RoleInterface,
+     *      resource: ResourceInterface,
+     *      privilege: string,
+     *      assert: bool
+     * }>
+     */
+    public function getExpressions(): array
     {
         $author3 = new User([
             'username' => 'author3',
         ]);
-        $post3 = new BlogPost([
+        $post3   = new BlogPost([
             'author' => $author3,
         ]);
 
         return [
-            'equality' => [
+            'equality'                     => [
                 'expression' => [
-                    'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
+                    'left'     => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
                     'operator' => ExpressionAssertion::OPERATOR_EQ,
-                    'right' => 'test',
+                    'right'    => 'test',
                 ],
-                'role' => new User([
+                'role'       => new User([
                     'username' => 'test',
                 ]),
-                'resource' => new BlogPost(),
-                'privilege' => 'read',
-                'assert' => true,
+                'resource'   => new BlogPost(),
+                'privilege'  => 'read',
+                'assert'     => true,
             ],
-            'inequality' => [
+            'inequality'                   => [
                 'expression' => [
-                    'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
+                    'left'     => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
                     'operator' => ExpressionAssertion::OPERATOR_NEQ,
-                    'right' => 'test',
+                    'right'    => 'test',
                 ],
-                'role' => new User([
+                'role'       => new User([
                     'username' => 'foobar',
                 ]),
-                'resource' => new BlogPost(),
-                'privilege' => 'read',
-                'assert' => true,
+                'resource'   => new BlogPost(),
+                'privilege'  => 'read',
+                'assert'     => true,
             ],
-            'boolean-equality' => [
+            'boolean-equality'             => [
                 'expression' => [
-                    'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
+                    'left'     => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
                     'operator' => ExpressionAssertion::OPERATOR_EQ,
-                    'right' => true,
+                    'right'    => true,
                 ],
-                'role' => $author3,
-                'resource' => $post3,
-                'privilege' => 'read',
-                'assert' => true,
+                'role'       => $author3,
+                'resource'   => $post3,
+                'privilege'  => 'read',
+                'assert'     => true,
             ],
-            'greater-than' => [
+            'greater-than'                 => [
                 'expression' => [
-                    'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.age'],
+                    'left'     => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.age'],
                     'operator' => ExpressionAssertion::OPERATOR_GT,
-                    'right' => 20,
+                    'right'    => 20,
                 ],
-                'role' => new User([
+                'role'       => new User([
                     'username' => 'foobar',
-                    'age' => 15,
+                    'age'      => 15,
                 ]),
-                'resource' => new BlogPost(),
-                'privilege' => 'read',
-                'assert' => false,
+                'resource'   => new BlogPost(),
+                'privilege'  => 'read',
+                'assert'     => false,
             ],
-            'greater-than-or-equal' => [
+            'greater-than-or-equal'        => [
                 'expression' => [
-                    'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.age'],
+                    'left'     => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.age'],
                     'operator' => ExpressionAssertion::OPERATOR_GTE,
-                    'right' => 20,
+                    'right'    => 20,
                 ],
-                'role' => new User([
+                'role'       => new User([
                     'username' => 'foobar',
-                    'age' => 20,
+                    'age'      => 20,
                 ]),
-                'resource' => new BlogPost(),
-                'privilege' => 'read',
-                'assert' => true,
+                'resource'   => new BlogPost(),
+                'privilege'  => 'read',
+                'assert'     => true,
             ],
-            'less-than' => [
+            'less-than'                    => [
                 'expression' => [
-                    'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.age'],
+                    'left'     => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.age'],
                     'operator' => ExpressionAssertion::OPERATOR_LT,
-                    'right' => 30,
+                    'right'    => 30,
                 ],
-                'role' => new User([
+                'role'       => new User([
                     'username' => 'foobar',
-                    'age' => 20,
+                    'age'      => 20,
                 ]),
-                'resource' => new BlogPost(),
-                'privilege' => 'read',
-                'assert' => true,
+                'resource'   => new BlogPost(),
+                'privilege'  => 'read',
+                'assert'     => true,
             ],
-            'less-than-or-equal' => [
+            'less-than-or-equal'           => [
                 'expression' => [
-                    'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.age'],
+                    'left'     => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.age'],
                     'operator' => ExpressionAssertion::OPERATOR_LTE,
-                    'right' => 30,
+                    'right'    => 30,
                 ],
-                'role' => new User([
+                'role'       => new User([
                     'username' => 'foobar',
-                    'age' => 30,
+                    'age'      => 30,
                 ]),
-                'resource' => new BlogPost(),
-                'privilege' => 'read',
-                'assert' => true,
+                'resource'   => new BlogPost(),
+                'privilege'  => 'read',
+                'assert'     => true,
             ],
-            'in' => [
+            'in'                           => [
                 'expression' => [
-                    'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
+                    'left'     => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
                     'operator' => ExpressionAssertion::OPERATOR_IN,
-                    'right' => ['foo', 'bar'],
+                    'right'    => ['foo', 'bar'],
                 ],
-                'role' => new User([
+                'role'       => new User([
                     'username' => 'test',
                 ]),
-                'resource' => new BlogPost(),
-                'privilege' => 'read',
-                'assert' => false,
+                'resource'   => new BlogPost(),
+                'privilege'  => 'read',
+                'assert'     => false,
             ],
-            'not-in' => [
+            'not-in'                       => [
                 'expression' => [
-                    'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
+                    'left'     => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
                     'operator' => ExpressionAssertion::OPERATOR_NIN,
-                    'right' => ['foo', 'bar'],
+                    'right'    => ['foo', 'bar'],
                 ],
-                'role' => new User([
+                'role'       => new User([
                     'username' => 'test',
                 ]),
-                'resource' => new BlogPost(),
-                'privilege' => 'read',
-                'assert' => true,
+                'resource'   => new BlogPost(),
+                'privilege'  => 'read',
+                'assert'     => true,
             ],
-            'regex' => [
+            'regex'                        => [
                 'expression' => [
-                    'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
+                    'left'     => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
                     'operator' => ExpressionAssertion::OPERATOR_REGEX,
-                    'right' => '/foobar/',
+                    'right'    => '/foobar/',
                 ],
-                'role' => new User([
+                'role'       => new User([
                     'username' => 'test',
                 ]),
-                'resource' => new BlogPost(),
-                'privilege' => 'read',
-                'assert' => false,
+                'resource'   => new BlogPost(),
+                'privilege'  => 'read',
+                'assert'     => false,
             ],
-            'REGEX' => [
+            'REGEX'                        => [
                 'expression' => [
-                    'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'resource.shortDescription'],
+                    'left'     => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'resource.shortDescription'],
                     'operator' => 'REGEX',
-                    'right' => '/ipsum/',
+                    'right'    => '/ipsum/',
                 ],
-                'role' => new User([
+                'role'       => new User([
                     'username' => 'test',
                 ]),
-                'resource' => new BlogPost([
-                    'title' => 'Test',
-                    'content' => 'lorem ipsum dolor sit amet',
-                    'shortDescription' => 'lorem ipsum'
+                'resource'   => new BlogPost([
+                    'title'            => 'Test',
+                    'content'          => 'lorem ipsum dolor sit amet',
+                    'shortDescription' => 'lorem ipsum',
                 ]),
-                'privilege' => 'read',
-                'assert' => true,
+                'privilege'  => 'read',
+                'assert'     => true,
             ],
-            'nregex' => [
+            'nregex'                       => [
                 'expression' => [
-                    'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
+                    'left'     => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
                     'operator' => ExpressionAssertion::OPERATOR_NREGEX,
-                    'right' => '/barbaz/',
+                    'right'    => '/barbaz/',
                 ],
-                'role' => new User([
+                'role'       => new User([
                     'username' => 'test',
                 ]),
-                'resource' => new BlogPost(),
-                'privilege' => 'read',
-                'assert' => true,
+                'resource'   => new BlogPost(),
+                'privilege'  => 'read',
+                'assert'     => true,
             ],
-            'same' => [
+            'same'                         => [
                 'expression' => [
-                    'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
+                    'left'     => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
                     'operator' => ExpressionAssertion::OPERATOR_SAME,
-                    'right' => 'test',
+                    'right'    => 'test',
                 ],
-                'role' => new User([
+                'role'       => new User([
                     'username' => 'test',
                 ]),
-                'resource' => new BlogPost(),
-                'privilege' => 'read',
-                'assert' => true,
+                'resource'   => new BlogPost(),
+                'privilege'  => 'read',
+                'assert'     => true,
             ],
-            'not-same' => [
+            'not-same'                     => [
                 'expression' => [
-                    'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
+                    'left'     => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
                     'operator' => ExpressionAssertion::OPERATOR_NSAME,
-                    'right' => 'test',
+                    'right'    => 'test',
                 ],
-                'role' => new User([
+                'role'       => new User([
                     'username' => 'foobar',
                 ]),
-                'resource' => new BlogPost(),
-                'privilege' => 'read',
-                'assert' => true,
+                'resource'   => new BlogPost(),
+                'privilege'  => 'read',
+                'assert'     => true,
             ],
             'equality-calculated-property' => [
                 'expression' => [
-                    'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.adult'],
+                    'left'     => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.adult'],
                     'operator' => ExpressionAssertion::OPERATOR_EQ,
-                    'right' => true,
+                    'right'    => true,
                 ],
-                'role' => new User([
+                'role'       => new User([
                     'username' => 'test',
-                    'age' => 30,
+                    'age'      => 30,
                 ]),
-                'resource' => new BlogPost(),
-                'privilege' => 'read',
-                'assert' => true,
+                'resource'   => new BlogPost(),
+                'privilege'  => 'read',
+                'assert'     => true,
             ],
-            'privilege' => [
+            'privilege'                    => [
                 'expression' => [
-                    'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'privilege'],
+                    'left'     => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'privilege'],
                     'operator' => ExpressionAssertion::OPERATOR_EQ,
-                    'right' => 'read',
+                    'right'    => 'read',
                 ],
-                'role' => new User([
+                'role'       => new User([
                     'username' => 'test',
                 ]),
-                'resource' => new BlogPost(),
-                'privilege' => 'update',
-                'assert' => false,
+                'resource'   => new BlogPost(),
+                'privilege'  => 'update',
+                'assert'     => false,
             ],
         ];
     }
 
-    public function testExceptionIsRaisedInCaseOfUnknownContextOperand()
+    public function testExceptionIsRaisedInCaseOfUnknownContextOperand(): void
     {
         $assertion = ExpressionAssertion::fromProperties(
             [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'foobar'],
@@ -321,7 +341,7 @@ class ExpressionAssertionTest extends TestCase
         $assertion->assert(new Acl(), new User(), new BlogPost(), 'read');
     }
 
-    public function testExceptionIsRaisedInCaseOfUnknownContextOperandContainingPropertyPath()
+    public function testExceptionIsRaisedInCaseOfUnknownContextOperandContainingPropertyPath(): void
     {
         $assertion = ExpressionAssertion::fromProperties(
             [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'foo.bar'],
@@ -335,7 +355,7 @@ class ExpressionAssertionTest extends TestCase
         $assertion->assert(new Acl(), new User(), new BlogPost(), 'read');
     }
 
-    public function testExceptionIsRaisedIfContextObjectPropertyCannotBeResolved()
+    public function testExceptionIsRaisedIfContextObjectPropertyCannotBeResolved(): void
     {
         $assertion = ExpressionAssertion::fromProperties(
             [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.age123'],
@@ -349,7 +369,7 @@ class ExpressionAssertionTest extends TestCase
         $assertion->assert(new Acl(), new User(), new BlogPost(), 'read');
     }
 
-    public function testExceptionIsRaisedInCaseThatAssertHasBeenInvokedWithoutPassingContext()
+    public function testExceptionIsRaisedInCaseThatAssertHasBeenInvokedWithoutPassingContext(): void
     {
         $assertion = ExpressionAssertion::fromProperties(
             [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
@@ -363,7 +383,7 @@ class ExpressionAssertionTest extends TestCase
         $assertion->assert(new Acl());
     }
 
-    public function testSerialization()
+    public function testSerialization(): void
     {
         $assertion = ExpressionAssertion::fromProperties(
             'foo',
@@ -381,7 +401,7 @@ class ExpressionAssertionTest extends TestCase
         $this->assertStringContainsString('bar', $serializedAssertion);
     }
 
-    public function testSerializationShouldNotSerializeAssertContext()
+    public function testSerializationShouldNotSerializeAssertContext(): void
     {
         $assertion = ExpressionAssertion::fromProperties(
             'foo',

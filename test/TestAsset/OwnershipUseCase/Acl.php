@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Permissions\Acl\TestAsset\OwnershipUseCase;
 
 use Laminas\Permissions\Acl\Acl as BaseAcl;

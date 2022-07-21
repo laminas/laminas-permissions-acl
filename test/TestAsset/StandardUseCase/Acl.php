@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Permissions\Acl\TestAsset\StandardUseCase;
 
 use Laminas\Permissions\Acl\Acl as BaseAcl;
@@ -8,7 +10,7 @@ use Laminas\Permissions\Acl\Role\GenericRole;
 
 class Acl extends BaseAcl
 {
-    public $customAssertion = null;
+    public UserIsBlogPostOwnerAssertion $customAssertion;
 
     public function __construct()
     {

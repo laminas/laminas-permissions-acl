@@ -15,4 +15,10 @@
     <!-- Paths to check -->
     <file>src</file>
     <file>test</file>
+
+    <!-- This rule does not appear to work with $a =& $b -->
+    <rule ref="WebimpressCodingStandard.Formatting.Reference">
+        <exclude-pattern>src/Acl.php</exclude-pattern>
+    </rule>
+
 </ruleset>

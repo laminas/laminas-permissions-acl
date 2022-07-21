@@ -1,12 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Permissions\Acl;
 
+use ArrayIterator;
 use Laminas\Permissions\Acl;
 use Laminas\Permissions\Acl\Exception\ExceptionInterface;
 use Laminas\Permissions\Acl\Exception\InvalidArgumentException;
 use Laminas\Permissions\Acl\Resource;
 use Laminas\Permissions\Acl\Role;
+use Laminas\Permissions\Acl\Role\GenericRole;
+use Laminas\Permissions\Acl\Role\RoleInterface;
 use LaminasTest\Permissions\Acl\TestAsset\MockAssertion;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -22,8 +27,6 @@ class AclTest extends TestCase
 
     /**
      * Instantiates a new ACL object and creates internal reference to it for each test method
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -32,12 +35,10 @@ class AclTest extends TestCase
 
     /**
      * Ensures that basic addition and retrieval of a single Role works
-     *
-     * @return void
      */
-    public function testRoleRegistryAddAndGetOne()
+    public function testRoleRegistryAddAndGetOne(): void
     {
-        $roleGuest = new Role\GenericRole('guest');
+        $roleGuest = new GenericRole('guest');
 
         $role = $this->acl->addRole($roleGuest)
                           ->getRole($roleGuest->getRoleId());
@@ -49,23 +50,21 @@ class AclTest extends TestCase
     /**
      * Ensures that basic addition and retrieval of a single Resource works
      */
-    public function testRoleAddAndGetOneByString()
+    public function testRoleAddAndGetOneByString(): void
     {
         $role = $this->acl
             ->addRole('area')
             ->getRole('area');
-        $this->assertInstanceOf(Role\RoleInterface::class, $role);
+        $this->assertInstanceOf(RoleInterface::class, $role);
         $this->assertEquals('area', $role->getRoleId());
     }
 
     /**
      * Ensures that basic removal of a single Role works
-     *
-     * @return void
      */
-    public function testRoleRegistryRemoveOne()
+    public function testRoleRegistryRemoveOne(): void
     {
-        $roleGuest = new Role\GenericRole('guest');
+        $roleGuest = new GenericRole('guest');
         $this->acl
             ->addRole($roleGuest)
             ->removeRole($roleGuest);
@@ -74,10 +73,8 @@ class AclTest extends TestCase
 
     /**
      * Ensures that an exception is thrown when a non-existent Role is specified for removal
-     *
-     * @return void
      */
-    public function testRoleRegistryRemoveOneNonExistent()
+    public function testRoleRegistryRemoveOneNonExistent(): void
     {
         $this->expectException(InvalidArgumentException::class, 'not found');
         $this->acl->removeRole('nonexistent');
@@ -85,12 +82,10 @@ class AclTest extends TestCase
 
     /**
      * Ensures that removal of all Roles works
-     *
-     * @return void
      */
-    public function testRoleRegistryRemoveAll()
+    public function testRoleRegistryRemoveAll(): void
     {
-        $roleGuest = new Role\GenericRole('guest');
+        $roleGuest = new GenericRole('guest');
         $this->acl
             ->addRole($roleGuest)
             ->removeRoleAll();
@@ -99,42 +94,36 @@ class AclTest extends TestCase
 
     /**
      * Ensures that an exception is thrown when a non-existent Role is specified as a parent upon Role addition
-     *
-     * @return void
      */
-    public function testRoleRegistryAddInheritsNonExistent()
+    public function testRoleRegistryAddInheritsNonExistent(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->acl->addRole(new Role\GenericRole('guest'), 'nonexistent');
+        $this->acl->addRole(new GenericRole('guest'), 'nonexistent');
     }
 
     /**
      * Ensures that an exception is thrown when a not Role is passed
-     *
-     * @return void
      */
-    public function testRoleRegistryAddNotRole()
+    public function testRoleRegistryAddNotRole(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('addRole() expects $role to be of type Laminas\Permissions\Acl\Role');
-        $this->acl->addRole(new \stdClass, 'guest');
+        $this->acl->addRole(new stdClass(), 'guest');
     }
 
     /**
      * Ensures that an exception is thrown when a non-existent Role is specified to each parameter of inherits()
-     *
-     * @return void
      */
-    public function testRoleRegistryInheritsNonExistent()
+    public function testRoleRegistryInheritsNonExistent(): void
     {
-        $roleGuest = new Role\GenericRole('guest');
+        $roleGuest = new GenericRole('guest');
         $this->acl->addRole($roleGuest);
         try {
             $this->acl->inheritsRole('nonexistent', $roleGuest);
             $this->fail(
                 'Expected Laminas\Permissions\Acl\Role\Exception not thrown upon specifying a non-existent child Role'
             );
-        } catch (Acl\Exception\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             $this->assertStringContainsString('not found', $e->getMessage());
         }
         try {
@@ -142,21 +131,19 @@ class AclTest extends TestCase
             $this->fail(
                 'Expected Laminas\Permissions\Acl\Role\Exception not thrown upon specifying a non-existent child Role'
             );
-        } catch (Acl\Exception\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             $this->assertStringContainsString('not found', $e->getMessage());
         }
     }
 
     /**
      * Tests basic Role inheritance
-     *
-     * @return void
      */
-    public function testRoleRegistryInherits()
+    public function testRoleRegistryInherits(): void
     {
-        $roleGuest  = new Role\GenericRole('guest');
-        $roleMember = new Role\GenericRole('member');
-        $roleEditor = new Role\GenericRole('editor');
+        $roleGuest    = new GenericRole('guest');
+        $roleMember   = new GenericRole('member');
+        $roleEditor   = new GenericRole('editor');
         $roleRegistry = new Role\Registry();
         $roleRegistry
             ->add($roleGuest)
@@ -182,14 +169,12 @@ class AclTest extends TestCase
 
     /**
      * Tests basic Role multiple inheritance with array
-     *
-     * @return void
      */
-    public function testRoleRegistryInheritsMultipleArray()
+    public function testRoleRegistryInheritsMultipleArray(): void
     {
-        $roleParent1 = new Role\GenericRole('parent1');
-        $roleParent2 = new Role\GenericRole('parent2');
-        $roleChild   = new Role\GenericRole('child');
+        $roleParent1  = new GenericRole('parent1');
+        $roleParent2  = new GenericRole('parent2');
+        $roleChild    = new GenericRole('child');
         $roleRegistry = new Role\Registry();
         $roleRegistry
             ->add($roleParent1)
@@ -213,21 +198,19 @@ class AclTest extends TestCase
 
     /**
      * Tests basic Role multiple inheritance with traversable object
-     *
-     * @return void
      */
-    public function testRoleRegistryInheritsMultipleTraversable()
+    public function testRoleRegistryInheritsMultipleTraversable(): void
     {
-        $roleParent1 = new Role\GenericRole('parent1');
-        $roleParent2 = new Role\GenericRole('parent2');
-        $roleChild   = new Role\GenericRole('child');
+        $roleParent1  = new GenericRole('parent1');
+        $roleParent2  = new GenericRole('parent2');
+        $roleChild    = new GenericRole('child');
         $roleRegistry = new Role\Registry();
         $roleRegistry
             ->add($roleParent1)
             ->add($roleParent2)
             ->add(
                 $roleChild,
-                new \ArrayIterator([$roleParent1, $roleParent2])
+                new ArrayIterator([$roleParent1, $roleParent2])
             );
         $roleChildParents = $roleRegistry->getParents($roleChild);
         $this->assertCount(2, $roleChildParents);
@@ -247,12 +230,10 @@ class AclTest extends TestCase
 
     /**
      * Ensures that the same Role cannot be registered more than once to the registry
-     *
-     * @return void
      */
-    public function testRoleRegistryDuplicate()
+    public function testRoleRegistryDuplicate(): void
     {
-        $roleGuest = new Role\GenericRole('guest');
+        $roleGuest    = new GenericRole('guest');
         $roleRegistry = new Role\Registry();
         $this->expectException(InvalidArgumentException::class, 'already exists');
         $roleRegistry
@@ -262,13 +243,11 @@ class AclTest extends TestCase
 
     /**
      * Ensures that two Roles having the same ID cannot be registered
-     *
-     * @return void
      */
-    public function testRoleRegistryDuplicateId()
+    public function testRoleRegistryDuplicateId(): void
     {
-        $roleGuest1 = new Role\GenericRole('guest');
-        $roleGuest2 = new Role\GenericRole('guest');
+        $roleGuest1   = new GenericRole('guest');
+        $roleGuest2   = new GenericRole('guest');
         $roleRegistry = new Role\Registry();
         $this->expectException(InvalidArgumentException::class, 'already exists');
         $roleRegistry
@@ -278,13 +257,11 @@ class AclTest extends TestCase
 
     /**
      * Ensures that basic addition and retrieval of a single Resource works
-     *
-     * @return void
      */
-    public function testResourceAddAndGetOne()
+    public function testResourceAddAndGetOne(): void
     {
         $resourceArea = new Resource\GenericResource('area');
-        $resource = $this->acl
+        $resource     = $this->acl
             ->addResource($resourceArea)
             ->getResource($resourceArea->getResourceId());
         $this->assertEquals($resourceArea, $resource);
@@ -295,7 +272,7 @@ class AclTest extends TestCase
     /**
      * Ensures that basic addition and retrieval of a single Resource works
      */
-    public function testResourceAddAndGetOneByString()
+    public function testResourceAddAndGetOneByString(): void
     {
         $resource = $this->acl
             ->addResource('area')
@@ -309,10 +286,10 @@ class AclTest extends TestCase
      *
      * @group Laminas-1167
      */
-    public function testResourceAddAndGetOneWithAddResourceMethod()
+    public function testResourceAddAndGetOneWithAddResourceMethod(): void
     {
         $resourceArea = new Resource\GenericResource('area');
-        $resource = $this->acl
+        $resource     = $this->acl
             ->addResource($resourceArea)
             ->getResource($resourceArea->getResourceId());
         $this->assertEquals($resourceArea, $resource);
@@ -322,10 +299,8 @@ class AclTest extends TestCase
 
     /**
      * Ensures that basic removal of a single Resource works
-     *
-     * @return void
      */
-    public function testResourceRemoveOne()
+    public function testResourceRemoveOne(): void
     {
         $resourceArea = new Resource\GenericResource('area');
         $this->acl
@@ -336,10 +311,8 @@ class AclTest extends TestCase
 
     /**
      * Ensures that an exception is thrown when a non-existent Resource is specified for removal
-     *
-     * @return void
      */
-    public function testResourceRemoveOneNonExistent()
+    public function testResourceRemoveOneNonExistent(): void
     {
         $this->expectException(ExceptionInterface::class);
         $this->expectExceptionMessage('not found');
@@ -348,10 +321,8 @@ class AclTest extends TestCase
 
     /**
      * Ensures that removal of all Resources works
-     *
-     * @return void
      */
-    public function testResourceRemoveAll()
+    public function testResourceRemoveAll(): void
     {
         $resourceArea = new Resource\GenericResource('area');
         $this->acl
@@ -362,10 +333,8 @@ class AclTest extends TestCase
 
     /**
      * Ensures that an exception is thrown when a non-existent Resource is specified as a parent upon Resource addition
-     *
-     * @return void
      */
-    public function testResourceAddInheritsNonExistent()
+    public function testResourceAddInheritsNonExistent(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('does not exist');
@@ -374,22 +343,18 @@ class AclTest extends TestCase
 
     /**
      * Ensures that an exception is thrown when a not Resource is passed
-     *
-     * @return void
      */
-    public function testResourceRegistryAddNotResource()
+    public function testResourceRegistryAddNotResource(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('addResource() expects $resource to be of type Laminas\Permissions\Acl\Resource');
-        $this->acl->addResource(new stdClass);
+        $this->acl->addResource(new stdClass());
     }
 
     /**
      * Ensures that an exception is thrown when a non-existent Resource is specified to each parameter of inherits()
-     *
-     * @return void
      */
-    public function testResourceInheritsNonExistent()
+    public function testResourceInheritsNonExistent(): void
     {
         $resourceArea = new Resource\GenericResource('area');
         $this->acl->addResource($resourceArea);
@@ -399,7 +364,7 @@ class AclTest extends TestCase
                 'Expected Laminas\Permissions\Acl\Exception\ExceptionInterface not'
                 . ' thrown upon specifying a non-existent child Resource'
             );
-        } catch (Acl\Exception\ExceptionInterface $e) {
+        } catch (ExceptionInterface $e) {
             $this->assertStringContainsString('not found', $e->getMessage());
         }
         try {
@@ -408,17 +373,15 @@ class AclTest extends TestCase
                 'Expected Laminas\Permissions\Acl\Exception\ExceptionInterface not thrown '
                 . 'upon specifying a non-existent parent Resource'
             );
-        } catch (Acl\Exception\ExceptionInterface $e) {
+        } catch (ExceptionInterface $e) {
             $this->assertStringContainsString('not found', $e->getMessage());
         }
     }
 
     /**
      * Tests basic Resource inheritance
-     *
-     * @return void
      */
-    public function testResourceInherits()
+    public function testResourceInherits(): void
     {
         $resourceCity     = new Resource\GenericResource('city');
         $resourceBuilding = new Resource\GenericResource('building');
@@ -439,10 +402,8 @@ class AclTest extends TestCase
 
     /**
      * Ensures that the same Resource cannot be added more than once
-     *
-     * @return void
      */
-    public function testResourceDuplicate()
+    public function testResourceDuplicate(): void
     {
         $resourceArea = new Resource\GenericResource('area');
 
@@ -456,10 +417,8 @@ class AclTest extends TestCase
 
     /**
      * Ensures that two Resources having the same ID cannot be added
-     *
-     * @return void
      */
-    public function testResourceDuplicateId()
+    public function testResourceDuplicateId(): void
     {
         $resourceArea1 = new Resource\GenericResource('area');
         $resourceArea2 = new Resource\GenericResource('area');
@@ -474,10 +433,8 @@ class AclTest extends TestCase
 
     /**
      * Ensures that an exception is thrown when a non-existent Role and Resource parameters are specified to isAllowed()
-     *
-     * @return void
      */
-    public function testIsAllowedNonExistent()
+    public function testIsAllowedNonExistent(): void
     {
         try {
             $this->acl->isAllowed('nonexistent');
@@ -499,20 +456,16 @@ class AclTest extends TestCase
 
     /**
      * Ensures that by default, Laminas_Acl denies access to everything by all
-     *
-     * @return void
      */
-    public function testDefaultDeny()
+    public function testDefaultDeny(): void
     {
         $this->assertFalse($this->acl->isAllowed());
     }
 
     /**
      * Ensures that the default rule obeys its assertion
-     *
-     * @return void
      */
-    public function testDefaultAssert()
+    public function testDefaultAssert(): void
     {
         $this->acl->deny(null, null, null, new MockAssertion(false));
         $this->assertTrue($this->acl->isAllowed());
@@ -521,10 +474,8 @@ class AclTest extends TestCase
 
     /**
      * Ensures that ACL-wide rules (all Roles, Resources, and privileges) work properly
-     *
-     * @return void
      */
-    public function testDefaultRuleSet()
+    public function testDefaultRuleSet(): void
     {
         $this->acl->allow();
         $this->assertTrue($this->acl->isAllowed());
@@ -534,20 +485,16 @@ class AclTest extends TestCase
 
     /**
      * Ensures that by default, Laminas_Acl denies access to a privilege on anything by all
-     *
-     * @return void
      */
-    public function testDefaultPrivilegeDeny()
+    public function testDefaultPrivilegeDeny(): void
     {
         $this->assertFalse($this->acl->isAllowed(null, null, 'somePrivilege'));
     }
 
     /**
      * Ensures that ACL-wide rules apply to privileges
-     *
-     * @return void
      */
-    public function testDefaultRuleSetPrivilege()
+    public function testDefaultRuleSetPrivilege(): void
     {
         $this->acl->allow();
         $this->assertTrue($this->acl->isAllowed(null, null, 'somePrivilege'));
@@ -557,10 +504,8 @@ class AclTest extends TestCase
 
     /**
      * Ensures that a privilege allowed for all Roles upon all Resources works properly
-     *
-     * @return void
      */
-    public function testPrivilegeAllow()
+    public function testPrivilegeAllow(): void
     {
         $this->acl->allow(null, null, 'somePrivilege');
         $this->assertTrue($this->acl->isAllowed(null, null, 'somePrivilege'));
@@ -568,10 +513,8 @@ class AclTest extends TestCase
 
     /**
      * Ensures that a privilege denied for all Roles upon all Resources works properly
-     *
-     * @return void
      */
-    public function testPrivilegeDeny()
+    public function testPrivilegeDeny(): void
     {
         $this->acl->allow();
         $this->acl->deny(null, null, 'somePrivilege');
@@ -580,10 +523,8 @@ class AclTest extends TestCase
 
     /**
      * Ensures that multiple privileges work properly
-     *
-     * @return void
      */
-    public function testPrivileges()
+    public function testPrivileges(): void
     {
         $this->acl->allow(null, null, ['p1', 'p2', 'p3']);
         $this->assertTrue($this->acl->isAllowed(null, null, 'p1'));
@@ -601,10 +542,8 @@ class AclTest extends TestCase
 
     /**
      * Ensures that assertions on privileges work properly
-     *
-     * @return void
      */
-    public function testPrivilegeAssert()
+    public function testPrivilegeAssert(): void
     {
         $this->acl->allow(null, null, 'somePrivilege', new MockAssertion(true));
         $this->assertTrue($this->acl->isAllowed(null, null, 'somePrivilege'));
@@ -615,24 +554,20 @@ class AclTest extends TestCase
 
     /**
      * Ensures that by default, Laminas_Acl denies access to everything for a particular Role
-     *
-     * @return void
      */
-    public function testRoleDefaultDeny()
+    public function testRoleDefaultDeny(): void
     {
-        $roleGuest = new Role\GenericRole('guest');
+        $roleGuest = new GenericRole('guest');
         $this->acl->addRole($roleGuest);
         $this->assertFalse($this->acl->isAllowed($roleGuest));
     }
 
     /**
      * Ensures that ACL-wide rules (all Resources and privileges) work properly for a particular Role
-     *
-     * @return void
      */
-    public function testRoleDefaultRuleSet()
+    public function testRoleDefaultRuleSet(): void
     {
-        $roleGuest = new Role\GenericRole('guest');
+        $roleGuest = new GenericRole('guest');
         $this->acl
             ->addRole($roleGuest)
             ->allow($roleGuest);
@@ -644,24 +579,20 @@ class AclTest extends TestCase
 
     /**
      * Ensures that by default, Laminas_Acl denies access to a privilege on anything for a particular Role
-     *
-     * @return void
      */
-    public function testRoleDefaultPrivilegeDeny()
+    public function testRoleDefaultPrivilegeDeny(): void
     {
-        $roleGuest = new Role\GenericRole('guest');
+        $roleGuest = new GenericRole('guest');
         $this->acl->addRole($roleGuest);
         $this->assertFalse($this->acl->isAllowed($roleGuest, null, 'somePrivilege'));
     }
 
     /**
      * Ensures that ACL-wide rules apply to privileges for a particular Role
-     *
-     * @return void
      */
-    public function testRoleDefaultRuleSetPrivilege()
+    public function testRoleDefaultRuleSetPrivilege(): void
     {
-        $roleGuest = new Role\GenericRole('guest');
+        $roleGuest = new GenericRole('guest');
 
         $this->acl
             ->addRole($roleGuest)
@@ -674,12 +605,10 @@ class AclTest extends TestCase
 
     /**
      * Ensures that a privilege allowed for a particular Role upon all Resources works properly
-     *
-     * @return void
      */
-    public function testRolePrivilegeAllow()
+    public function testRolePrivilegeAllow(): void
     {
-        $roleGuest = new Role\GenericRole('guest');
+        $roleGuest = new GenericRole('guest');
         $this->acl
             ->addRole($roleGuest)
             ->allow($roleGuest, null, 'somePrivilege');
@@ -688,12 +617,10 @@ class AclTest extends TestCase
 
     /**
      * Ensures that a privilege denied for a particular Role upon all Resources works properly
-     *
-     * @return void
      */
-    public function testRolePrivilegeDeny()
+    public function testRolePrivilegeDeny(): void
     {
-        $roleGuest = new Role\GenericRole('guest');
+        $roleGuest = new GenericRole('guest');
         $this->acl
             ->addRole($roleGuest)
             ->allow($roleGuest)
@@ -703,12 +630,10 @@ class AclTest extends TestCase
 
     /**
      * Ensures that multiple privileges work properly for a particular Role
-     *
-     * @return void
      */
-    public function testRolePrivileges()
+    public function testRolePrivileges(): void
     {
-        $roleGuest = new Role\GenericRole('guest');
+        $roleGuest = new GenericRole('guest');
         $this->acl
             ->addRole($roleGuest)
             ->allow($roleGuest, null, ['p1', 'p2', 'p3']);
@@ -727,12 +652,10 @@ class AclTest extends TestCase
 
     /**
      * Ensures that assertions on privileges work properly for a particular Role
-     *
-     * @return void
      */
-    public function testRolePrivilegeAssert()
+    public function testRolePrivilegeAssert(): void
     {
-        $roleGuest = new Role\GenericRole('guest');
+        $roleGuest = new GenericRole('guest');
         $this->acl
             ->addRole($roleGuest)
             ->allow($roleGuest, null, 'somePrivilege', new MockAssertion(true));
@@ -744,10 +667,8 @@ class AclTest extends TestCase
 
     /**
      * Ensures that removing the default deny rule results in default deny rule
-     *
-     * @return void
      */
-    public function testRemoveDefaultDeny()
+    public function testRemoveDefaultDeny(): void
     {
         $this->assertFalse($this->acl->isAllowed());
         $this->acl->removeDeny();
@@ -756,10 +677,8 @@ class AclTest extends TestCase
 
     /**
      * Ensures that removing the default deny rule results in assertion method being removed
-     *
-     * @return void
      */
-    public function testRemoveDefaultDenyAssert()
+    public function testRemoveDefaultDenyAssert(): void
     {
         $this->acl->deny(null, null, null, new MockAssertion(false));
         $this->assertTrue($this->acl->isAllowed());
@@ -769,10 +688,8 @@ class AclTest extends TestCase
 
     /**
      * Ensures that removing the default allow rule results in default deny rule being assigned
-     *
-     * @return void
      */
-    public function testRemoveDefaultAllow()
+    public function testRemoveDefaultAllow(): void
     {
         $this->acl->allow();
         $this->assertTrue($this->acl->isAllowed());
@@ -782,10 +699,8 @@ class AclTest extends TestCase
 
     /**
      * Ensures that removing non-existent default allow rule does nothing
-     *
-     * @return void
      */
-    public function testRemoveDefaultAllowNonExistent()
+    public function testRemoveDefaultAllowNonExistent(): void
     {
         $this->acl->removeAllow();
         $this->assertFalse($this->acl->isAllowed());
@@ -793,10 +708,8 @@ class AclTest extends TestCase
 
     /**
      * Ensures that removing non-existent default deny rule does nothing
-     *
-     * @return void
      */
-    public function testRemoveDefaultDenyNonExistent()
+    public function testRemoveDefaultDenyNonExistent(): void
     {
         $this->acl
             ->allow()
@@ -807,14 +720,12 @@ class AclTest extends TestCase
     /**
      * Ensures that for a particular Role, a deny rule on a specific Resource is honored before an allow rule
      * on the entire ACL
-     *
-     * @return void
      */
-    public function testRoleDefaultAllowRuleWithResourceDenyRule()
+    public function testRoleDefaultAllowRuleWithResourceDenyRule(): void
     {
         $this->acl
-            ->addRole(new Role\GenericRole('guest'))
-            ->addRole(new Role\GenericRole('staff'), 'guest')
+            ->addRole(new GenericRole('guest'))
+            ->addRole(new GenericRole('staff'), 'guest')
             ->addResource(new Resource\GenericResource('area1'))
             ->addResource(new Resource\GenericResource('area2'))
             ->deny()
@@ -826,14 +737,12 @@ class AclTest extends TestCase
     /**
      * Ensures that for a particular Role, a deny rule on a specific privilege is honored before an allow
      * rule on the entire ACL
-     *
-     * @return void
      */
-    public function testRoleDefaultAllowRuleWithPrivilegeDenyRule()
+    public function testRoleDefaultAllowRuleWithPrivilegeDenyRule(): void
     {
         $this->acl
-            ->addRole(new Role\GenericRole('guest'))
-            ->addRole(new Role\GenericRole('staff'), 'guest')
+            ->addRole(new GenericRole('guest'))
+            ->addRole(new GenericRole('staff'), 'guest')
             ->deny()
             ->allow('staff')
             ->deny('staff', null, ['privilege1', 'privilege2']);
@@ -842,10 +751,8 @@ class AclTest extends TestCase
 
     /**
      * Ensure that basic rule removal works
-     *
-     * @return void
      */
-    public function testRulesRemove()
+    public function testRulesRemove(): void
     {
         $this->acl->allow(null, null, ['privilege1', 'privilege2']);
         $this->assertFalse($this->acl->isAllowed());
@@ -859,13 +766,11 @@ class AclTest extends TestCase
 
     /**
      * Ensures that removal of a Role results in its rules being removed
-     *
-     * @return void
      */
-    public function testRuleRoleRemove()
+    public function testRuleRoleRemove(): void
     {
         $this->acl
-            ->addRole(new Role\GenericRole('guest'))
+            ->addRole(new GenericRole('guest'))
             ->allow('guest');
         $this->assertTrue($this->acl->isAllowed('guest'));
         $this->acl->removeRole('guest');
@@ -877,19 +782,17 @@ class AclTest extends TestCase
         } catch (Acl\Exception\InvalidArgumentException $e) {
             $this->assertStringContainsString('not found', $e->getMessage());
         }
-        $this->acl->addRole(new Role\GenericRole('guest'));
+        $this->acl->addRole(new GenericRole('guest'));
         $this->assertFalse($this->acl->isAllowed('guest'));
     }
 
     /**
      * Ensures that removal of all Roles results in Role-specific rules being removed
-     *
-     * @return void
      */
-    public function testRuleRoleRemoveAll()
+    public function testRuleRoleRemoveAll(): void
     {
         $this->acl
-            ->addRole(new Role\GenericRole('guest'))
+            ->addRole(new GenericRole('guest'))
             ->allow('guest');
         $this->assertTrue($this->acl->isAllowed('guest'));
 
@@ -902,16 +805,14 @@ class AclTest extends TestCase
         } catch (Acl\Exception\InvalidArgumentException $e) {
             $this->assertStringContainsString('not found', $e->getMessage());
         }
-        $this->acl->addRole(new Role\GenericRole('guest'));
+        $this->acl->addRole(new GenericRole('guest'));
         $this->assertFalse($this->acl->isAllowed('guest'));
     }
 
     /**
      * Ensures that removal of a Resource results in its rules being removed
-     *
-     * @return void
      */
-    public function testRulesResourceRemove()
+    public function testRulesResourceRemove(): void
     {
         $this->acl
             ->addResource(new Resource\GenericResource('area'))
@@ -923,7 +824,7 @@ class AclTest extends TestCase
             $this->fail(
                 'Expected Laminas\Permissions\Acl\Exception not thrown upon isAllowed() on non-existent Resource'
             );
-        } catch (Acl\Exception\ExceptionInterface $e) {
+        } catch (ExceptionInterface $e) {
             $this->assertStringContainsString('not found', $e->getMessage());
         }
         $this->acl->addResource(new Resource\GenericResource('area'));
@@ -932,10 +833,8 @@ class AclTest extends TestCase
 
     /**
      * Ensures that removal of all Resources results in Resource-specific rules being removed
-     *
-     * @return void
      */
-    public function testRulesResourceRemoveAll()
+    public function testRulesResourceRemoveAll(): void
     {
         $this->acl
             ->addResource(new Resource\GenericResource('area'))
@@ -948,7 +847,7 @@ class AclTest extends TestCase
                 'Expected Laminas\Permissions\Acl\Exception\ExceptionInterface not thrown upon '
                 . 'isAllowed() on non-existent Resource'
             );
-        } catch (Acl\Exception\ExceptionInterface $e) {
+        } catch (ExceptionInterface $e) {
             $this->assertStringContainsString('not found', $e->getMessage());
         }
         $this->acl->addResource(new Resource\GenericResource('area'));
@@ -957,17 +856,15 @@ class AclTest extends TestCase
 
     /**
      * Ensures that an example for a content management system is operable
-     *
-     * @return void
      */
-    public function testCMSExample()
+    public function testCMSExample(): void
     {
         // Add some roles to the Role registry
         $this->acl
-            ->addRole(new Role\GenericRole('guest'))
-            ->addRole(new Role\GenericRole('staff'), 'guest')  // staff inherits permissions from guest
-            ->addRole(new Role\GenericRole('editor'), 'staff') // editor inherits permissions from staff
-            ->addRole(new Role\GenericRole('administrator'));
+            ->addRole(new GenericRole('guest'))
+            ->addRole(new GenericRole('staff'), 'guest')  // staff inherits permissions from guest
+            ->addRole(new GenericRole('editor'), 'staff') // editor inherits permissions from staff
+            ->addRole(new GenericRole('administrator'));
 
         // Guest may only view content
         $this->acl->allow('guest', null, 'view');
@@ -1041,7 +938,7 @@ class AclTest extends TestCase
         $this->assertTrue($this->acl->isAllowed('administrator', 'pending'));
 
         // Add a new group, marketing, which bases its permissions on staff
-        $this->acl->addRole(new Role\GenericRole('marketing'), 'staff');
+        $this->acl->addRole(new GenericRole('marketing'), 'staff');
 
         // Refine the privilege sets for more specific needs
 
@@ -1126,62 +1023,60 @@ class AclTest extends TestCase
     /**
      * Ensures that the $onlyParents argument to inheritsRole() works
      *
-     * @return void
      * @group  Laminas-2502
      */
-    public function testRoleInheritanceSupportsCheckingOnlyParents()
+    public function testRoleInheritanceSupportsCheckingOnlyParents(): void
     {
         $this->acl
-            ->addRole(new Role\GenericRole('grandparent'))
-            ->addRole(new Role\GenericRole('parent'), 'grandparent')
-            ->addRole(new Role\GenericRole('child'), 'parent');
+            ->addRole(new GenericRole('grandparent'))
+            ->addRole(new GenericRole('parent'), 'grandparent')
+            ->addRole(new GenericRole('child'), 'parent');
         $this->assertFalse($this->acl->inheritsRole('child', 'grandparent', true));
     }
 
     /**
      * Ensures that the solution for Laminas-2234 works as expected
      *
-     * @return void
      * @group  Laminas-2234
      */
-    public function testAclInternalDFSMethodsBehaveProperly()
+    public function testAclInternalDFSMethodsBehaveProperly(): void
     {
         $acl = new TestAsset\ExtendedAclLaminas2234();
 
         $someResource = new Resource\GenericResource('someResource');
-        $someRole     = new Role\GenericRole('someRole');
+        $someRole     = new GenericRole('someRole');
 
         $acl->addResource($someResource)
             ->addRole($someRole);
 
         $nullValue     = null;
-        $nullReference =& $nullValue;
+        $nullReference = &$nullValue;
 
         try {
             $acl->exroleDFSVisitAllPrivileges($someRole, $someResource, $nullReference);
             $this->fail('Expected Laminas\Permissions\Acl\Exception not thrown');
-        } catch (Acl\Exception\ExceptionInterface $e) {
+        } catch (ExceptionInterface $e) {
             $this->assertEquals('$dfs parameter may not be null', $e->getMessage());
         }
 
         try {
             $acl->exroleDFSOnePrivilege($someRole, $someResource, null);
             $this->fail('Expected Laminas\Permissions\Acl\Exception not thrown');
-        } catch (Acl\Exception\ExceptionInterface $e) {
+        } catch (ExceptionInterface $e) {
             $this->assertEquals('$privilege parameter may not be null', $e->getMessage());
         }
 
         try {
             $acl->exroleDFSVisitOnePrivilege($someRole, $someResource, null);
             $this->fail('Expected Laminas\Permissions\Acl\Exception not thrown');
-        } catch (Acl\Exception\ExceptionInterface $e) {
+        } catch (ExceptionInterface $e) {
             $this->assertEquals('$privilege parameter may not be null', $e->getMessage());
         }
 
         try {
             $acl->exroleDFSVisitOnePrivilege($someRole, $someResource, 'somePrivilege', $nullReference);
             $this->fail('Expected Laminas\Permissions\Acl\Exception not thrown');
-        } catch (Acl\Exception\ExceptionInterface $e) {
+        } catch (ExceptionInterface $e) {
             $this->assertEquals('$dfs parameter may not be null', $e->getMessage());
         }
     }
@@ -1189,11 +1084,11 @@ class AclTest extends TestCase
     /**
      * @group Laminas-1721
      */
-    public function testAclAssertionsGetProperRoleWhenInheritenceIsUsed()
+    public function testAclAssertionsGetProperRoleWhenInheritenceIsUsed(): void
     {
         $acl = $this->loadStandardUseCase();
 
-        $user = new Role\GenericRole('publisher');
+        $user     = new GenericRole('publisher');
         $blogPost = new Resource\GenericResource('blogPost');
 
         /**
@@ -1207,10 +1102,9 @@ class AclTest extends TestCase
     }
 
     /**
-     *
      * @group Laminas-1722
      */
-    public function testAclAssertionsGetOriginalIsAllowedObjects()
+    public function testAclAssertionsGetOriginalIsAllowedObjects(): void
     {
         $acl = $this->loadStandardUseCase();
 
@@ -1225,7 +1119,7 @@ class AclTest extends TestCase
         $assertion = $acl->customAssertion;
 
         $assertion->assertReturnValue = true;
-        $user->role = 'contributor';
+        $user->role                   = 'contributor';
         $this->assertTrue($acl->isAllowed($user, $blogPost, 'modify'), 'Assertion should return true');
         $assertion->assertReturnValue = false;
         $this->assertFalse($acl->isAllowed($user, $blogPost, 'modify'), 'Assertion should return false');
@@ -1244,7 +1138,6 @@ class AclTest extends TestCase
     }
 
     /**
-     *
      * @return TestAsset\StandardUseCase\Acl
      */
     protected function loadStandardUseCase()
@@ -1258,12 +1151,12 @@ class AclTest extends TestCase
      *
      * @group Laminas-5700
      */
-    public function testRemovingRoleAfterItWasAllowedAccessToAllResourcesGivesError()
+    public function testRemovingRoleAfterItWasAllowedAccessToAllResourcesGivesError(): void
     {
         $acl = new Acl\Acl();
-        $acl->addRole(new Role\GenericRole('test0'));
-        $acl->addRole(new Role\GenericRole('test1'));
-        $acl->addRole(new Role\GenericRole('test2'));
+        $acl->addRole(new GenericRole('test0'));
+        $acl->addRole(new GenericRole('test1'));
+        $acl->addRole(new GenericRole('test2'));
         $acl->addResource(new Resource\GenericResource('Test'));
 
         $acl->allow(null, 'Test', 'xxx');
@@ -1281,7 +1174,7 @@ class AclTest extends TestCase
      * Meant to test for the (in)existence of this notice:
      * "Notice: Undefined index: allPrivileges in lib/Laminas/Acl.php on line 682"
      */
-    public function testMethodRemoveAllowDoesNotThrowNotice()
+    public function testMethodRemoveAllowDoesNotThrowNotice(): void
     {
         $acl = new Acl\Acl();
         $acl->addRole('admin');
@@ -1292,13 +1185,13 @@ class AclTest extends TestCase
         $this->assertTrue(true);
     }
 
-    public function testRoleObjectImplementsToString()
+    public function testRoleObjectImplementsToString(): void
     {
-        $role = new Role\GenericRole('_fooBar_');
+        $role = new GenericRole('_fooBar_');
         $this->assertEquals('_fooBar_', (string) $role);
     }
 
-    public function testResourceObjectImplementsToString()
+    public function testResourceObjectImplementsToString(): void
     {
         $resource = new Resource\GenericResource('_fooBar_');
         $this->assertEquals('_fooBar_', (string) $resource);
@@ -1307,7 +1200,7 @@ class AclTest extends TestCase
     /**
      * @group Laminas-7973
      */
-    public function testAclPassesPrivilegeToAssertClass()
+    public function testAclPassesPrivilegeToAssertClass(): void
     {
         $assertion = new TestAsset\AssertionLaminas7973();
 
@@ -1323,24 +1216,24 @@ class AclTest extends TestCase
     /**
      * @group Laminas-8468
      */
-    public function testgetRoles()
+    public function testgetRoles(): void
     {
         $this->assertEquals([], $this->acl->getRoles());
 
-        $roleGuest = new Role\GenericRole('guest');
+        $roleGuest = new GenericRole('guest');
         $this->acl->addRole($roleGuest);
-        $this->acl->addRole(new Role\GenericRole('staff'), $roleGuest);
-        $this->acl->addRole(new Role\GenericRole('editor'), 'staff');
-        $this->acl->addRole(new Role\GenericRole('administrator'));
+        $this->acl->addRole(new GenericRole('staff'), $roleGuest);
+        $this->acl->addRole(new GenericRole('editor'), 'staff');
+        $this->acl->addRole(new GenericRole('administrator'));
 
-        $expected = ['guest', 'staff', 'editor','administrator'];
+        $expected = ['guest', 'staff', 'editor', 'administrator'];
         $this->assertEquals($expected, $this->acl->getRoles());
     }
 
     /**
      * @group Laminas-8468
      */
-    public function testgetResources()
+    public function testgetResources(): void
     {
         $this->assertEquals([], $this->acl->getResources());
 
@@ -1354,7 +1247,7 @@ class AclTest extends TestCase
     /**
      * @group Laminas-9643
      */
-    public function testRemoveAllowWithNullResourceAppliesToAllResources()
+    public function testRemoveAllowWithNullResourceAppliesToAllResources(): void
     {
         $this->acl->addRole('guest');
         $this->acl->addResource('blogpost');
@@ -1435,7 +1328,7 @@ class AclTest extends TestCase
 
     public function testSetRuleWorksWithResourceInterface()
     {
-        $roleGuest = new Role\GenericRole('guest');
+        $roleGuest = new GenericRole('guest');
         $this->acl->addRole($roleGuest);
 
         $resourceFoo = new Resource\GenericResource('foo');

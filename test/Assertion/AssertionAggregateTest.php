@@ -1,34 +1,33 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
- * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
- */
+declare(strict_types=1);
+
 namespace LaminasTest\Permissions\Acl\Assertion;
 
 use InvalidArgumentException as PHPInvalidArgumentException;
 use Laminas\Permissions\Acl\Acl;
-use LaminasTest\Permissions\Acl\Assertion\TestSubclasses\AssertionAggregate;
+use Laminas\Permissions\Acl\Assertion\AssertionInterface;
+use Laminas\Permissions\Acl\Assertion\AssertionManager;
 use Laminas\Permissions\Acl\Assertion\Exception\InvalidAssertionException;
 use Laminas\Permissions\Acl\Exception\InvalidArgumentException;
 use Laminas\Permissions\Acl\Exception\RuntimeException;
 use Laminas\Permissions\Acl\Resource\GenericResource;
 use Laminas\Permissions\Acl\Role\GenericRole;
+use LaminasTest\Permissions\Acl\Assertion\TestSubclasses\AssertionAggregate;
 use PHPUnit\Framework\TestCase;
 
 class AssertionAggregateTest extends TestCase
 {
-    protected $assertionAggregate;
+    private AssertionAggregate $assertionAggregate;
 
     protected function setUp(): void
     {
         $this->assertionAggregate = new AssertionAggregate();
     }
 
-    public function testAddAssertion()
+    public function testAddAssertion(): AssertionAggregate
     {
-        $assertion = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
+        $assertion = $this->getMockForAbstractClass(AssertionInterface::class);
         $this->assertionAggregate->addAssertion($assertion);
 
         $this->assertEquals([$assertion], $this->assertionAggregate->peakAssertions());
@@ -36,7 +35,7 @@ class AssertionAggregateTest extends TestCase
         $aggregate = $this->assertionAggregate->addAssertion('other.assertion');
         $this->assertEquals([
             $assertion,
-            'other.assertion'
+            'other.assertion',
         ], $this->assertionAggregate->peakAssertions());
 
         // test fluent interface
@@ -45,10 +44,10 @@ class AssertionAggregateTest extends TestCase
         return clone $this->assertionAggregate;
     }
 
-    public function testAddAssertions()
+    public function testAddAssertions(): void
     {
-        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
-        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
+        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
+        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
 
         $aggregate = $this->assertionAggregate->addAssertions($assertions);
 
@@ -73,7 +72,7 @@ class AssertionAggregateTest extends TestCase
         $this->assertSame($assertionAggregate, $aggregate);
     }
 
-    public function testDefaultModeValue()
+    public function testDefaultModeValue(): void
     {
         $this->assertEquals(AssertionAggregate::MODE_ALL, $this->assertionAggregate->peakMode());
     }
@@ -81,7 +80,7 @@ class AssertionAggregateTest extends TestCase
     /**
      * @dataProvider getDataForTestSetMode
      */
-    public function testSetMode($mode, $exception = false)
+    public function testSetMode(string $mode, bool $exception): void
     {
         if ($exception) {
             $this->expectException(InvalidArgumentException::class);
@@ -92,25 +91,28 @@ class AssertionAggregateTest extends TestCase
         }
     }
 
-    public static function getDataForTestSetMode()
+    /** @return array<array-key, array{0: string, 1: bool}> */
+    public static function getDataForTestSetMode(): array
     {
         return [
             [
-                AssertionAggregate::MODE_ALL
+                AssertionAggregate::MODE_ALL,
+                false,
             ],
             [
-                AssertionAggregate::MODE_AT_LEAST_ONE
+                AssertionAggregate::MODE_AT_LEAST_ONE,
+                false,
             ],
             [
                 'invalid mode',
-                true
-            ]
+                true,
+            ],
         ];
     }
 
-    public function testManagerAccessors()
+    public function testManagerAccessors(): void
     {
-        $manager = $this->getMockBuilder('Laminas\Permissions\Acl\Assertion\AssertionManager')
+        $manager = $this->getMockBuilder(AssertionManager::class)
                         ->disableOriginalConstructor()
                         ->getMock();
 
@@ -119,28 +121,25 @@ class AssertionAggregateTest extends TestCase
         $this->assertSame($this->assertionAggregate, $aggregate);
     }
 
-    public function testCallingAssertWillFetchAssertionFromManager()
+    public function testCallingAssertWillFetchAssertionFromManager(): void
     {
         $acl = $this->getMockBuilder(Acl::class)
-            ->getMock()
-            ;
+            ->getMock();
 
         $role = $this->getMockBuilder(GenericRole::class)
             ->setConstructorArgs(['test.role'])
-            ->getMock()
-            ;
+            ->getMock();
 
         $resource = $this->getMockBuilder(GenericResource::class)
             ->setConstructorArgs(['test.resource'])
-            ->getMock()
-            ;
+            ->getMock();
 
-        $assertion = $this->getMockForAbstractClass('Laminas\Permissions\Acl\Assertion\AssertionInterface');
+        $assertion = $this->getMockForAbstractClass(AssertionInterface::class);
         $assertion->expects($this->once())
             ->method('assert')
             ->will($this->returnValue(true));
 
-        $manager = $this->getMockBuilder('Laminas\Permissions\Acl\Assertion\AssertionManager')
+        $manager = $this->getMockBuilder(AssertionManager::class)
                         ->disableOriginalConstructor()
                         ->getMock();
 
@@ -155,23 +154,20 @@ class AssertionAggregateTest extends TestCase
         $this->assertTrue($this->assertionAggregate->assert($acl, $role, $resource, 'privilege'));
     }
 
-    public function testAssertThrowsAnExceptionWhenReferingToNonExistentAssertion()
+    public function testAssertThrowsAnExceptionWhenReferingToNonExistentAssertion(): void
     {
         $acl = $this->getMockBuilder(Acl::class)
-            ->getMock()
-            ;
+            ->getMock();
 
         $role = $this->getMockBuilder(GenericRole::class)
             ->setConstructorArgs(['test.role'])
-            ->getMock()
-            ;
+            ->getMock();
 
         $resource = $this->getMockBuilder(GenericResource::class)
             ->setConstructorArgs(['test.resource'])
-            ->getMock()
-            ;
+            ->getMock();
 
-        $manager = $this->getMockBuilder('Laminas\Permissions\Acl\Assertion\AssertionManager')
+        $manager = $this->getMockBuilder(AssertionManager::class)
                         ->disableOriginalConstructor()
                         ->getMock();
 
@@ -187,25 +183,22 @@ class AssertionAggregateTest extends TestCase
         $this->assertionAggregate->assert($acl, $role, $resource, 'privilege');
     }
 
-    public function testAssertWithModeAll()
+    public function testAssertWithModeAll(): void
     {
         $acl = $this->getMockBuilder(Acl::class)
-            ->getMock()
-            ;
+            ->getMock();
 
         $role = $this->getMockBuilder(GenericRole::class)
             ->setConstructorArgs(['test.role'])
-            ->getMock()
-            ;
+            ->getMock();
 
         $resource = $this->getMockBuilder(GenericResource::class)
             ->setConstructorArgs(['test.resource'])
-            ->getMock()
-            ;
+            ->getMock();
 
-        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
-        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
-        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
+        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
+        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
+        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
 
         $assertions[0]->expects($this->once())
             ->method('assert')
@@ -227,25 +220,22 @@ class AssertionAggregateTest extends TestCase
         $this->assertTrue($this->assertionAggregate->assert($acl, $role, $resource, 'privilege'));
     }
 
-    public function testAssertWithModeAtLeastOne()
+    public function testAssertWithModeAtLeastOne(): void
     {
         $acl = $this->getMockBuilder(Acl::class)
-            ->getMock()
-            ;
+            ->getMock();
 
         $role = $this->getMockBuilder(GenericRole::class)
             ->setConstructorArgs(['test.role'])
-            ->getMock()
-            ;
+            ->getMock();
 
         $resource = $this->getMockBuilder(GenericResource::class)
             ->setConstructorArgs(['test.resource'])
-            ->getMock()
-            ;
+            ->getMock();
 
-        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
-        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
-        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
+        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
+        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
+        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
 
         $assertions[0]->expects($this->once())
             ->method('assert')
@@ -268,27 +258,24 @@ class AssertionAggregateTest extends TestCase
         $this->assertTrue($this->assertionAggregate->assert($acl, $role, $resource, 'privilege'));
     }
 
-    public function testDoesNotAssertWithModeAll()
+    public function testDoesNotAssertWithModeAll(): void
     {
         $acl = $this->getMockBuilder(Acl::class)
-            ->getMock()
-            ;
+            ->getMock();
 
         $role = $this->getMockBuilder(GenericRole::class)
             ->setConstructorArgs(['test.role'])
             ->setMethods(['assert'])
-            ->getMock()
-            ;
+            ->getMock();
 
         $resource = $this->getMockBuilder(GenericResource::class)
             ->setConstructorArgs(['test.resource'])
             ->setMethods(['assert'])
-            ->getMock()
-            ;
+            ->getMock();
 
-        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
-        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
-        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
+        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
+        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
+        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
 
         $assertions[0]->expects($this->once())
             ->method('assert')
@@ -310,27 +297,24 @@ class AssertionAggregateTest extends TestCase
         $this->assertFalse($this->assertionAggregate->assert($acl, $role, $resource, 'privilege'));
     }
 
-    public function testDoesNotAssertWithModeAtLeastOne()
+    public function testDoesNotAssertWithModeAtLeastOne(): void
     {
         $acl = $this->getMockBuilder(Acl::class)
-            ->getMock()
-            ;
+            ->getMock();
 
         $role = $this->getMockBuilder(GenericRole::class)
             ->setConstructorArgs(['test.role'])
             ->setMethods(['assert'])
-            ->getMock()
-            ;
+            ->getMock();
 
         $resource = $this->getMockBuilder(GenericResource::class)
             ->setConstructorArgs(['test.resource'])
             ->setMethods(['assert'])
-            ->getMock()
-            ;
+            ->getMock();
 
-        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
-        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
-        $assertions[] = $this->getMockForAbstractClass('\Laminas\Permissions\Acl\Assertion\AssertionInterface');
+        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
+        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
+        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
 
         $assertions[0]->expects($this->once())
             ->method('assert')
@@ -353,23 +337,20 @@ class AssertionAggregateTest extends TestCase
         $this->assertFalse($this->assertionAggregate->assert($acl, $role, $resource, 'privilege'));
     }
 
-    public function testAssertThrowsAnExceptionWhenNoAssertionIsAggregated()
+    public function testAssertThrowsAnExceptionWhenNoAssertionIsAggregated(): void
     {
         $acl = $this->getMockBuilder(Acl::class)
-            ->getMock()
-            ;
+            ->getMock();
 
         $role = $this->getMockBuilder(GenericRole::class)
             ->setConstructorArgs(['test.role'])
             ->setMethods(['assert'])
-            ->getMock()
-            ;
+            ->getMock();
 
         $resource = $this->getMockBuilder(GenericResource::class)
             ->setConstructorArgs(['test.resource'])
             ->setMethods(['assert'])
-            ->getMock()
-            ;
+            ->getMock();
 
         $this->expectException(RuntimeException::class);
 
