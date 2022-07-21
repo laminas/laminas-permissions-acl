@@ -1,10 +1,7 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-permissions-acl for the canonical source repository
- * @copyright https://github.com/laminas/laminas-permissions-acl/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-permissions-acl/blob/master/LICENSE.md New BSD License
- */
+declare(strict_types=1);
+
 namespace LaminasTest\Permissions\Acl\Assertion;
 
 use Laminas\Permissions\Acl\Assertion\AssertionInterface;
@@ -15,18 +12,17 @@ use PHPUnit\Framework\TestCase;
 
 class AssertionManagerTest extends TestCase
 {
-    protected $manager;
+    protected AssertionManager $manager;
 
     protected function setUp(): void
     {
-        $this->manager = new AssertionManager(new ServiceManager);
+        $this->manager = new AssertionManager(new ServiceManager());
     }
 
-    public function testValidatePlugin()
+    public function testValidatePlugin(): void
     {
         $assertion = $this->getMockForAbstractClass(AssertionInterface::class);
-
-        $this->assertNull($this->manager->validate($assertion));
+        $this->manager->validate($assertion);
 
         $this->expectException(InvalidServiceException::class);
 
