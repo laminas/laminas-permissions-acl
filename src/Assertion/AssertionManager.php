@@ -8,7 +8,6 @@ use Laminas\Permissions\Acl\Exception\InvalidArgumentException;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 
-use function get_class;
 use function gettype;
 use function is_object;
 use function sprintf;
@@ -35,7 +34,7 @@ class AssertionManager extends AbstractPluginManager
                 '%s can only create instances of %s; %s is invalid',
                 self::class,
                 $this->instanceOf,
-                is_object($instance) ? get_class($instance) : gettype($instance)
+                is_object($instance) ? $instance::class : gettype($instance)
             ));
         }
     }
