@@ -19,9 +19,8 @@ class CallbackAssertionTest extends TestCase
      */
     public function testConstructorThrowsExceptionIfNotCallable(): void
     {
-        $this->expectException(
-            InvalidArgumentException::class
-        );
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid callback provided; not callable');
         new CallbackAssertion('I am not callable!');
     }
 
