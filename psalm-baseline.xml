@@ -474,8 +474,7 @@
       <code>$value</code>
     </MissingClosureParamType>
     <MissingClosureReturnType occurrences="3">
-      <code>function ($aclArg, $roleArg, $resourceArg, $privilegeArg) use ($value) {</code>
-      <code>function ($value) {</code>
+      <code>static fn($value)</code>
       <code>function () {</code>
     </MissingClosureReturnType>
     <TooManyArguments occurrences="1">

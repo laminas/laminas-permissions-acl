@@ -76,7 +76,7 @@ class AclTest extends TestCase
      */
     public function testRoleRegistryRemoveOneNonExistent(): void
     {
-        $this->expectException(InvalidArgumentException::class, 'not found');
+        $this->expectException(InvalidArgumentException::class);
         $this->acl->removeRole('nonexistent');
     }
 
@@ -235,7 +235,7 @@ class AclTest extends TestCase
     {
         $roleGuest    = new GenericRole('guest');
         $roleRegistry = new Role\Registry();
-        $this->expectException(InvalidArgumentException::class, 'already exists');
+        $this->expectException(InvalidArgumentException::class);
         $roleRegistry
             ->add($roleGuest)
             ->add($roleGuest);
@@ -249,7 +249,7 @@ class AclTest extends TestCase
         $roleGuest1   = new GenericRole('guest');
         $roleGuest2   = new GenericRole('guest');
         $roleRegistry = new Role\Registry();
-        $this->expectException(InvalidArgumentException::class, 'already exists');
+        $this->expectException(InvalidArgumentException::class);
         $roleRegistry
             ->add($roleGuest1)
             ->add($roleGuest2);
@@ -1208,7 +1208,7 @@ class AclTest extends TestCase
         $acl->addRole('role');
         $acl->addResource('resource');
         $acl->allow('role', null, null, $assertion);
-        $allowed = $acl->isAllowed('role', 'resource', 'privilege', $assertion);
+        $allowed = $acl->isAllowed('role', 'resource', 'privilege');
 
         $this->assertTrue($allowed);
     }

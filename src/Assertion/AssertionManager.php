@@ -46,11 +46,10 @@ class AssertionManager extends AbstractPluginManager
      *
      * @deprecated Please use {@see AssertionManager::validate()} instead.
      *
-     * @param mixed $instance
      * @throws InvalidArgumentException
      * @psalm-assert AssertionInterface $instance
      */
-    public function validatePlugin($instance)
+    public function validatePlugin(mixed $instance)
     {
         try {
             $this->validate($instance);

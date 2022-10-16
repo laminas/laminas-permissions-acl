@@ -143,7 +143,7 @@ class AssertionAggregate implements AssertionInterface
                     if ($manager = $this->getAssertionManager()) {
                         try {
                             $assertion = $manager->get($assertion);
-                        } catch (Exception $e) {
+                        } catch (Exception) {
                             throw new InvalidAssertionException(
                                 'assertion "'
                                 . $assertion

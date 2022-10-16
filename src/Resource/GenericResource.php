@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Laminas\Permissions\Acl\Resource;
 
-class GenericResource implements ResourceInterface
+use Stringable;
+
+class GenericResource implements ResourceInterface, Stringable
 {
     /**
      * Unique id of Resource
@@ -36,10 +38,8 @@ class GenericResource implements ResourceInterface
     /**
      * Defined by ResourceInterface; returns the Resource identifier
      * Proxies to getResourceId()
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getResourceId();
     }

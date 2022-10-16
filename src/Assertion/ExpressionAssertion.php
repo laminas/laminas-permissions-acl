@@ -22,8 +22,8 @@ use function method_exists;
 use function preg_match;
 use function property_exists;
 use function sprintf;
+use function str_contains;
 use function str_replace;
-use function strpos;
 use function strtolower;
 use function ucwords;
 
@@ -68,7 +68,7 @@ final class ExpressionAssertion implements AssertionInterface
     public const OPERATOR_NSAME  = '!==';
 
     /** @var list<string> */
-    private static $validOperators = [
+    private static array $validOperators = [
         self::OPERATOR_EQ,
         self::OPERATOR_NEQ,
         self::OPERATOR_LT,
@@ -83,15 +83,6 @@ final class ExpressionAssertion implements AssertionInterface
         self::OPERATOR_NSAME,
     ];
 
-    /** @var mixed */
-    private $left;
-
-    /** @var string */
-    private $operator;
-
-    /** @var mixed */
-    private $right;
-
     /**
      * Constructor
      *
@@ -102,11 +93,8 @@ final class ExpressionAssertion implements AssertionInterface
      * @param string $operator One of the OPERATOR constants (or their values)
      * @param mixed|array $right See the class description for valid values.
      */
-    private function __construct($left, $operator, $right)
+    private function __construct(private $left, private $operator, private $right)
     {
-        $this->left     = $left;
-        $this->operator = $operator;
-        $this->right    = $right;
     }
 
     /**
@@ -247,7 +235,7 @@ final class ExpressionAssertion implements AssertionInterface
 
         $contextProperty = $operand[self::OPERAND_CONTEXT_PROPERTY];
 
-        if (strpos($contextProperty, '.') !== false) { // property path?
+        if (str_contains($contextProperty, '.')) { // property path?
             [$objectName, $objectField] = explode('.', $contextProperty, 2);
             return $this->getObjectFieldValue($context, $objectName, $objectField);
         }
@@ -282,7 +270,7 @@ final class ExpressionAssertion implements AssertionInterface
 
         $object        = $context[$objectName];
         $accessors     = ['get', 'is'];
-        $fieldAccessor = false === strpos($field, '_')
+        $fieldAccessor = ! str_contains($field, '_')
             ? $field
             : str_replace(' ', '', ucwords(str_replace('_', ' ', $field)));
 
@@ -306,13 +294,11 @@ final class ExpressionAssertion implements AssertionInterface
     }
 
     /**
-     * @param mixed $left
      * @param string $operator
-     * @param mixed $right
      * @return bool|void
      * @throws RuntimeException If operand is not supported.
      */
-    private static function evaluateExpression($left, $operator, $right)
+    private static function evaluateExpression(mixed $left, $operator, mixed $right)
     {
         // phpcs:disable SlevomatCodingStandard.Operators.DisallowEqualOperators
         switch ($operator) {
