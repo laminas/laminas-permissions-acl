@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LaminasTest\Permissions\Acl\Assertion;
 
-use Closure;
 use Laminas\Permissions\Acl;
 use Laminas\Permissions\Acl\Exception\InvalidArgumentException;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
