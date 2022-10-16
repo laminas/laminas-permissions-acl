@@ -77,6 +77,7 @@ class AclTest extends TestCase
     public function testRoleRegistryRemoveOneNonExistent(): void
     {
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('not found');
         $this->acl->removeRole('nonexistent');
     }
 
@@ -236,6 +237,7 @@ class AclTest extends TestCase
         $roleGuest    = new GenericRole('guest');
         $roleRegistry = new Role\Registry();
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('already exists');
         $roleRegistry
             ->add($roleGuest)
             ->add($roleGuest);
@@ -250,6 +252,7 @@ class AclTest extends TestCase
         $roleGuest2   = new GenericRole('guest');
         $roleRegistry = new Role\Registry();
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('already exists');
         $roleRegistry
             ->add($roleGuest1)
             ->add($roleGuest2);
