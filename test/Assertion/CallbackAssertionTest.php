@@ -18,10 +18,8 @@ class CallbackAssertionTest extends TestCase
      */
     public function testConstructorThrowsExceptionIfNotCallable(): void
     {
-        $this->expectException(
-            InvalidArgumentException::class,
-            'Invalid callback provided; not callable'
-        );
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid callback provided; not callable');
         new CallbackAssertion('I am not callable!');
     }
 
@@ -30,7 +28,7 @@ class CallbackAssertionTest extends TestCase
      */
     public function testCallbackIsSet(): void
     {
-        $callback = function () {
+        $callback = static function (): void {
         };
         $assert   = new CallbackAssertion($callback);
         $this->assertSame($callback, $assert->peakCallback());
@@ -44,7 +42,7 @@ class CallbackAssertionTest extends TestCase
         $acl    = new Acl\Acl();
         $that   = $this;
         $assert = new CallbackAssertion(
-            function ($aclArg, $roleArg, $resourceArg, $privilegeArg) use ($that, $acl) {
+            static function ($aclArg, $roleArg, $resourceArg, $privilegeArg) use ($that, $acl): bool {
                 $that->assertSame($acl, $aclArg);
                 $that->assertInstanceOf(RoleInterface::class, $roleArg);
                 $that->assertEquals('guest', $roleArg->getRoleId());
@@ -68,11 +66,7 @@ class CallbackAssertionTest extends TestCase
     {
         $acl        = new Acl\Acl();
         $roleGuest  = new Acl\Role\GenericRole('guest');
-        $assertMock = function ($value) {
-            return function ($aclArg, $roleArg, $resourceArg, $privilegeArg) use ($value) {
-                return $value;
-            };
-        };
+        $assertMock = static fn($value) => static fn($aclArg, $roleArg, $resourceArg, $privilegeArg) => $value;
         $acl->addRole($roleGuest);
         $acl->allow($roleGuest, null, 'somePrivilege', new CallbackAssertion($assertMock(true)));
         $this->assertTrue($acl->isAllowed($roleGuest, null, 'somePrivilege'));

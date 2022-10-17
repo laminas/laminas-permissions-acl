@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Laminas\Permissions\Acl\Role;
 
-class GenericRole implements RoleInterface
+use Stringable;
+
+class GenericRole implements RoleInterface, Stringable
 {
     /**
      * Unique id of Role
@@ -36,10 +38,8 @@ class GenericRole implements RoleInterface
     /**
      * Defined by RoleInterface; returns the Role identifier
      * Proxies to getRoleId()
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getRoleId();
     }

@@ -748,7 +748,7 @@ class Acl implements AclInterface
             // query on all privileges
             do {
                 // depth-first search on $role if it is not 'allRoles' pseudo-parent
-                if (null !== $role && null !== ($result = $this->roleDFSAllPrivileges($role, $resource, $privilege))) {
+                if (null !== $role && null !== ($result = $this->roleDFSAllPrivileges($role, $resource))) {
                     return $result;
                 }
 

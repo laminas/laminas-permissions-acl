@@ -8,11 +8,8 @@ use Laminas\Permissions\Acl;
 
 class MockAssertion implements Acl\Assertion\AssertionInterface
 {
-    protected bool $returnValue;
-
-    public function __construct(bool $returnValue)
+    public function __construct(protected bool $returnValue)
     {
-        $this->returnValue = $returnValue;
     }
 
     /** @inheritDoc */
