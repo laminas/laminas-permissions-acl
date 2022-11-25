@@ -43,10 +43,10 @@ class CleanIPAssertion implements AssertionInterface
         ResourceInterface $resource = null,
         $privilege = null
     ) {
-        return $this->_isCleanIP($_SERVER['REMOTE_ADDR']);
+        return $this->isCleanIP($_SERVER['REMOTE_ADDR']);
     }
 
-    protected function _isCleanIP($ip)
+    protected function isCleanIP($ip)
     {
         // ...
     }
