@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.24.0@06dd975cb55d36af80f242561738f16c5f58264f">
+<files psalm-version="5.0.0@4e177bf0c9f03c17d2fbfd83b7cc9c47605274d8">
   <file src="src/Acl.php">
-    <InvalidCatch occurrences="2"/>
     <InvalidNullableReturnType occurrences="1">
       <code>bool</code>
     </InvalidNullableReturnType>
-    <InvalidScalarArgument occurrences="2">
-      <code>$e-&gt;getCode()</code>
-      <code>$e-&gt;getCode()</code>
-    </InvalidScalarArgument>
+    <InvalidReturnType occurrences="3">
+      <code>bool|void</code>
+      <code>bool|void</code>
+      <code>bool|void</code>
+    </InvalidReturnType>
     <MixedArgument occurrences="15">
       <code>$child</code>
       <code>$childId</code>
@@ -26,7 +26,7 @@
       <code>$role</code>
       <code>$visitor</code>
     </MixedArgument>
-    <MixedArrayAccess occurrences="27">
+    <MixedArrayAccess occurrences="33">
       <code>$rule['assert']</code>
       <code>$rule['assert']</code>
       <code>$rule['type']</code>
@@ -46,26 +46,34 @@
       <code>$this-&gt;rules['allResources']['byRoleId']</code>
       <code>$this-&gt;rules['allResources']['byRoleId']</code>
       <code>$this-&gt;rules['allResources']['byRoleId']</code>
+      <code>$this-&gt;rules['allResources']['byRoleId'][$roleIdCurrent]</code>
+      <code>$this-&gt;rules['allResources']['byRoleId'][$roleIdCurrent]</code>
       <code>$this-&gt;rules['byResourceId'][$resourceIdCurrent]</code>
       <code>$this-&gt;rules['byResourceId'][$resourceIdCurrent]</code>
       <code>$this-&gt;rules['byResourceId'][$resourceIdCurrent]</code>
+      <code>$this-&gt;rules['byResourceId'][$resourceIdCurrent]['byRoleId']</code>
+      <code>$this-&gt;rules['byResourceId'][$resourceIdCurrent]['byRoleId']</code>
+      <code>$this-&gt;rules['byResourceId'][$resourceIdCurrent]['byRoleId'][$roleIdCurrent]</code>
+      <code>$this-&gt;rules['byResourceId'][$resourceIdCurrent]['byRoleId'][$roleIdCurrent]</code>
       <code>$this-&gt;rules['byResourceId'][$resourceId]</code>
       <code>$this-&gt;rules['byResourceId'][$resourceId]</code>
       <code>$visitor['allRoles']</code>
       <code>$visitor['byRoleId']</code>
       <code>$visitor['byRoleId'][$roleId]</code>
     </MixedArrayAccess>
-    <MixedArrayAssignment occurrences="8">
+    <MixedArrayAssignment occurrences="10">
       <code>$dfs['stack'][]</code>
       <code>$dfs['stack'][]</code>
       <code>$dfs['visited'][$role-&gt;getRoleId()]</code>
       <code>$dfs['visited'][$role-&gt;getRoleId()]</code>
       <code>$this-&gt;resources[$resourceParentId]['children']</code>
+      <code>$this-&gt;resources[$resourceParentId]['children'][$resourceId]</code>
       <code>$this-&gt;rules['byResourceId'][$resourceId]</code>
       <code>$visitor['allRoles']</code>
       <code>$visitor['byRoleId']</code>
+      <code>$visitor['byRoleId'][$roleId]</code>
     </MixedArrayAssignment>
-    <MixedArrayOffset occurrences="12">
+    <MixedArrayOffset occurrences="13">
       <code>$dfs['visited'][$role-&gt;getRoleId()]</code>
       <code>$dfs['visited'][$role-&gt;getRoleId()]</code>
       <code>$rules['byPrivilegeId'][$privilege]</code>
@@ -78,8 +86,9 @@
       <code>$this-&gt;rules['byResourceId'][$resourceIdCurrent]</code>
       <code>$this-&gt;rules['byResourceId'][$resourceIdCurrent]</code>
       <code>$this-&gt;rules['byResourceId'][$resourceIdCurrent]</code>
+      <code>$this-&gt;rules['byResourceId'][$resourceIdCurrent]['byRoleId'][$roleIdCurrent]</code>
     </MixedArrayOffset>
-    <MixedAssignment occurrences="44">
+    <MixedAssignment occurrences="42">
       <code>$child</code>
       <code>$child</code>
       <code>$childId</code>
@@ -122,8 +131,6 @@
       <code>$rules</code>
       <code>$visitor</code>
       <code>$visitor</code>
-      <code>$visitor</code>
-      <code>$visitor</code>
     </MixedAssignment>
     <MixedInferredReturnType occurrences="3">
       <code>ResourceInterface</code>
@@ -137,10 +144,12 @@
       <code>getRoleId</code>
       <code>getRoleId</code>
     </MixedMethodCall>
-    <MixedReturnStatement occurrences="4">
+    <MixedReturnStatement occurrences="6">
       <code>$rule['type']</code>
       <code>$this-&gt;resources[$resourceId]['instance']</code>
       <code>$visitor['allRoles']</code>
+      <code>$visitor['allRoles']</code>
+      <code>$visitor['byRoleId'][$roleId]</code>
       <code>$visitor['byRoleId'][$roleId]</code>
     </MixedReturnStatement>
     <PossiblyInvalidPropertyAssignmentValue occurrences="2">
@@ -170,9 +179,10 @@
       <code>(string) $resource</code>
       <code>(string) $resource</code>
     </RedundantCastGivenDocblockType>
-    <TooManyArguments occurrences="1">
-      <code>roleDFSAllPrivileges</code>
-    </TooManyArguments>
+    <UnsupportedReferenceUsage occurrences="2">
+      <code>$rules =&amp; $this-&gt;getRules($resource, $role)</code>
+      <code>$rules =&amp; $this-&gt;getRules($resource, $role, true)</code>
+    </UnsupportedReferenceUsage>
     <UnusedForeachValue occurrences="9">
       <code>$child</code>
       <code>$resource</code>
@@ -185,7 +195,7 @@
       <code>$rules</code>
     </UnusedForeachValue>
     <UnusedVariable occurrences="1">
-      <code>$ruleTypeOnePrivilege</code>
+      <code>$rules</code>
     </UnusedVariable>
   </file>
   <file src="src/Assertion/AssertionAggregate.php">
@@ -212,6 +222,9 @@
     <InvalidNullableReturnType occurrences="1">
       <code>bool</code>
     </InvalidNullableReturnType>
+    <InvalidReturnType occurrences="1">
+      <code>bool|void</code>
+    </InvalidReturnType>
     <MissingReturnType occurrences="2">
       <code>validateOperand</code>
       <code>validateOperator</code>
@@ -257,14 +270,9 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="src/Role/Registry.php">
-    <InvalidCatch occurrences="2"/>
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$this-&gt;roles</code>
     </InvalidPropertyAssignmentValue>
-    <InvalidScalarArgument occurrences="2">
-      <code>$e-&gt;getCode()</code>
-      <code>$e-&gt;getCode()</code>
-    </InvalidScalarArgument>
     <MixedArgument occurrences="3">
       <code>$parentId</code>
       <code>$roleParentId</code>
@@ -277,10 +285,11 @@
     <MixedArrayAssignment occurrences="1">
       <code>$this-&gt;roles[$roleParentId]['children'][$roleId]</code>
     </MixedArrayAssignment>
-    <MixedArrayOffset occurrences="4">
+    <MixedArrayOffset occurrences="5">
       <code>$roleParents[$roleParentId]</code>
       <code>$this-&gt;roles[$childId]</code>
       <code>$this-&gt;roles[$parentId]</code>
+      <code>$this-&gt;roles[$roleParentId]</code>
       <code>$this-&gt;roles[$roleParentId]</code>
     </MixedArrayOffset>
     <MixedArrayTypeCoercion occurrences="1">
@@ -314,7 +323,7 @@
       <code>(string) $role</code>
       <code>(string) $role</code>
     </RedundantCastGivenDocblockType>
-    <UndefinedInterfaceMethod occurrences="9">
+    <UndefinedInterfaceMethod occurrences="10">
       <code>$this-&gt;roles[$childId]</code>
       <code>$this-&gt;roles[$parentId]</code>
       <code>$this-&gt;roles[$roleId]</code>
@@ -324,6 +333,7 @@
       <code>$this-&gt;roles[$roleId]</code>
       <code>$this-&gt;roles[$roleId]</code>
       <code>$this-&gt;roles[$roleParentId]</code>
+      <code>$this-&gt;roles[$roleParentId]</code>
     </UndefinedInterfaceMethod>
     <UnusedForeachValue occurrences="3">
       <code>$child</code>
@@ -332,14 +342,10 @@
     </UnusedForeachValue>
   </file>
   <file src="test/AclTest.php">
-    <InvalidArgument occurrences="5">
-      <code>ExceptionInterface::class</code>
-      <code>ExceptionInterface::class</code>
-      <code>ExceptionInterface::class</code>
+    <InvalidArgument occurrences="2">
       <code>new stdClass()</code>
       <code>new stdClass()</code>
     </InvalidArgument>
-    <InvalidCatch occurrences="8"/>
     <MissingReturnType occurrences="4">
       <code>testAclResourcePermissionsAreInheritedWithMultilevelResourcesAndDenyPolicy</code>
       <code>testAllowNullPermissionAfterResourcesExistShouldAllowAllPermissionsForRole</code>
@@ -353,11 +359,7 @@
     <MixedMethodCall occurrences="1">
       <code>getRoleId</code>
     </MixedMethodCall>
-    <TooManyArguments occurrences="5">
-      <code>expectException</code>
-      <code>expectException</code>
-      <code>expectException</code>
-      <code>isAllowed</code>
+    <TooManyArguments occurrences="1">
       <code>new Resource\GenericResource('profiles', 'gallery')</code>
     </TooManyArguments>
     <UndefinedClass occurrences="2">
@@ -473,13 +475,10 @@
       <code>$roleArg</code>
       <code>$value</code>
     </MissingClosureParamType>
-    <MissingClosureReturnType occurrences="3">
-      <code>static fn($value)</code>
-      <code>function () {</code>
+    <MissingClosureReturnType occurrences="2">
+      <code>static fn($aclArg, $roleArg, $resourceArg, $privilegeArg) =&gt; $value</code>
+      <code>static fn($value) =&gt; static fn($aclArg, $roleArg, $resourceArg, $privilegeArg) =&gt; $value</code>
     </MissingClosureReturnType>
-    <TooManyArguments occurrences="1">
-      <code>expectException</code>
-    </TooManyArguments>
     <UnusedClosureParam occurrences="4">
       <code>$aclArg</code>
       <code>$privilegeArg</code>
