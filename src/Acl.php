@@ -58,6 +58,14 @@ class Acl implements AclInterface
      */
     protected $resources = [];
 
+    /**
+     * Resources by resourceId plus a null element
+     * Used to speed up setRule()
+     *
+     * @var array
+     */
+    protected $resourcesById = [null];
+
     /** @var Role\RoleInterface|null */
     protected $isAllowedRole;
 
@@ -273,7 +281,7 @@ class Acl implements AclInterface
             'parent'   => $resourceParent,
             'children' => [],
         ];
-
+        $this->resourcesById[$resourceId] = $resource;
         return $this;
     }
 
@@ -416,7 +424,7 @@ class Acl implements AclInterface
         }
 
         $this->resources = [];
-
+        $this->resourcesById = [null];
         return $this;
     }
 
@@ -563,35 +571,29 @@ class Acl implements AclInterface
             }
         }
         unset($rolesTemp);
-
-        // ensure that all specified Resources exist; normalize input to array of Resource objects or null
-        if (! is_array($resources)) {
-            if (null === $resources && $this->resources) {
-                $resources = array_keys($this->resources);
-                // Passing a null resource; make sure "global" permission is also set!
-                if (! in_array(null, $resources)) {
-                    array_unshift($resources, null);
-                }
-            } else {
+        if (null === $resources && $this->resources) {
+            $resources = $this->resourcesById;
+        } else {
+            // ensure that all specified Resources exist; normalize input to array of Resource objects or null
+            if (!is_array($resources)) {
                 $resources = [$resources];
+            } elseif (!$resources) {
+                $resources = [null];
             }
-        } elseif (! $resources) {
-            $resources = [null];
-        }
-        $resourcesTemp = $resources;
-        $resources     = [];
-        foreach ($resourcesTemp as $resource) {
-            if (null !== $resource) {
-                $resourceObj            = $this->getResource($resource);
-                $resourceId             = $resourceObj->getResourceId();
-                $children               = $this->getChildResources($resourceObj);
-                $resources              = array_merge($resources, $children);
-                $resources[$resourceId] = $resourceObj;
-            } else {
-                $resources[] = null;
+            $resourcesTemp = $resources;
+            $resources = [];
+            foreach ($resourcesTemp as $resource) {
+                if (null !== $resource) {
+                    $resourceObj = $this->getResource($resource);
+                    $resourceId = $resourceObj->getResourceId();
+                    $this->getChildResources($resourceObj, $resources);
+                    $resources[$resourceId] = $resourceObj;
+                } else {
+                    $resources[] = null;
+                }
             }
+            unset($resourcesTemp);
         }
-        unset($resourcesTemp);
 
         // normalize privileges to array
         if (null === $privileges) {
@@ -677,19 +679,14 @@ class Acl implements AclInterface
      *
      * @return ResourceInterface[]
      */
-    protected function getChildResources(ResourceInterface $resource)
+    protected function getChildResources(ResourceInterface $resource, &$return = [])
     {
-        $return = [];
-        $id     = $resource->getResourceId();
-
+        $id = $resource->getResourceId();
         $children = $this->resources[$id]['children'];
         foreach ($children as $child) {
-            $childReturn                          = $this->getChildResources($child);
-            $childReturn[$child->getResourceId()] = $child;
-
-            $return = array_merge($return, $childReturn);
+            $this->getChildResources($child, $return);
+            $return[$child->getResourceId()] = $child;
         }
-
         return $return;
     }
 
