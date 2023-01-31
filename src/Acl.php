@@ -13,10 +13,7 @@ use Throwable;
 
 use function array_key_exists;
 use function array_keys;
-use function array_merge;
 use function array_pop;
-use function array_unshift;
-use function in_array;
 use function is_array;
 use function is_string;
 use function sprintf;
@@ -62,7 +59,7 @@ class Acl implements AclInterface
      * Resources by resourceId plus a null element
      * Used to speed up setRule()
      *
-     * @var array
+     * @var (ResourceInterface|null)[]
      */
     protected $resourcesById = [null];
 
@@ -276,7 +273,7 @@ class Acl implements AclInterface
             $this->resources[$resourceParentId]['children'][$resourceId] = $resource;
         }
 
-        $this->resources[$resourceId] = [
+        $this->resources[$resourceId]     = [
             'instance' => $resource,
             'parent'   => $resourceParent,
             'children' => [],
@@ -423,7 +420,7 @@ class Acl implements AclInterface
             unset($this->rules['byResourceId'][$resourceId]);
         }
 
-        $this->resources = [];
+        $this->resources     = [];
         $this->resourcesById = [null];
         return $this;
     }
@@ -571,28 +568,28 @@ class Acl implements AclInterface
             }
         }
         unset($rolesTemp);
+        /** var (ResourceInterface|null)[] */
+        $resourcesArray = [];
         if (null === $resources && $this->resources) {
-            $resources = $this->resourcesById;
+            $resourcesArray = $this->resourcesById;
         } else {
             // ensure that all specified Resources exist; normalize input to array of Resource objects or null
-            if (!is_array($resources)) {
+            if (! is_array($resources)) {
                 $resources = [$resources];
-            } elseif (!$resources) {
+            } elseif (! $resources) {
                 $resources = [null];
             }
-            $resourcesTemp = $resources;
-            $resources = [];
-            foreach ($resourcesTemp as $resource) {
+            foreach ($resources as $resource) {
                 if (null !== $resource) {
                     $resourceObj = $this->getResource($resource);
-                    $resourceId = $resourceObj->getResourceId();
-                    $this->getChildResources($resourceObj, $resources);
-                    $resources[$resourceId] = $resourceObj;
+                    $resourceId  = $resourceObj->getResourceId();
+                    $this->getChildResources($resourceObj, $resourcesArray);
+                    $resourcesArray[$resourceId] = $resourceObj;
                 } else {
-                    $resources[] = null;
+                    $resourcesArray[] = null;
                 }
             }
-            unset($resourcesTemp);
+            unset($resources);
         }
 
         // normalize privileges to array
@@ -605,7 +602,7 @@ class Acl implements AclInterface
         switch ($operation) {
             // add to the rules
             case self::OP_ADD:
-                foreach ($resources as $resource) {
+                foreach ($resourcesArray as $resource) {
                     foreach ($roles as $role) {
                         $rules =& $this->getRules($resource, $role, true);
                         if (! $privileges) {
@@ -626,7 +623,7 @@ class Acl implements AclInterface
 
             // remove from the rules
             case self::OP_REMOVE:
-                foreach ($resources as $resource) {
+                foreach ($resourcesArray as $resource) {
                     foreach ($roles as $role) {
                         $rules =& $this->getRules($resource, $role);
                         if (null === $rules) {
@@ -677,11 +674,12 @@ class Acl implements AclInterface
     /**
      * Returns all child resources from the given resource.
      *
-     * @return ResourceInterface[]
+     * @param (ResourceInterface|null)[] $return
+     * @return (ResourceInterface|null)[]
      */
-    protected function getChildResources(ResourceInterface $resource, &$return = [])
+    protected function getChildResources(ResourceInterface $resource, array &$return = [])
     {
-        $id = $resource->getResourceId();
+        $id       = $resource->getResourceId();
         $children = $this->resources[$id]['children'];
         foreach ($children as $child) {
             $this->getChildResources($child, $return);
