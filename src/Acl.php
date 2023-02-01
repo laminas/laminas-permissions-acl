@@ -59,9 +59,9 @@ class Acl implements AclInterface
      * Resources by resourceId plus a null element
      * Used to speed up setRule()
      *
-     * @var (ResourceInterface|null)[]
+     * @var array<int|string, ResourceInterface|null>
      */
-    protected $resourcesById = [null];
+    private $resourcesById = [null];
 
     /** @var Role\RoleInterface|null */
     protected $isAllowedRole;
@@ -568,10 +568,10 @@ class Acl implements AclInterface
             }
         }
         unset($rolesTemp);
-        /** var (ResourceInterface|null)[] */
-        $resourcesArray = [];
+        /** var array<int|string, ResourceInterface|null> */
+        $resourcesToApplyRules = [];
         if (null === $resources && $this->resources) {
-            $resourcesArray = $this->resourcesById;
+            $resourcesToApplyRules = $this->resourcesById;
         } else {
             // ensure that all specified Resources exist; normalize input to array of Resource objects or null
             if (! is_array($resources)) {
@@ -583,10 +583,10 @@ class Acl implements AclInterface
                 if (null !== $resource) {
                     $resourceObj = $this->getResource($resource);
                     $resourceId  = $resourceObj->getResourceId();
-                    $this->getChildResources($resourceObj, $resourcesArray);
-                    $resourcesArray[$resourceId] = $resourceObj;
+                    $this->getChildResourcesIntoReference($resourceObj, $resourcesToApplyRules);
+                    $resourcesToApplyRules[$resourceId] = $resourceObj;
                 } else {
-                    $resourcesArray[] = null;
+                    $resourcesToApplyRules[] = null;
                 }
             }
             unset($resources);
@@ -602,7 +602,7 @@ class Acl implements AclInterface
         switch ($operation) {
             // add to the rules
             case self::OP_ADD:
-                foreach ($resourcesArray as $resource) {
+                foreach ($resourcesToApplyRules as $resource) {
                     foreach ($roles as $role) {
                         $rules =& $this->getRules($resource, $role, true);
                         if (! $privileges) {
@@ -623,7 +623,7 @@ class Acl implements AclInterface
 
             // remove from the rules
             case self::OP_REMOVE:
-                foreach ($resourcesArray as $resource) {
+                foreach ($resourcesToApplyRules as $resource) {
                     foreach ($roles as $role) {
                         $rules =& $this->getRules($resource, $role);
                         if (null === $rules) {
@@ -674,18 +674,32 @@ class Acl implements AclInterface
     /**
      * Returns all child resources from the given resource.
      *
-     * @param (ResourceInterface|null)[] $return
-     * @return (ResourceInterface|null)[]
+     * @param array<int|string, ResourceInterface|null> $return
+     * @return array<int|string, ResourceInterface|null>
      */
-    protected function getChildResources(ResourceInterface $resource, array &$return = [])
+    private function getChildResourcesIntoReference(ResourceInterface $resource, array &$return = [])
     {
         $id       = $resource->getResourceId();
         $children = $this->resources[$id]['children'];
         foreach ($children as $child) {
-            $this->getChildResources($child, $return);
+            $this->getChildResourcesIntoReference($child, $return);
             $return[$child->getResourceId()] = $child;
         }
         return $return;
+    }
+
+    /**
+     * Returns all child resources from the given resource.
+     *
+     * @deprecated
+     *
+     * @see getChildResourcesIntoReference()
+     *
+     * @return array<int|string, ResourceInterface|null>
+     */
+    protected function getChildResources(ResourceInterface $resource)
+    {
+        return $this->getChildResourcesIntoReference($resource);
     }
 
     /**

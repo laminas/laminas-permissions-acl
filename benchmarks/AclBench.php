@@ -27,7 +27,10 @@ class AclBench
         $this->acl = new Acl();
     }
 
-    public function benchSetService(): void
+    /**
+     * Benchmarks setting up ACL with roles and resources, and then adding allow/deny rules to them
+     */
+    public function benchAclRolesResourcesAllowDeny(): void
     {
         $acl = new Acl();
         $role = new GenericRole('A');
