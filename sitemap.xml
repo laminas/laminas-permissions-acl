@@ -2,32 +2,32 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://docs.laminas.dev/laminas-permissions-acl/</loc>
-         <lastmod>2023-02-01</lastmod>
+         <lastmod>2023-05-29</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.laminas.dev/laminas-permissions-acl/advanced/</loc>
-         <lastmod>2023-02-01</lastmod>
+         <lastmod>2023-05-29</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.laminas.dev/laminas-permissions-acl/expression/</loc>
-         <lastmod>2023-02-01</lastmod>
+         <lastmod>2023-05-29</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.laminas.dev/laminas-permissions-acl/ownership/</loc>
-         <lastmod>2023-02-01</lastmod>
+         <lastmod>2023-05-29</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.laminas.dev/laminas-permissions-acl/refining/</loc>
-         <lastmod>2023-02-01</lastmod>
+         <lastmod>2023-05-29</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.laminas.dev/laminas-permissions-acl/usage/</loc>
-         <lastmod>2023-02-01</lastmod>
+         <lastmod>2023-05-29</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
