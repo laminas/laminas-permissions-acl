@@ -13,10 +13,12 @@ use ReflectionProperty;
 
 use function array_flip;
 use function array_intersect_key;
+use function assert;
 use function count;
 use function explode;
 use function in_array;
 use function is_array;
+use function is_object;
 use function is_string;
 use function method_exists;
 use function preg_match;
@@ -234,9 +236,12 @@ final class ExpressionAssertion implements AssertionInterface
         }
 
         $contextProperty = $operand[self::OPERAND_CONTEXT_PROPERTY];
+        assert(is_string($contextProperty));
 
         if (str_contains($contextProperty, '.')) { // property path?
-            [$objectName, $objectField] = explode('.', $contextProperty, 2);
+            $parts = explode('.', $contextProperty, 2);
+            assert(count($parts) >= 2);
+            [$objectName, $objectField] = $parts;
             return $this->getObjectFieldValue($context, $objectName, $objectField);
         }
 
@@ -277,12 +282,12 @@ final class ExpressionAssertion implements AssertionInterface
         foreach ($accessors as $accessor) {
             $accessor .= $fieldAccessor;
 
-            if (method_exists($object, $accessor)) {
+            if (is_object($object) && method_exists($object, $accessor)) {
                 return $object->$accessor();
             }
         }
 
-        if (! $this->propertyExists($object, $field)) {
+        if (! is_object($object) || ! $this->propertyExists($object, $field)) {
             throw new RuntimeException(sprintf(
                 "'%s' property cannot be resolved on the '%s' object",
                 $field,

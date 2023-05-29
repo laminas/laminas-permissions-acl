@@ -16,7 +16,7 @@ class AssertionManagerCompatibilityTest extends TestCase
 {
     use CommonPluginManagerTrait;
 
-    protected function getPluginManager(): AssertionManager
+    protected static function getPluginManager(): AssertionManager
     {
         return new AssertionManager(new ServiceManager());
     }
