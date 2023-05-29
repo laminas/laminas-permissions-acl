@@ -12,6 +12,7 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Laminas\Permissions\Acl\Role\RoleInterface;
 use LaminasTest\Permissions\Acl\TestAsset\ExpressionUseCase\BlogPost;
 use LaminasTest\Permissions\Acl\TestAsset\ExpressionUseCase\User;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 use function serialize;
@@ -73,9 +74,9 @@ class ExpressionAssertionTest extends TestCase
     }
 
     /**
-     * @dataProvider getExpressions
      * @param array<string, mixed> $expression
      */
+    #[DataProvider('getExpressions')]
     public function testExpressionsEvaluation(
         array $expression,
         RoleInterface $role,
@@ -99,7 +100,7 @@ class ExpressionAssertionTest extends TestCase
      *      assert: bool
      * }>
      */
-    public function getExpressions(): array
+    public static function getExpressions(): array
     {
         $author3 = new User([
             'username' => 'author3',
