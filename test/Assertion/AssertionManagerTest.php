@@ -21,7 +21,7 @@ class AssertionManagerTest extends TestCase
 
     public function testValidatePlugin(): void
     {
-        $assertion = $this->getMockForAbstractClass(AssertionInterface::class);
+        $assertion = $this->createMock(AssertionInterface::class);
         $this->manager->validate($assertion);
 
         $this->expectException(InvalidServiceException::class);

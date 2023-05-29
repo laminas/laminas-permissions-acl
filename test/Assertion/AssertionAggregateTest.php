@@ -27,7 +27,7 @@ class AssertionAggregateTest extends TestCase
 
     public function testAddAssertion(): AssertionAggregate
     {
-        $assertion = $this->getMockForAbstractClass(AssertionInterface::class);
+        $assertion = $this->createMock(AssertionInterface::class);
         $this->assertionAggregate->addAssertion($assertion);
 
         $this->assertEquals([$assertion], $this->assertionAggregate->peakAssertions());
@@ -46,8 +46,8 @@ class AssertionAggregateTest extends TestCase
 
     public function testAddAssertions(): void
     {
-        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
-        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
+        $assertions[] = $this->createMock(AssertionInterface::class);
+        $assertions[] = $this->createMock(AssertionInterface::class);
 
         $aggregate = $this->assertionAggregate->addAssertions($assertions);
 
@@ -123,18 +123,10 @@ class AssertionAggregateTest extends TestCase
 
     public function testCallingAssertWillFetchAssertionFromManager(): void
     {
-        $acl = $this->getMockBuilder(Acl::class)
-            ->getMock();
-
-        $role = $this->getMockBuilder(GenericRole::class)
-            ->setConstructorArgs(['test.role'])
-            ->getMock();
-
-        $resource = $this->getMockBuilder(GenericResource::class)
-            ->setConstructorArgs(['test.resource'])
-            ->getMock();
-
-        $assertion = $this->getMockForAbstractClass(AssertionInterface::class);
+        $acl       = $this->createMock(Acl::class);
+        $role      = $this->createMock(GenericRole::class);
+        $resource  = $this->createMock(GenericResource::class);
+        $assertion = $this->createMock(AssertionInterface::class);
         $assertion->expects($this->once())
             ->method('assert')
             ->will($this->returnValue(true));
@@ -185,20 +177,12 @@ class AssertionAggregateTest extends TestCase
 
     public function testAssertWithModeAll(): void
     {
-        $acl = $this->getMockBuilder(Acl::class)
-            ->getMock();
-
-        $role = $this->getMockBuilder(GenericRole::class)
-            ->setConstructorArgs(['test.role'])
-            ->getMock();
-
-        $resource = $this->getMockBuilder(GenericResource::class)
-            ->setConstructorArgs(['test.resource'])
-            ->getMock();
-
-        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
-        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
-        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
+        $acl          = $this->createMock(Acl::class);
+        $role         = $this->createMock(GenericRole::class);
+        $resource     = $this->createMock(GenericResource::class);
+        $assertions[] = $this->createMock(AssertionInterface::class);
+        $assertions[] = $this->createMock(AssertionInterface::class);
+        $assertions[] = $this->createMock(AssertionInterface::class);
 
         $assertions[0]->expects($this->once())
             ->method('assert')
@@ -222,20 +206,12 @@ class AssertionAggregateTest extends TestCase
 
     public function testAssertWithModeAtLeastOne(): void
     {
-        $acl = $this->getMockBuilder(Acl::class)
-            ->getMock();
-
-        $role = $this->getMockBuilder(GenericRole::class)
-            ->setConstructorArgs(['test.role'])
-            ->getMock();
-
-        $resource = $this->getMockBuilder(GenericResource::class)
-            ->setConstructorArgs(['test.resource'])
-            ->getMock();
-
-        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
-        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
-        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
+        $acl          = $this->createMock(Acl::class);
+        $role         = $this->createMock(GenericRole::class);
+        $resource     = $this->createMock(GenericResource::class);
+        $assertions[] = $this->createMock(AssertionInterface::class);
+        $assertions[] = $this->createMock(AssertionInterface::class);
+        $assertions[] = $this->createMock(AssertionInterface::class);
 
         $assertions[0]->expects($this->once())
             ->method('assert')
@@ -260,22 +236,13 @@ class AssertionAggregateTest extends TestCase
 
     public function testDoesNotAssertWithModeAll(): void
     {
-        $acl = $this->getMockBuilder(Acl::class)
-            ->getMock();
+        $acl      = $this->createMock(Acl::class);
+        $role     = $this->createMock(GenericRole::class);
+        $resource = $this->createMock(GenericResource::class);
 
-        $role = $this->getMockBuilder(GenericRole::class)
-            ->setConstructorArgs(['test.role'])
-            ->setMethods(['assert'])
-            ->getMock();
-
-        $resource = $this->getMockBuilder(GenericResource::class)
-            ->setConstructorArgs(['test.resource'])
-            ->setMethods(['assert'])
-            ->getMock();
-
-        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
-        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
-        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
+        $assertions[] = $this->createMock(AssertionInterface::class);
+        $assertions[] = $this->createMock(AssertionInterface::class);
+        $assertions[] = $this->createMock(AssertionInterface::class);
 
         $assertions[0]->expects($this->once())
             ->method('assert')
@@ -299,22 +266,12 @@ class AssertionAggregateTest extends TestCase
 
     public function testDoesNotAssertWithModeAtLeastOne(): void
     {
-        $acl = $this->getMockBuilder(Acl::class)
-            ->getMock();
-
-        $role = $this->getMockBuilder(GenericRole::class)
-            ->setConstructorArgs(['test.role'])
-            ->setMethods(['assert'])
-            ->getMock();
-
-        $resource = $this->getMockBuilder(GenericResource::class)
-            ->setConstructorArgs(['test.resource'])
-            ->setMethods(['assert'])
-            ->getMock();
-
-        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
-        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
-        $assertions[] = $this->getMockForAbstractClass(AssertionInterface::class);
+        $acl          = $this->createMock(Acl::class);
+        $role         = $this->createMock(GenericRole::class);
+        $resource     = $this->createMock(GenericResource::class);
+        $assertions[] = $this->createMock(AssertionInterface::class);
+        $assertions[] = $this->createMock(AssertionInterface::class);
+        $assertions[] = $this->createMock(AssertionInterface::class);
 
         $assertions[0]->expects($this->once())
             ->method('assert')
@@ -339,18 +296,9 @@ class AssertionAggregateTest extends TestCase
 
     public function testAssertThrowsAnExceptionWhenNoAssertionIsAggregated(): void
     {
-        $acl = $this->getMockBuilder(Acl::class)
-            ->getMock();
-
-        $role = $this->getMockBuilder(GenericRole::class)
-            ->setConstructorArgs(['test.role'])
-            ->setMethods(['assert'])
-            ->getMock();
-
-        $resource = $this->getMockBuilder(GenericResource::class)
-            ->setConstructorArgs(['test.resource'])
-            ->setMethods(['assert'])
-            ->getMock();
+        $acl      = $this->createMock(Acl::class);
+        $role     = $this->createMock(GenericRole::class);
+        $resource = $this->createMock(GenericResource::class);
 
         $this->expectException(RuntimeException::class);
 

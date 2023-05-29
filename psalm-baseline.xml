@@ -369,14 +369,6 @@
     </UnusedForeachValue>
   </file>
   <file src="test/Assertion/AssertionAggregateTest.php">
-    <DeprecatedMethod>
-      <code>setMethods</code>
-      <code>setMethods</code>
-      <code>setMethods</code>
-      <code>setMethods</code>
-      <code>setMethods</code>
-      <code>setMethods</code>
-    </DeprecatedMethod>
     <MissingReturnType>
       <code>testClearAssertions</code>
     </MissingReturnType>
@@ -480,6 +472,9 @@
     <MissingReturnType>
       <code>testExpressionsEvaluation</code>
     </MissingReturnType>
+    <PossiblyUnusedMethod>
+      <code>getExpressions</code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="test/TestAsset/ExpressionUseCase/BlogPost.php">
     <PossiblyUnusedMethod>
