@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.12.0@f90118cdeacd0088e7215e64c0c99ceca819e176">
+<files psalm-version="5.14.1@b9d355e0829c397b9b3b47d0c0ed042a8a70284d">
   <file src="src/Acl.php">
     <MixedArgument>
       <code>$child</code>
@@ -372,78 +372,6 @@
     <MissingReturnType>
       <code>testClearAssertions</code>
     </MissingReturnType>
-    <MixedArgument>
-      <code>$assertion</code>
-      <code>$assertion</code>
-      <code>$assertion</code>
-      <code>$assertion</code>
-    </MixedArgument>
-    <MixedArgumentTypeCoercion>
-      <code>$assertions</code>
-    </MixedArgumentTypeCoercion>
-    <MixedAssignment>
-      <code>$assertion</code>
-      <code>$assertion</code>
-      <code>$assertion</code>
-      <code>$assertion</code>
-    </MixedAssignment>
-    <MixedMethodCall>
-      <code>expects</code>
-      <code>expects</code>
-      <code>expects</code>
-      <code>expects</code>
-      <code>expects</code>
-      <code>expects</code>
-      <code>expects</code>
-      <code>expects</code>
-      <code>expects</code>
-      <code>expects</code>
-      <code>expects</code>
-      <code>expects</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>with</code>
-      <code>with</code>
-      <code>with</code>
-      <code>with</code>
-      <code>with</code>
-      <code>with</code>
-      <code>with</code>
-      <code>with</code>
-      <code>with</code>
-      <code>with</code>
-      <code>with</code>
-      <code>with</code>
-    </MixedMethodCall>
-    <PossiblyUndefinedVariable>
-      <code>$assertions</code>
-      <code>$assertions</code>
-      <code>$assertions</code>
-      <code>$assertions</code>
-      <code>$assertions</code>
-    </PossiblyUndefinedVariable>
   </file>
   <file src="test/Assertion/CallbackAssertionTest.php">
     <MissingClosureParamType>

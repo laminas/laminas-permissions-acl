@@ -46,8 +46,10 @@ class AssertionAggregateTest extends TestCase
 
     public function testAddAssertions(): void
     {
-        $assertions[] = $this->createMock(AssertionInterface::class);
-        $assertions[] = $this->createMock(AssertionInterface::class);
+        $assertions = [
+            $this->createMock(AssertionInterface::class),
+            $this->createMock(AssertionInterface::class),
+        ];
 
         $aggregate = $this->assertionAggregate->addAssertions($assertions);
 
@@ -129,7 +131,7 @@ class AssertionAggregateTest extends TestCase
         $assertion = $this->createMock(AssertionInterface::class);
         $assertion->expects($this->once())
             ->method('assert')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $manager = $this->getMockBuilder(AssertionManager::class)
                         ->disableOriginalConstructor()
@@ -138,7 +140,7 @@ class AssertionAggregateTest extends TestCase
         $manager->expects($this->once())
             ->method('get')
             ->with('assertion')
-            ->will($this->returnValue($assertion));
+            ->willReturn($assertion);
 
         $this->assertionAggregate->setAssertionManager($manager);
         $this->assertionAggregate->addAssertion('assertion');
@@ -166,7 +168,7 @@ class AssertionAggregateTest extends TestCase
         $manager->expects($this->once())
             ->method('get')
             ->with('assertion')
-            ->will($this->throwException(new PHPInvalidArgumentException()));
+            ->willThrowException(new PHPInvalidArgumentException());
 
         $this->assertionAggregate->setAssertionManager($manager);
 
@@ -177,25 +179,27 @@ class AssertionAggregateTest extends TestCase
 
     public function testAssertWithModeAll(): void
     {
-        $acl          = $this->createMock(Acl::class);
-        $role         = $this->createMock(GenericRole::class);
-        $resource     = $this->createMock(GenericResource::class);
-        $assertions[] = $this->createMock(AssertionInterface::class);
-        $assertions[] = $this->createMock(AssertionInterface::class);
-        $assertions[] = $this->createMock(AssertionInterface::class);
+        $acl        = $this->createMock(Acl::class);
+        $role       = $this->createMock(GenericRole::class);
+        $resource   = $this->createMock(GenericResource::class);
+        $assertions = [
+            $this->createMock(AssertionInterface::class),
+            $this->createMock(AssertionInterface::class),
+            $this->createMock(AssertionInterface::class),
+        ];
 
         $assertions[0]->expects($this->once())
             ->method('assert')
             ->with($acl, $role, $resource, 'privilege')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $assertions[1]->expects($this->once())
             ->method('assert')
             ->with($acl, $role, $resource, 'privilege')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $assertions[2]->expects($this->once())
             ->method('assert')
             ->with($acl, $role, $resource, 'privilege')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         foreach ($assertions as $assertion) {
             $this->assertionAggregate->addAssertion($assertion);
@@ -206,25 +210,27 @@ class AssertionAggregateTest extends TestCase
 
     public function testAssertWithModeAtLeastOne(): void
     {
-        $acl          = $this->createMock(Acl::class);
-        $role         = $this->createMock(GenericRole::class);
-        $resource     = $this->createMock(GenericResource::class);
-        $assertions[] = $this->createMock(AssertionInterface::class);
-        $assertions[] = $this->createMock(AssertionInterface::class);
-        $assertions[] = $this->createMock(AssertionInterface::class);
+        $acl        = $this->createMock(Acl::class);
+        $role       = $this->createMock(GenericRole::class);
+        $resource   = $this->createMock(GenericResource::class);
+        $assertions = [
+            $this->createMock(AssertionInterface::class),
+            $this->createMock(AssertionInterface::class),
+            $this->createMock(AssertionInterface::class),
+        ];
 
         $assertions[0]->expects($this->once())
             ->method('assert')
             ->with($acl, $role, $resource, 'privilege')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
         $assertions[1]->expects($this->once())
             ->method('assert')
             ->with($acl, $role, $resource, 'privilege')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
         $assertions[2]->expects($this->once())
             ->method('assert')
             ->with($acl, $role, $resource, 'privilege')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         foreach ($assertions as $assertion) {
             $this->assertionAggregate->addAssertion($assertion);
@@ -236,26 +242,27 @@ class AssertionAggregateTest extends TestCase
 
     public function testDoesNotAssertWithModeAll(): void
     {
-        $acl      = $this->createMock(Acl::class);
-        $role     = $this->createMock(GenericRole::class);
-        $resource = $this->createMock(GenericResource::class);
-
-        $assertions[] = $this->createMock(AssertionInterface::class);
-        $assertions[] = $this->createMock(AssertionInterface::class);
-        $assertions[] = $this->createMock(AssertionInterface::class);
+        $acl        = $this->createMock(Acl::class);
+        $role       = $this->createMock(GenericRole::class);
+        $resource   = $this->createMock(GenericResource::class);
+        $assertions = [
+            $this->createMock(AssertionInterface::class),
+            $this->createMock(AssertionInterface::class),
+            $this->createMock(AssertionInterface::class),
+        ];
 
         $assertions[0]->expects($this->once())
             ->method('assert')
             ->with($acl, $role, $resource, 'privilege')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $assertions[1]->expects($this->once())
             ->method('assert')
             ->with($acl, $role, $resource, 'privilege')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $assertions[2]->expects($this->once())
             ->method('assert')
             ->with($acl, $role, $resource, 'privilege')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         foreach ($assertions as $assertion) {
             $this->assertionAggregate->addAssertion($assertion);
@@ -266,25 +273,27 @@ class AssertionAggregateTest extends TestCase
 
     public function testDoesNotAssertWithModeAtLeastOne(): void
     {
-        $acl          = $this->createMock(Acl::class);
-        $role         = $this->createMock(GenericRole::class);
-        $resource     = $this->createMock(GenericResource::class);
-        $assertions[] = $this->createMock(AssertionInterface::class);
-        $assertions[] = $this->createMock(AssertionInterface::class);
-        $assertions[] = $this->createMock(AssertionInterface::class);
+        $acl        = $this->createMock(Acl::class);
+        $role       = $this->createMock(GenericRole::class);
+        $resource   = $this->createMock(GenericResource::class);
+        $assertions = [
+            $this->createMock(AssertionInterface::class),
+            $this->createMock(AssertionInterface::class),
+            $this->createMock(AssertionInterface::class),
+        ];
 
         $assertions[0]->expects($this->once())
             ->method('assert')
             ->with($acl, $role, $resource, 'privilege')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
         $assertions[1]->expects($this->once())
             ->method('assert')
             ->with($acl, $role, $resource, 'privilege')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
         $assertions[2]->expects($this->once())
             ->method('assert')
             ->with($acl, $role, $resource, 'privilege')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         foreach ($assertions as $assertion) {
             $this->assertionAggregate->addAssertion($assertion);
