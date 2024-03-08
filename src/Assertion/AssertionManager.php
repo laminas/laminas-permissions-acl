@@ -4,30 +4,28 @@ declare(strict_types=1);
 
 namespace Laminas\Permissions\Acl\Assertion;
 
-use Laminas\Permissions\Acl\Exception\InvalidArgumentException;
-use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\AbstractSingleInstancePluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 
 use function gettype;
 use function is_object;
 use function sprintf;
 
-/** @extends AbstractPluginManager<AssertionInterface> */
-class AssertionManager extends AbstractPluginManager
+/** @extends AbstractSingleInstancePluginManager<AssertionInterface> */
+class AssertionManager extends AbstractSingleInstancePluginManager
 {
     /** @var class-string<AssertionInterface> */
-    protected $instanceOf = AssertionInterface::class;
+    protected string $instanceOf = AssertionInterface::class;
 
     /**
      * Validate the plugin is of the expected type (v3).
      *
      * Validates against `$instanceOf`.
      *
-     * @param mixed $instance
      * @throws InvalidServiceException
      * @psalm-assert AssertionInterface $instance
      */
-    public function validate($instance)
+    public function validate(mixed $instance): void
     {
         if (! $instance instanceof $this->instanceOf) {
             throw new InvalidServiceException(sprintf(
@@ -36,25 +34,6 @@ class AssertionManager extends AbstractPluginManager
                 $this->instanceOf,
                 is_object($instance) ? $instance::class : gettype($instance)
             ));
-        }
-    }
-
-    /**
-     * Validate the plugin is of the expected type (v2).
-     *
-     * Proxies to `validate()`.
-     *
-     * @deprecated Please use {@see AssertionManager::validate()} instead.
-     *
-     * @throws InvalidArgumentException
-     * @psalm-assert AssertionInterface $instance
-     */
-    public function validatePlugin(mixed $instance)
-    {
-        try {
-            $this->validate($instance);
-        } catch (InvalidServiceException $e) {
-            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
         }
     }
 }
