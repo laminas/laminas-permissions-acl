@@ -41,9 +41,9 @@ That value can be one of the following:
   and the second being a property or field of that object. The
   `ExpressionAssertion` will test for:
 
-  - a method matching `get<field>()`
-  - a method matching `is<field>()`
-  - a public property named `<field>`
+    - a method matching `get<field>()`
+    - a method matching `is<field>()`
+    - a public property named `<field>`
 
   in that specific order. In the first two cases, `<field>` will be normalized
   to WordCase when creating the method name to test.
