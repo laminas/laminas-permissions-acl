@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "20ac5bd02162118c0449b63574197b46",
+    "content-hash": "bf19b844eaf3035ba8f9ff9f8608701c",
     "packages": [],
     "packages-dev": [
         {
@@ -1480,6 +1480,7 @@
                 "issues": "https://github.com/phpbench/dom/issues",
                 "source": "https://github.com/phpbench/dom/tree/0.3.3"
             },
+            "abandoned": true,
             "time": "2023-03-06T23:46:57+00:00"
         },
         {
@@ -4833,7 +4834,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "~8.1.0 || ~8.2.0 || ~8.3.0"
+        "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0"
     },
     "platform-dev": [],
     "platform-overrides": {
