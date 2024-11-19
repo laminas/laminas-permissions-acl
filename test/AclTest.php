@@ -12,6 +12,7 @@ use Laminas\Permissions\Acl\Resource;
 use Laminas\Permissions\Acl\Role;
 use Laminas\Permissions\Acl\Role\GenericRole;
 use Laminas\Permissions\Acl\Role\RoleInterface;
+use LaminasTest\Permissions\Acl\StandardUseCase\UserIsBlogPostOwnerAssertion;
 use LaminasTest\Permissions\Acl\TestAsset\MockAssertion;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -1095,7 +1096,7 @@ class AclTest extends TestCase
         $blogPost = new Resource\GenericResource('blogPost');
 
         /**
-         * @var LaminasTest\Permissions\Acl\StandardUseCase\UserIsBlogPostOwnerAssertion
+         * @var UserIsBlogPostOwnerAssertion $assertion
          */
         $assertion = $acl->customAssertion;
 
@@ -1117,7 +1118,7 @@ class AclTest extends TestCase
         $this->assertTrue($acl->isAllowed($user, $blogPost, 'view'));
 
         /**
-         * @var LaminasTest\Permissions\Acl\StandardUseCase\UserIsBlogPostOwnerAssertion
+         * @var UserIsBlogPostOwnerAssertion $assertion
          */
         $assertion = $acl->customAssertion;
 
