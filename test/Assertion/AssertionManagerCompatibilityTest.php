@@ -6,25 +6,18 @@ namespace LaminasTest\Permissions\Acl\Assertion;
 
 use Laminas\Permissions\Acl\Assertion\AssertionInterface;
 use Laminas\Permissions\Acl\Assertion\AssertionManager;
-use Laminas\Permissions\Acl\Exception\InvalidArgumentException;
+use Laminas\ServiceManager\AbstractSingleInstancePluginManager;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\ServiceManager\Test\CommonPluginManagerTrait;
 use PHPUnit\Framework\TestCase;
-use Throwable;
 
 class AssertionManagerCompatibilityTest extends TestCase
 {
     use CommonPluginManagerTrait;
 
-    protected static function getPluginManager(): AssertionManager
+    protected static function getPluginManager(array $config = []): AbstractSingleInstancePluginManager
     {
         return new AssertionManager(new ServiceManager());
-    }
-
-    /** @return class-string<Throwable> */
-    protected function getV2InvalidPluginException(): string
-    {
-        return InvalidArgumentException::class;
     }
 
     /** @return class-string */
