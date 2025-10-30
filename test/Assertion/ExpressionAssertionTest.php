@@ -82,13 +82,13 @@ class ExpressionAssertionTest extends TestCase
         RoleInterface $role,
         ResourceInterface $resource,
         string $privilege,
-        bool $expectedAssert
+        bool $assert
     ) {
         $assertion = ExpressionAssertion::fromArray($expression);
 
         $this->assertThat(
             $assertion->assert(new Acl(), $role, $resource, $privilege),
-            $expectedAssert ? $this->isTrue() : $this->isFalse()
+            $assert ? $this->isTrue() : $this->isFalse()
         );
     }
 
