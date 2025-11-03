@@ -19,6 +19,20 @@
         </ignoreFiles>
     </projectFiles>
 
+    <issueHandlers>
+        <MissingOverrideAttribute>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+                <directory name="test"/>
+            </errorLevel>
+        </MissingOverrideAttribute>
+        <ClassMustBeFinal>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </ClassMustBeFinal>
+    </issueHandlers>
+
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
     </plugins>

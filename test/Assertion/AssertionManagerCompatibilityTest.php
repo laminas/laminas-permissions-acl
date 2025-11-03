@@ -12,7 +12,7 @@ use Laminas\ServiceManager\Test\CommonPluginManagerTrait;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
-class AssertionManagerCompatibilityTest extends TestCase
+final class AssertionManagerCompatibilityTest extends TestCase
 {
     use CommonPluginManagerTrait;
 

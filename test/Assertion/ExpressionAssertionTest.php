@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 
 use function serialize;
 
-class ExpressionAssertionTest extends TestCase
+final class ExpressionAssertionTest extends TestCase
 {
     public function testFromPropertiesCreation(): void
     {

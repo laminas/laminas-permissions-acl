@@ -10,7 +10,7 @@ use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Laminas\ServiceManager\ServiceManager;
 use PHPUnit\Framework\TestCase;
 
-class AssertionManagerTest extends TestCase
+final class AssertionManagerTest extends TestCase
 {
     protected AssertionManager $manager;
 

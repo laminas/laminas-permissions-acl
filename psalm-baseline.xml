@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="6.13.1@1e3b7f0a8ab32b23197b91107adc0a7ed8a05b51">
   <file src="src/Acl.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function hasResource($resource)]]></code>
-      <code><![CDATA[public function isAllowed($role = null, $resource = null, $privilege = null)]]></code>
-    </MissingOverrideAttribute>
     <MixedArgument>
       <code><![CDATA[$child]]></code>
       <code><![CDATA[$childId]]></code>
@@ -201,9 +197,6 @@
     </UnusedVariable>
   </file>
   <file src="src/Assertion/AssertionAggregate.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function assert(]]></code>
-    </MissingOverrideAttribute>
     <MixedAssignment>
       <code><![CDATA[$assertion]]></code>
     </MixedAssignment>
@@ -216,12 +209,6 @@
     </MixedOperand>
   </file>
   <file src="src/Assertion/AssertionManager.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[AssertionManager]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function validate($instance)]]></code>
-    </MissingOverrideAttribute>
     <MissingReturnType>
       <code><![CDATA[validatePlugin]]></code>
     </MissingReturnType>
@@ -232,23 +219,10 @@
       <code><![CDATA[validatePlugin]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="src/Assertion/CallbackAssertion.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function assert(]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Assertion/Exception/InvalidAssertionException.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[InvalidAssertionException]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="src/Assertion/ExpressionAssertion.php">
     <InvalidNullableReturnType>
       <code><![CDATA[bool]]></code>
     </InvalidNullableReturnType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function assert(]]></code>
-    </MissingOverrideAttribute>
     <MissingReturnType>
       <code><![CDATA[validateOperand]]></code>
       <code><![CDATA[validateOperator]]></code>
@@ -270,52 +244,17 @@
       <code><![CDATA[static::evaluateExpression($left, $this->operator, $right)]]></code>
     </NullableReturnStatement>
   </file>
-  <file src="src/Assertion/OwnershipAssertion.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[OwnershipAssertion]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function assert(]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="src/Exception/InvalidArgumentException.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[InvalidArgumentException]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="src/Exception/RuntimeException.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[RuntimeException]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="src/Resource/GenericResource.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[GenericResource]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function __toString(): string]]></code>
-      <code><![CDATA[public function getResourceId()]]></code>
-    </MissingOverrideAttribute>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(string) $resourceId]]></code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="src/Role/GenericRole.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[GenericRole]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function __toString(): string]]></code>
-      <code><![CDATA[public function getRoleId()]]></code>
-    </MissingOverrideAttribute>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(string) $roleId]]></code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="src/Role/Registry.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[Registry]]></code>
-    </ClassMustBeFinal>
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$this->roles]]></code>
     </InvalidPropertyAssignmentValue>
@@ -384,16 +323,10 @@
     </UnusedForeachValue>
   </file>
   <file src="test/AclTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[AclTest]]></code>
-    </ClassMustBeFinal>
     <InvalidArgument>
       <code><![CDATA[new stdClass()]]></code>
       <code><![CDATA[new stdClass()]]></code>
     </InvalidArgument>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function setUp(): void]]></code>
-    </MissingOverrideAttribute>
     <MissingReturnType>
       <code><![CDATA[testAclResourcePermissionsAreInheritedWithMultilevelResourcesAndDenyPolicy]]></code>
       <code><![CDATA[testAllowNullPermissionAfterResourcesExistShouldAllowAllPermissionsForRole]]></code>
@@ -427,38 +360,11 @@
     </UnusedForeachValue>
   </file>
   <file src="test/Assertion/AssertionAggregateTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[AssertionAggregateTest]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function setUp(): void]]></code>
-    </MissingOverrideAttribute>
     <MissingReturnType>
       <code><![CDATA[testClearAssertions]]></code>
     </MissingReturnType>
   </file>
-  <file src="test/Assertion/AssertionManagerCompatibilityTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[AssertionManagerCompatibilityTest]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getInstanceOf(): string]]></code>
-      <code><![CDATA[protected function getV2InvalidPluginException(): string]]></code>
-      <code><![CDATA[protected static function getPluginManager(): AssertionManager]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="test/Assertion/AssertionManagerTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[AssertionManagerTest]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function setUp(): void]]></code>
-    </MissingOverrideAttribute>
-  </file>
   <file src="test/Assertion/CallbackAssertionTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[CallbackAssertionTest]]></code>
-    </ClassMustBeFinal>
     <MissingClosureParamType>
       <code><![CDATA[$aclArg]]></code>
       <code><![CDATA[$aclArg]]></code>
@@ -482,33 +388,19 @@
     </UnusedClosureParam>
   </file>
   <file src="test/Assertion/ExpressionAssertionTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ExpressionAssertionTest]]></code>
-    </ClassMustBeFinal>
     <MissingReturnType>
       <code><![CDATA[testExpressionsEvaluation]]></code>
     </MissingReturnType>
-  </file>
-  <file src="test/Assertion/OwnershipAssertionTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[OwnershipAssertionTest]]></code>
-    </ClassMustBeFinal>
   </file>
   <file src="test/TestAsset/AssertionLaminas7973.php">
     <ClassMustBeFinal>
       <code><![CDATA[AssertionLaminas7973]]></code>
     </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function assert(]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="test/TestAsset/ExpressionUseCase/BlogPost.php">
     <ClassMustBeFinal>
       <code><![CDATA[BlogPost]]></code>
     </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getResourceId(): string]]></code>
-    </MissingOverrideAttribute>
     <PossiblyUnusedMethod>
       <code><![CDATA[getAuthorName]]></code>
       <code><![CDATA[getShortDescription]]></code>
@@ -522,9 +414,6 @@
     <ClassMustBeFinal>
       <code><![CDATA[User]]></code>
     </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getRoleId(): string]]></code>
-    </MissingOverrideAttribute>
     <PossiblyUnusedMethod>
       <code><![CDATA[isAdult]]></code>
     </PossiblyUnusedMethod>
@@ -543,9 +432,6 @@
     <ClassMustBeFinal>
       <code><![CDATA[MockAssertion]]></code>
     </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function assert(]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="test/TestAsset/OwnershipUseCase/Acl.php">
     <ClassMustBeFinal>
@@ -566,24 +452,11 @@
     <ClassMustBeFinal>
       <code><![CDATA[BlogPost]]></code>
     </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getOwnerId(): ?int]]></code>
-      <code><![CDATA[public function getResourceId(): string]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="test/TestAsset/OwnershipUseCase/Comment.php">
     <ClassMustBeFinal>
       <code><![CDATA[Comment]]></code>
     </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getResourceId(): string]]></code>
-    </MissingOverrideAttribute>
-  </file>
-  <file src="test/TestAsset/OwnershipUseCase/User.php">
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getOwnerId(): ?int]]></code>
-      <code><![CDATA[public function getRoleId(): string]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="test/TestAsset/StandardUseCase/Acl.php">
     <ClassMustBeFinal>
@@ -594,25 +467,16 @@
     <ClassMustBeFinal>
       <code><![CDATA[BlogPost]]></code>
     </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getResourceId(): string]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="test/TestAsset/StandardUseCase/User.php">
     <ClassMustBeFinal>
       <code><![CDATA[User]]></code>
     </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getRoleId(): string]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="test/TestAsset/StandardUseCase/UserIsBlogPostOwnerAssertion.php">
     <ClassMustBeFinal>
       <code><![CDATA[UserIsBlogPostOwnerAssertion]]></code>
     </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function assert(]]></code>
-    </MissingOverrideAttribute>
     <ParamNameMismatch>
       <code><![CDATA[$blogPost]]></code>
       <code><![CDATA[$user]]></code>

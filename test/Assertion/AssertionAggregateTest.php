@@ -16,7 +16,7 @@ use Laminas\Permissions\Acl\Role\GenericRole;
 use LaminasTest\Permissions\Acl\Assertion\TestSubclasses\AssertionAggregate;
 use PHPUnit\Framework\TestCase;
 
-class AssertionAggregateTest extends TestCase
+final class AssertionAggregateTest extends TestCase
 {
     private AssertionAggregate $assertionAggregate;
 
