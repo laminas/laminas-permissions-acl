@@ -17,7 +17,7 @@ use LaminasTest\Permissions\Acl\TestAsset\MockAssertion;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class AclTest extends TestCase
+final class AclTest extends TestCase
 {
     /**
      * ACL object for each test method

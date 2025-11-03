@@ -11,7 +11,7 @@ use Laminas\Permissions\Acl\Role\RoleInterface;
 use LaminasTest\Permissions\Acl\Assertion\TestSubclasses\CallbackAssertion;
 use PHPUnit\Framework\TestCase;
 
-class CallbackAssertionTest extends TestCase
+final class CallbackAssertionTest extends TestCase
 {
     /**
      * Ensures constructor throws InvalidArgumentException if not callable is provided
