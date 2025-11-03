@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.13.1@1e3b7f0a8ab32b23197b91107adc0a7ed8a05b51">
+<files psalm-version="5.22.2@d768d914152dbbf3486c36398802f74e80cfde48">
   <file src="src/Acl.php">
     <MixedArgument>
       <code><![CDATA[$child]]></code>
@@ -124,6 +124,11 @@
       <code><![CDATA[$visitor]]></code>
       <code><![CDATA[$visitor]]></code>
     </MixedAssignment>
+    <MixedInferredReturnType>
+      <code><![CDATA[ResourceInterface]]></code>
+      <code><![CDATA[array|null]]></code>
+      <code><![CDATA[string|null]]></code>
+    </MixedInferredReturnType>
     <MixedMethodCall>
       <code><![CDATA[getResourceId]]></code>
       <code><![CDATA[getResourceId]]></code>
@@ -208,17 +213,6 @@
       <code><![CDATA[$assertion]]></code>
     </MixedOperand>
   </file>
-  <file src="src/Assertion/AssertionManager.php">
-    <MissingReturnType>
-      <code><![CDATA[validatePlugin]]></code>
-    </MissingReturnType>
-    <NonInvariantDocblockPropertyType>
-      <code><![CDATA[$instanceOf]]></code>
-    </NonInvariantDocblockPropertyType>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[validatePlugin]]></code>
-    </PossiblyUnusedMethod>
-  </file>
   <file src="src/Assertion/ExpressionAssertion.php">
     <InvalidNullableReturnType>
       <code><![CDATA[bool]]></code>
@@ -290,6 +284,10 @@
       <code><![CDATA[$parentId]]></code>
       <code><![CDATA[$roleParentId]]></code>
     </MixedAssignment>
+    <MixedInferredReturnType>
+      <code><![CDATA[RoleInterface]]></code>
+      <code><![CDATA[array]]></code>
+    </MixedInferredReturnType>
     <MixedPropertyTypeCoercion>
       <code><![CDATA[$this->roles]]></code>
     </MixedPropertyTypeCoercion>
@@ -391,16 +389,11 @@
     <MissingReturnType>
       <code><![CDATA[testExpressionsEvaluation]]></code>
     </MissingReturnType>
-  </file>
-  <file src="test/TestAsset/AssertionLaminas7973.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[AssertionLaminas7973]]></code>
-    </ClassMustBeFinal>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getExpressions]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="test/TestAsset/ExpressionUseCase/BlogPost.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[BlogPost]]></code>
-    </ClassMustBeFinal>
     <PossiblyUnusedMethod>
       <code><![CDATA[getAuthorName]]></code>
       <code><![CDATA[getShortDescription]]></code>
@@ -411,72 +404,18 @@
     </PossiblyUnusedProperty>
   </file>
   <file src="test/TestAsset/ExpressionUseCase/User.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[User]]></code>
-    </ClassMustBeFinal>
     <PossiblyUnusedMethod>
       <code><![CDATA[isAdult]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="test/TestAsset/ExtendedAclLaminas2234.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ExtendedAclLaminas2234]]></code>
-    </ClassMustBeFinal>
     <PossiblyUnusedReturnValue>
       <code><![CDATA[bool|void]]></code>
       <code><![CDATA[bool|void]]></code>
       <code><![CDATA[bool|void]]></code>
     </PossiblyUnusedReturnValue>
   </file>
-  <file src="test/TestAsset/MockAssertion.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[MockAssertion]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="test/TestAsset/OwnershipUseCase/Acl.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[Acl]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="test/TestAsset/OwnershipUseCase/Author1.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[Author1]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="test/TestAsset/OwnershipUseCase/Author2.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[Author2]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="test/TestAsset/OwnershipUseCase/BlogPost.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[BlogPost]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="test/TestAsset/OwnershipUseCase/Comment.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[Comment]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="test/TestAsset/StandardUseCase/Acl.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[Acl]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="test/TestAsset/StandardUseCase/BlogPost.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[BlogPost]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="test/TestAsset/StandardUseCase/User.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[User]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="test/TestAsset/StandardUseCase/UserIsBlogPostOwnerAssertion.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[UserIsBlogPostOwnerAssertion]]></code>
-    </ClassMustBeFinal>
     <ParamNameMismatch>
       <code><![CDATA[$blogPost]]></code>
       <code><![CDATA[$user]]></code>
