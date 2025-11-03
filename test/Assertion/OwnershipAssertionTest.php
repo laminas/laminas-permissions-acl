@@ -7,7 +7,7 @@ namespace LaminasTest\Permissions\Acl\Assertion;
 use LaminasTest\Permissions\Acl\TestAsset\OwnershipUseCase;
 use PHPUnit\Framework\TestCase;
 
-class OwnershipAssertionTest extends TestCase
+final class OwnershipAssertionTest extends TestCase
 {
     public function testAssertPassesIfRoleIsNotProprietary(): void
     {
