@@ -608,9 +608,7 @@ class Acl implements AclInterface
                         if (! $privileges) {
                             $rules['allPrivileges']['type']   = $type;
                             $rules['allPrivileges']['assert'] = $assert;
-                            if (! isset($rules['byPrivilegeId'])) {
-                                $rules['byPrivilegeId'] = [];
-                            }
+                            $rules['byPrivilegeId'] ??= [];
                         } else {
                             foreach ($privileges as $privilege) {
                                 $rules['byPrivilegeId'][$privilege]['type']   = $type;
@@ -812,9 +810,7 @@ class Acl implements AclInterface
      */
     protected function getRoleRegistry()
     {
-        if (null === $this->roleRegistry) {
-            $this->roleRegistry = new Role\Registry();
-        }
+        $this->roleRegistry ??= new Role\Registry();
         return $this->roleRegistry;
     }
 

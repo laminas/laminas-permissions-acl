@@ -54,20 +54,20 @@ use function ucwords;
  */
 final class ExpressionAssertion implements AssertionInterface
 {
-    public const OPERAND_CONTEXT_PROPERTY = '__context';
+    public const string OPERAND_CONTEXT_PROPERTY = '__context';
 
-    public const OPERATOR_EQ     = '=';
-    public const OPERATOR_NEQ    = '!=';
-    public const OPERATOR_LT     = '<';
-    public const OPERATOR_LTE    = '<=';
-    public const OPERATOR_GT     = '>';
-    public const OPERATOR_GTE    = '>=';
-    public const OPERATOR_IN     = 'in';
-    public const OPERATOR_NIN    = '!in';
-    public const OPERATOR_REGEX  = 'regex';
-    public const OPERATOR_NREGEX = '!regex';
-    public const OPERATOR_SAME   = '===';
-    public const OPERATOR_NSAME  = '!==';
+    public const string OPERATOR_EQ     = '=';
+    public const string OPERATOR_NEQ    = '!=';
+    public const string OPERATOR_LT     = '<';
+    public const string OPERATOR_LTE    = '<=';
+    public const string OPERATOR_GT     = '>';
+    public const string OPERATOR_GTE    = '>=';
+    public const string OPERATOR_IN     = 'in';
+    public const string OPERATOR_NIN    = '!in';
+    public const string OPERATOR_REGEX  = 'regex';
+    public const string OPERATOR_NREGEX = '!regex';
+    public const string OPERATOR_SAME   = '===';
+    public const string OPERATOR_NSAME  = '!==';
 
     /** @var list<string> */
     private static array $validOperators = [
