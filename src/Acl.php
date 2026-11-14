@@ -608,7 +608,7 @@ class Acl implements AclInterface
                         if (! $privileges) {
                             $rules['allPrivileges']['type']   = $type;
                             $rules['allPrivileges']['assert'] = $assert;
-                            $rules['byPrivilegeId'] ??= [];
+                            $rules['byPrivilegeId']         ??= [];
                         } else {
                             foreach ($privileges as $privilege) {
                                 $rules['byPrivilegeId'][$privilege]['type']   = $type;
