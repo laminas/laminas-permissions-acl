@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.13.1@1e3b7f0a8ab32b23197b91107adc0a7ed8a05b51">
+<files psalm-version="6.20.11@fca8e037ed356b9fc1afc213902e82dfad418eba">
   <file src="src/Acl.php">
+    <MissingClassConstType>
+      <code><![CDATA[OP_ADD = 'OP_ADD']]></code>
+      <code><![CDATA[OP_REMOVE = 'OP_REMOVE']]></code>
+      <code><![CDATA[TYPE_ALLOW = 'TYPE_ALLOW']]></code>
+      <code><![CDATA[TYPE_DENY = 'TYPE_DENY']]></code>
+    </MissingClassConstType>
     <MixedArgument>
       <code><![CDATA[$child]]></code>
       <code><![CDATA[$childId]]></code>
@@ -121,6 +127,7 @@
       <code><![CDATA[$rules]]></code>
       <code><![CDATA[$rules]]></code>
       <code><![CDATA[$rules]]></code>
+      <code><![CDATA[$rules['byPrivilegeId']]]></code>
       <code><![CDATA[$visitor]]></code>
       <code><![CDATA[$visitor]]></code>
     </MixedAssignment>
@@ -197,6 +204,10 @@
     </UnusedVariable>
   </file>
   <file src="src/Assertion/AssertionAggregate.php">
+    <MissingClassConstType>
+      <code><![CDATA[MODE_ALL = 'all']]></code>
+      <code><![CDATA[MODE_AT_LEAST_ONE = 'at_least_one']]></code>
+    </MissingClassConstType>
     <MixedAssignment>
       <code><![CDATA[$assertion]]></code>
     </MixedAssignment>
